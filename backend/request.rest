@@ -1,0 +1,59 @@
+GET http://localhost:3000/jobs
+
+
+###
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+    "name": "user",
+    "email": "user@gmail.com",
+    "password": "123456",
+    "confPassword": "123456"
+}
+
+###
+POST http://localhost:3000/SignIn
+Content-Type: application/json
+
+{
+    "email" : "user@gmail.com",
+    "password": "123456"
+}
+
+###
+POST http://localhost:3000/forgot-password
+Content-Type: application/json
+
+{
+    "email" : "revansakuswana@gmail.com"
+}
+
+###
+POST http://localhost:3000/reset-password/c3vxkahfcwl
+Content-Type: application/json
+
+{
+    "password" : "revansakuswana@gmail.com"
+}
+
+###
+POST http://localhost:3000/assign-job
+Content-Type: application/json
+
+{
+    "id" : "54",
+    "job" : "2936"
+}
+
+
+###
+GET http://localhost:3000/token
+
+###
+DELETE http://localhost:3000/logout
+
+
+###
+GET http://localhost:3000/users/name
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMyLCJuYW1lIjoidXNlciIsImVtYWlsIjoidXNlckBnbWFpbC5jb20iLCJpYXQiOjE3MjU4MTI2NzgsImV4cCI6MTcyNTgxMjczOH0.SGATVBnaPbTo8zA49kVOy66pEhguVUpGQU1Qmdqa-Fk
