@@ -53,9 +53,14 @@ const ArticleList = () => {
     const fetchArticles = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("http://localhost:3000/articles");
+        const response = await axios.get(
+          "http://localhost:3000/user/articles",
+          { withCredentials: true }
+        );
+        console.log("Response:", response); // Tambahkan log respons
         setArticles(response.data.data);
       } catch (err) {
+        console.error("Error fetching articles:", err); // Tambahkan log error
         setAlertMessage("Terjadi kesalahan saat mengambil data");
         setAlertSeverity("error");
         setAlertOpen(true);
@@ -109,7 +114,8 @@ const ArticleList = () => {
     if (articleIdToDelete) {
       try {
         await axios.delete(
-          `http://localhost:3000/articles/${articleIdToDelete}`
+          `http://localhost:3000/articles/${articleIdToDelete}`,
+          { withCredentials: true }
         );
         setAlertMessage("Artikel berhasil dihapus");
         setAlertSeverity("success");

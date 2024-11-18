@@ -90,7 +90,7 @@ const ArticleItem = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `http://localhost:3000/articleslist/${id}`
+          `http://localhost:3000/allarticles/${id}`
         );
         setArticle(response.data.data);
       } catch (err) {
@@ -111,7 +111,7 @@ const ArticleItem = () => {
   useEffect(() => {
     const fetchArticlesList = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/articles");
+        const response = await axios.get("http://localhost:3000/allarticles");
         setArticlesList(response.data.data);
       } catch (err) {
         setAlertMessage("Terjadi kesalahan saat mengambil data");

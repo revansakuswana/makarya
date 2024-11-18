@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { styled } from "@mui/material/styles";
+import React, { useState, useEffect } from "react";
 import {
   differenceInDays,
   differenceInHours,
@@ -7,17 +6,24 @@ import {
   differenceInSeconds,
   parseISO,
 } from "date-fns";
-import { Box, Button, Typography, Snackbar, Alert } from "@mui/material";
+import {
+  styled,
+  Box,
+  Button,
+  Typography,
+  Snackbar,
+  Alert,
+  Avatar,
+  Card,
+  CardContent,
+  CardMedia,
+  Chip,
+  FormControl,
+  OutlinedInput,
+} from "@mui/material";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { marked } from "marked";
-import Avatar from "@mui/material/Avatar";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Chip from "@mui/material/Chip";
 import Grid from "@mui/material/Grid2";
-import FormControl from "@mui/material/FormControl";
-import OutlinedInput from "@mui/material/OutlinedInput";
 import PropTypes from "prop-types";
 import axios from "axios";
 import Loaders from "../../Loaders/Loaders";
@@ -120,7 +126,7 @@ export default function MainContent() {
     const fetchArticles = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("http://localhost:3000/articles");
+        const response = await axios.get("http://localhost:3000/allarticles");
         setArticles(response.data.data);
       } catch (err) {
         setAlertMessage("Terjadi kesalahan saat mengambil data");
@@ -135,7 +141,7 @@ export default function MainContent() {
     const fetchCategories = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("http://localhost:3000/articles");
+        const response = await axios.get("http://localhost:3000/allarticles");
         setCategories(response.data.data);
       } catch (err) {
         setAlertMessage("Terjadi kesalahan saat mengambil data");
@@ -150,6 +156,31 @@ export default function MainContent() {
 
     fetchArticles();
     fetchCategories();
+  }, []);
+
+  const [users, setUsers] = useState({
+    image: "",
+  });
+
+  const defaultImage =
+    "https://img.freepik.com/free-vector/user-circles-set_78370-4704.jpg?t=st=1729519206~exp=1729522806~hmac=a5904ebe3507f7c9b87354d2ba19241b1c6cb9077818d95299677a2ed083ca74&w=1060";
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/profile`, {
+          withCredentials: true,
+        });
+        setUsers(response.data.data);
+        response.data.data.image
+          ? `http://localhost:3000/public/images/${response.data.data.image}`
+          : defaultImage;
+      } catch (err) {
+        err?.response?.data?.msg;
+      }
+    };
+
+    fetchUsers();
   }, []);
 
   const handleCloseAlert = (event, reason) => {
@@ -356,7 +387,7 @@ export default function MainContent() {
                       }}>
                       <Avatar
                         key={index}
-                        src={articles.avatar}
+                        src={`http://localhost:3000/public/images/${users.image}`}
                         sx={{ width: 24, height: 24 }}
                       />
                       <Typography variant="caption">{articles.name}</Typography>

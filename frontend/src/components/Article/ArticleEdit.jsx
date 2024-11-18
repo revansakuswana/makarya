@@ -66,7 +66,8 @@ const ArticleEdit = () => {
       setLoading(true); // Set loading to true when fetching
       try {
         const response = await axios.get(
-          `http://localhost:3000/articleslist/${id}`
+          `http://localhost:3000/articleslist/${id}`,
+          { withCredentials: true }
         );
         setArticle(response.data.data);
       } catch (err) {
@@ -126,6 +127,7 @@ const ArticleEdit = () => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
+          withCredentials: true,
         }
       );
       if (response.status === 200 || response.data.success) {
@@ -184,7 +186,7 @@ const ArticleEdit = () => {
               Edit Artikel
             </Typography>
             {error && (
-              <Grid item xs={12}>
+              <Grid xs={12}>
                 <Alert severity="error">{error}</Alert>
               </Grid>
             )}

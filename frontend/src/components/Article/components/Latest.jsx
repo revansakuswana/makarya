@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import {
   ThemeProvider,
   createTheme,
@@ -106,19 +107,20 @@ export default function Latest() {
   const [alertMessage, setAlertMessage] = useState("");
   const [alertSeverity, setAlertSeverity] = useState("error");
 
+  const { id } = useParams();
+
   React.useEffect(() => {
     const fetchArticles = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("http://localhost:3000/articles"); // Replace with your API URL
-        // Sort articles based on updatedAt field in descending order
+        const response = await axios.get(`http://localhost:3000/allarticles`); // Replace with your API URL
         const sortedArticles = response.data.data.sort(
           (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
         );
-        setArticles(sortedArticles); // Set articles state
+        setArticles(sortedArticles);
       } catch (err) {
         setAlertMessage("Terjadi kesalahan saat mengambil data");
-        setAlertSeverity("error"); // Atur tingkat keparahan sesuai kebutuhan
+        setAlertSeverity("error");
         setAlertOpen(true);
       } finally {
         setTimeout(() => {
@@ -128,6 +130,31 @@ export default function Latest() {
     };
 
     fetchArticles();
+  }, [id]);
+
+  const [users, setUsers] = useState({
+    image: "",
+  });
+
+  const defaultImage =
+    "https://img.freepik.com/free-vector/user-circles-set_78370-4704.jpg?t=st=1729519206~exp=1729522806~hmac=a5904ebe3507f7c9b87354d2ba19241b1c6cb9077818d95299677a2ed083ca74&w=1060";
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/profile`, {
+          withCredentials: true,
+        });
+        setUsers(response.data.data);
+        response.data.data.image
+          ? `http://localhost:3000/public/images/${response.data.data.image}`
+          : defaultImage;
+      } catch (err) {
+        err?.response?.data?.msg;
+      }
+    };
+
+    fetchUsers();
   }, []);
 
   const handleCloseAlert = (event, reason) => {
@@ -186,7 +213,7 @@ export default function Latest() {
                   <TitleTypography
                     variant="h6"
                     component="a"
-                    href={`/articleitem/${article.id}`}
+                    href={`/articles/${article.id}`}
                     style={{ textDecoration: "none" }}>
                     {article.title}
                     <NavigateNextRoundedIcon
@@ -218,7 +245,7 @@ export default function Latest() {
                       }}>
                       <Avatar
                         key={index}
-                        src={article.user}
+                        src={`http://localhost:3000/public/images/${users.image}`}
                         sx={{ width: 24, height: 24 }}
                       />
                       <Typography variant="caption">{article.name}</Typography>

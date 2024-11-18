@@ -9,13 +9,10 @@ import nodemailer from "nodemailer";
 import { Op } from "sequelize";
 
 export const getProfile = async (req, res) => {
-  const jwt_token = req.cookies.jwt;
-  if (!jwt_token) return res.sendStatus(403);
-
+  const { userId } = req.user;
   try {
-    const decode = jwt.decode(jwt_token);
-    const { userId, name, email } = decode;
-    const users = await Users.findByPk(userId, {
+    const user = await Users.findOne({
+      where: { id: userId },
       attributes: [
         "id",
         "name",
@@ -30,16 +27,20 @@ export const getProfile = async (req, res) => {
       ],
     });
 
-    if (!users) {
-      return res.status(404).json({ message: "Users not found" });
+    if (!user) {
+      return res.status(404).json({
+        msg: `Pengguna dengan nama "${userId}" tidak ditemukand`,
+      });
     }
 
     res.status(200).json({
-      message: "Users retrieved successfully",
-      data: users,
+      msg: `Profil berhasil diambil untuk pengguna: ${userId}`,
+      data: user,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({
+      msg: "Terjadi kesalahan saat memperbarui profil",
+    });
   }
 };
 
@@ -49,15 +50,11 @@ export const updateProfile = async (req, res) => {
       return res.status(500).json({ error: err.message });
     }
 
-    const jwt_token = req.cookies.jwt;
-    if (!jwt_token) return res.sendStatus(403);
-
+    const { userId } = req.user; 
     try {
-      const decode = jwt.decode(jwt_token);
-      const { userId, name, email } = decode;
-      const existingUsers = await Users.findByPk(userId);
-      if (!existingUsers) {
-        return res.status(404).json({ message: "Users not found" });
+      const existingUser = await Users.findOne({ where: { id: userId } });
+      if (!existingUser) {
+        return res.status(404).json({ message: "User not found" });
       }
 
       const data = {
@@ -66,43 +63,41 @@ export const updateProfile = async (req, res) => {
         location: req.body.location,
         education: req.body.education,
         skills: req.body.skills,
-        image: req.file ? req.file.filename : existingUsers.image,
+        image: req.file ? req.file.filename : existingUser.image, // Gunakan gambar baru jika ada
       };
 
       const result = await Users.update(data, { where: { id: userId } });
 
       if (result[0] === 0) {
-        return res.status(404).json({ message: "Users not found" });
+        return res.status(404).json({ msg: "Gagal memperbarui profil" });
       }
 
       res.status(200).json({
-        message: "Profile updated successfully",
-        data: result,
+        msg: "Profil berhasil diperbarui",
+        data: data,
       });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res
+        .status(500)
+        .json({ msg: "Terjadi kesalahan saat memperbarui profil" });
     }
   });
 };
 
 export const deleteProfile = async (req, res) => {
-  const jwt_token = req.cookies.jwt;
-  if (!jwt_token) return res.sendStatus(403);
+  const { userId } = req.user;
 
   try {
-    const decode = jwt.decode(jwt_token);
-    const { userId } = decode;
-
-    const existingUsers = await Users.findByPk(userId);
-    if (!existingUsers) {
-      return res.status(404).json({ message: "User not found" });
+    const existingUser = await Users.findByPk(userId);
+    if (!existingUser) {
+      return res.status(404).json({ msg: "Pengguna tidak ditemukan" });
     }
 
     await Users.destroy({ where: { id: userId } });
 
-    res.status(200).json({ message: "Profile deleted successfully" });
+    res.status(200).json({ msg: "Akun berhasil dihapus" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ msg: "Terjadi kesalahan saat menghapus akun" });
   }
 };
 
@@ -379,7 +374,7 @@ export const SignIn = async (req, res) => {
     const accessToken = jwt.sign(
       { userId, name, email },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "1d" }
     );
     res.cookie("jwt", accessToken, {
       secure: true,

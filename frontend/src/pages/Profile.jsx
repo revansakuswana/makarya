@@ -122,7 +122,7 @@ const Profile = () => {
       );
       if (response.status === 200 || response.data.success) {
         setAlertSeverity("success");
-        setAlertMessage("Profil berhasil diperbarui.");
+        setAlertMessage(response?.data?.msg);
         setAlertOpen(true);
         if (response.data.data.image) {
           const updatedUser = response.data.data;
@@ -144,12 +144,12 @@ const Profile = () => {
         const errors = err.response.data.errors;
         const formattedErrors = {};
         errors.forEach((error) => {
-          formattedErrors[error.field] = error.message;
+          formattedErrors[error.field] = error.msg;
         });
         setErrors(formattedErrors);
       } else {
-        setError(err.message);
-        setAlertMessage("Gagal memperbarui profil. Silakan coba lagi.");
+        setError(err.msg);
+        setAlertMessage(err.response?.data?.msg);
       }
       setAlertSeverity("error");
       setAlertOpen(true);
@@ -202,16 +202,20 @@ const Profile = () => {
 
   const handleDeleteAccount = async () => {
     try {
-      await axios.delete(`http://localhost:3000/profile/`, {
+      const response = await axios.delete(`http://localhost:3000/profile/`, {
         withCredentials: true,
       });
       setAlertSeverity("success");
-      setAlertMessage("Akun berhasil dihapus.");
+      setAlertMessage(response.data.msg);
       setAlertOpen(true);
       await handleLogout();
+      setTimeout(() => {
+        navigate("/users/signin");
+      }, 500);
     } catch (err) {
+      const errorMessage = err.response?.data?.msg;
       setAlertSeverity("error");
-      setAlertMessage("Gagal menghapus akun. Silakan coba lagi.");
+      setAlertMessage(errorMessage);
       setAlertOpen(true);
     } finally {
       setAlertOpen(true);

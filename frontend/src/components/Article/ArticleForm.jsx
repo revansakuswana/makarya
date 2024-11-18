@@ -104,7 +104,7 @@ const ArticleForm = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/articles",
+        "http://localhost:3000/articles/articlesform",
         formData,
         {
           withCredentials: true,
@@ -118,7 +118,7 @@ const ArticleForm = () => {
         setAlertMessage("Artikel berhasil diposting.");
         setAlertOpen(true);
         setTimeout(() => {
-          navigate("/articles/all");
+          navigate("/articles");
         }, 1000);
         setTitle("");
         setCategory("");
@@ -194,7 +194,7 @@ const ArticleForm = () => {
         ) : (
           <Grid sx={{ maxWidth: "800px", margin: "auto" }}>
             <Typography variant="h4" sx={{ mb: 3 }}>
-              Post an Article
+              Posting Artikel
             </Typography>
 
             <TextField
@@ -263,7 +263,7 @@ const ArticleForm = () => {
               )}
             </Grid>
 
-            <Grid container spacing={2} sx={{ mt: 3 }}>
+            <Grid container spacing={2} sx={{ mt: { xs: 10, sm: 7 } }}>
               <Grid>
                 <Button
                   variant="contained"
