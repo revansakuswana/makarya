@@ -2,11 +2,11 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('jobs', {
+    await queryInterface.createTable("jobs", {
       id: {
         type: Sequelize.INTEGER,
-        autoIncrement: true,
         primaryKey: true,
+        autoIncrement: true,
         allowNull: false,
       },
       job_title: {
@@ -34,13 +34,13 @@ module.exports = {
         allowNull: false,
       },
       salary: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING(255),
         allowNull: false,
       },
       link: {
         type: Sequelize.STRING(255),
         allowNull: false,
-        unique: true, // Menambahkan UNIQUE constraint
+        unique: true, // Menambahkan constraint UNIQUE untuk kolom link
       },
       link_img: {
         type: Sequelize.STRING(255),
@@ -54,7 +54,7 @@ module.exports = {
         type: Sequelize.STRING(255),
         allowNull: false,
       },
-      desc: {
+      description: {
         type: Sequelize.TEXT,
         allowNull: false,
       },
@@ -65,16 +65,17 @@ module.exports = {
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.NOW,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
       updatedAt: {
         type: Sequelize.DATE,
         allowNull: true,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"),
       },
     });
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('jobs');
+    await queryInterface.dropTable("jobs");
   },
 };

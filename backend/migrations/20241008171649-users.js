@@ -5,8 +5,8 @@ module.exports = {
     await queryInterface.createTable("users", {
       id: {
         type: Sequelize.INTEGER,
-        autoIncrement: true,
         primaryKey: true,
+        autoIncrement: true,
         allowNull: false,
       },
       name: {
@@ -16,7 +16,7 @@ module.exports = {
       email: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true,
+        unique: true, // Menambahkan constraint agar email unik
       },
       password: {
         type: Sequelize.STRING,
@@ -24,15 +24,59 @@ module.exports = {
       },
       refresh_token: {
         type: Sequelize.TEXT,
-        allowNull: true, // Token ini bisa bernilai null ketika belum ada token refresh
+        allowNull: true,
+      },
+      isVerified: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      verificationToken: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      verificationExpires: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      reset_password_token: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      reset_password_expires: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      location: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+        defaultValue: "",
+      },
+      education: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+        defaultValue: "",
+      },
+      skills: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+        defaultValue: "",
+      },
+      image: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+        defaultValue: "",
       },
       createdAt: {
-        allowNull: false,
         type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
       updatedAt: {
-        allowNull: false,
         type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.literal(
+          "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+        ),
       },
     });
   },
