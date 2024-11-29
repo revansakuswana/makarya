@@ -96,7 +96,9 @@ export default function JobsItem() {
     const fetchJobs = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`http://localhost:3000/jobs/${id}`);
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/api/jobs/${id}`
+        );
         setJobs(response.data.data);
       } catch (err) {
         setAlertMessage("Terjadi kesalahan saat mengambil data");
@@ -117,7 +119,9 @@ export default function JobsItem() {
     const fetchJobsList = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("http://localhost:3000/jobs");
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/api/jobs`
+        );
         setJobsList(response.data);
       } catch (err) {
         setAlertMessage("Terjadi kesalahan saat mengambil data");

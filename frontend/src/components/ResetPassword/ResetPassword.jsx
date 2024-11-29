@@ -35,7 +35,7 @@ export default function ResetPassword() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `http://localhost:3000/reset-password/${token}`,
+        `${import.meta.env.VITE_BASE_URL}/api/reset-password/${token}`,
         { password }
       );
       if (response.status === 200) {

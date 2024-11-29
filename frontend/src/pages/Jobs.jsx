@@ -245,8 +245,10 @@ const Jobs = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("http://localhost:3000/jobs");
-        let fetchedData = Array.isArray(response.data) ? response.data : []; 
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/api/jobs`
+        );
+        let fetchedData = Array.isArray(response.data) ? response.data : [];
         const search = Array.from(
           new Set(fetchedData.map((item) => item.job_title))
         );
@@ -275,13 +277,13 @@ const Jobs = () => {
                 item.job_title
                   .toLowerCase()
                   .includes(selectedSearchToUse.toLowerCase()) ||
-                item.company 
+                item.company
                   .toLowerCase()
                   .includes(selectedSearchToUse.toLowerCase()) ||
-                item.description 
+                item.description
                   .toLowerCase()
                   .includes(selectedSearchToUse.toLowerCase()) ||
-                item.skills 
+                item.skills
                   .toLowerCase()
                   .includes(selectedSearchToUse.toLowerCase())) &&
               (!selectedCategoryToUse ||
@@ -427,7 +429,7 @@ const Jobs = () => {
                 backgroundImage:
                   "url('https://i.ibb.co.com/ZYSzFCt/101465.jpg')",
                 backgroundSize: "cover",
-                backgroundPosition: "center", 
+                backgroundPosition: "center",
               }}>
               <Box
                 sx={{

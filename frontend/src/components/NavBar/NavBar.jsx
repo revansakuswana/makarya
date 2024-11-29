@@ -70,7 +70,7 @@ export default function NavBar() {
 
   const handleLogout = async () => {
     try {
-      await axios.delete("http://localhost:3000/users/logout", {
+      await axios.delete(`${import.meta.env.VITE_BASE_URL}/api/users/logout`, {
         withCredentials: true,
       });
       //

@@ -90,7 +90,7 @@ const ArticleItem = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `http://localhost:3000/allarticles/${id}`
+          `${import.meta.env.VITE_BASE_URL}/api/allarticles/${id}`
         );
         setArticle(response.data.data);
       } catch (err) {
@@ -111,7 +111,7 @@ const ArticleItem = () => {
   useEffect(() => {
     const fetchArticlesList = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/allarticles");
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/allarticles`);
         setArticlesList(response.data.data);
       } catch (err) {
         setAlertMessage("Terjadi kesalahan saat mengambil data");
@@ -136,12 +136,12 @@ const ArticleItem = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/profile`, {
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/profile`, {
           withCredentials: true,
         });
         setUsers(response.data.data);
         response.data.data.image
-          ? `http://localhost:3000/public/images/${response.data.data.image}`
+          ? `${import.meta.env.VITE_BASE_URL}/api/public/images/${response.data.data.image}`
           : defaultImage;
       } catch (err) {
         err?.response?.data?.msg;
@@ -193,7 +193,7 @@ const ArticleItem = () => {
               <CardMedia
                 component="img"
                 height="auto"
-                src={`http://localhost:3000/public/images/${article.image}`}
+                src={`${import.meta.env.VITE_BASE_URL}/api/public/images/${article.image}`}
                 alt="Article Cover"
               />
 
@@ -229,7 +229,7 @@ const ArticleItem = () => {
                         alignItems: "center",
                       }}>
                       <Avatar
-                        src={`http://localhost:3000/public/images/${users.image}`}
+                        src={`${import.meta.env.VITE_BASE_URL}/api/public/images/${users.image}`}
                         sx={{
                           width: { xs: 30, md: 30 },
                           height: { xs: 30, md: 30 },
@@ -302,7 +302,7 @@ const ArticleItem = () => {
                         <CardMedia
                           component="img"
                           height="auto"
-                          src={`http://localhost:3000/public/images/${otherArticle.image}`}
+                          src={`${import.meta.env.VITE_BASE_URL}/api/public/images/${otherArticle.image}`}
                         />
                       </Grid>
 

@@ -25,7 +25,7 @@ function VerifyEmail() {
     const verifyEmail = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/verify-email/${encodeURIComponent(token)}`
+          `${import.meta.env.VITE_BASE_URL}/api/verify-email/${encodeURIComponent(token)}`
         );
         setMessage(response.data.msg);
       } catch (error) {

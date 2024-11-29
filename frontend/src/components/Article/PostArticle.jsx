@@ -6,7 +6,6 @@ import {
   CssBaseline,
   TextField,
   Button,
-  Grid,
   Typography,
   Box,
   Alert,
@@ -14,6 +13,7 @@ import {
   Input,
   FormHelperText,
 } from "@mui/material";
+import Grid from "@mui/material/Grid2"
 import Breadcrumb from "../Breadcrumb/Breadcrumb";
 import getBlogTheme from "../Article/theme/getBlogTheme";
 import ReactQuill from "react-quill";
@@ -79,7 +79,7 @@ const PostArticle = () => {
         throw new Error("User belum login, token tidak ada");
       }
       const response = await axios.post(
-        "http://localhost:3000/postarticle",
+       `${import.meta.env.VITE_BASE_URL}/api/postarticle`,
         formData,
         {
           headers: {

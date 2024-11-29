@@ -66,7 +66,7 @@ const ArticleEdit = () => {
       setLoading(true); // Set loading to true when fetching
       try {
         const response = await axios.get(
-          `http://localhost:3000/articleslist/${id}`,
+          `${import.meta.env.VITE_BASE_URL}/api/articleslist/${id}`,
           { withCredentials: true }
         );
         setArticle(response.data.data);
@@ -121,7 +121,7 @@ const ArticleEdit = () => {
 
     try {
       const response = await axios.put(
-        `http://localhost:3000/articleslist/${id}/`,
+        `${import.meta.env.VITE_BASE_URL}/api/articleslist/${id}/`,
         formData,
         {
           headers: {

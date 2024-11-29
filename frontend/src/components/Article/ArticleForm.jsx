@@ -104,7 +104,7 @@ const ArticleForm = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/articles/articlesform",
+        `${import.meta.env.VITE_BASE_URL}/api/articles/articlesform`,
         formData,
         {
           withCredentials: true,
