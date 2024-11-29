@@ -1,10 +1,15 @@
 import { Sequelize } from "sequelize";
 
-const db = new Sequelize("makarya", "root", "", {
-  host: "localhost",
-  dialect: "mysql",
-  port: "3307",
-  timezone: "+07:00",
-});
+const db = new Sequelize(
+  process.env.DB_DATABASE || "makarya",
+  process.env.DB_USERNAME || "root",
+  process.env.DB_PASSWORD || "",
+  {
+    host: process.env.DB_HOST || "localhost",
+    dialect: process.env.DB_CONNECTION || "mysql",
+    port: process.env.DB_PORT || "3307",
+    timezone: "+07:00",
+  }
+);
 
 export default db;
