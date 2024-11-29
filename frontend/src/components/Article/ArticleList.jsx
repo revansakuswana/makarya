@@ -54,7 +54,7 @@ const ArticleList = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          "http://localhost:3000/user/articles",
+          "${import.meta.env.VITE_BASE_URL}/user/articles",
           { withCredentials: true }
         );
         if (response.data && response.data.data) {
@@ -121,7 +121,7 @@ const ArticleList = () => {
     if (articleIdToDelete) {
       try {
         await axios.delete(
-          `http://localhost:3000/articles/${articleIdToDelete}`,
+          `${import.meta.env.VITE_BASE_URL}/articles/${articleIdToDelete}`,
           { withCredentials: true }
         );
         setAlertMessage("Artikel berhasil dihapus");
@@ -267,7 +267,7 @@ const ArticleList = () => {
                           padding: 1,
                         }}>
                         <img
-                          src={`http://localhost:3000/public/images/${article.image}`}
+                          src={`${import.meta.env.VITE_BASE_URL}/public/images/${article.image}`}
                           alt="image cover"
                           style={{
                             width: 200,

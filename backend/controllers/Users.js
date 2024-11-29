@@ -145,7 +145,7 @@ export const SignUp = async (req, res) => {
       },
     });
 
-    const verificationUrl = `http://localhost:5173/verify-email/${encodeURIComponent(
+    const verificationUrl = `${process.env.APP_BASE_URL}/${encodeURIComponent(
       verificationToken
     )}`;
     const mailOptions = {
@@ -249,7 +249,7 @@ export const sendVerificationEmail = async (req, res) => {
       },
     });
 
-    const verificationUrl = `http://localhost:5173/verify-email/${encodeURIComponent(
+    const verificationUrl = `${process.env.APP_BASE_URL}/verify-email/${encodeURIComponent(
       verificationToken
     )}`;
     const mailOptions = {
@@ -476,7 +476,7 @@ export const forgotPassword = async (req, res) => {
       },
     });
 
-    const resetUrl = `http://localhost:5173/reset-password/${encodeURIComponent(
+    const resetUrl = `${process.env.APP_BASE_URL}/reset-password/${encodeURIComponent(
       token
     )}`;
 

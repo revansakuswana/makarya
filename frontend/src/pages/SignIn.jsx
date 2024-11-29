@@ -65,7 +65,7 @@ export default function SignIn() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/users/signin",
+        `${import.meta.env.VITE_BASE_URL}/users/signin`,
         { email, password },
         { withCredentials: true }
       );

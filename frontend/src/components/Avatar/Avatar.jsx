@@ -39,13 +39,13 @@ export default function AvatarIcon({ handleLogout }) {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/profile`, {
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/profile`, {
           withCredentials: true,
         });
         setUsers(response.data.data);
         setPreviewImage(
           response.data.data.image
-            ? `http://localhost:3000/public/images/${response.data.data.image}`
+            ? `${import.meta.env.VITE_BASE_URL}/public/images/${response.data.data.image}`
             : defaultImage
         );
       } catch (err) {
@@ -77,7 +77,7 @@ export default function AvatarIcon({ handleLogout }) {
             <Avatar
               src={
                 previewImage ||
-                `http://localhost:3000/public/images/${users.image}`
+                `${import.meta.env.VITE_BASE_URL}/public/images/${users.image}`
               }
               alt="Profile Picture"
               sx={{ width: 32, height: 32 }}

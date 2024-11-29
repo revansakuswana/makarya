@@ -67,13 +67,13 @@ const Profile = () => {
     const fetchUsers = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`http://localhost:3000/profile`, {
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/profile`, {
           withCredentials: true,
         });
         setUsers(response.data.data);
         setPreviewImage(
           response.data.data.image
-            ? `http://localhost:3000/public/images/${response.data.data.image}`
+            ? `${import.meta.env.VITE_BASE_URL}/public/images/${response.data.data.image}`
             : defaultImage
         );
       } catch (err) {
@@ -111,7 +111,7 @@ const Profile = () => {
 
     try {
       const response = await axios.put(
-        `http://localhost:3000/profile/`,
+        `${import.meta.env.VITE_BASE_URL}/profile/`,
         formData,
         {
           withCredentials: true,
@@ -133,7 +133,7 @@ const Profile = () => {
 
           setPreviewImage(
             updatedUser.image
-              ? `http://localhost:3000/public/images/${updatedUser.image}`
+              ? `${import.meta.env.VITE_BASE_URL}/public/images/${updatedUser.image}`
               : defaultImage
           );
         }
@@ -191,7 +191,7 @@ const Profile = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.delete("http://localhost:3000/users/logout", {
+      await axios.delete(`${import.meta.env.VITE_BASE_URL}/users/logout`, {
         withCredentials: true,
       });
       navigate("/users/signin");
@@ -202,7 +202,7 @@ const Profile = () => {
 
   const handleDeleteAccount = async () => {
     try {
-      const response = await axios.delete(`http://localhost:3000/profile/`, {
+      const response = await axios.delete(`${import.meta.env.VITE_BASE_URL}/profile/`, {
         withCredentials: true,
       });
       setAlertSeverity("success");
@@ -237,7 +237,7 @@ const Profile = () => {
   const handleVerify = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3000/verify-email", {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/verify-email`, {
         email: users.email,
       });
       if (response.status === 200) {
