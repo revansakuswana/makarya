@@ -84,7 +84,7 @@ const Home = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("http://localhost:3000/jobs");
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/jobs`);
         let fetchedData = Array.isArray(response.data) ? response.data : [];
 
         fetchedData.sort(
