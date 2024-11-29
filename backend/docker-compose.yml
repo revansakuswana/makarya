@@ -1,0 +1,14 @@
+services:
+  # API
+  tools_api:
+    container_name: tools_api
+    image: tools-api:latest
+    restart: always
+    volumes:
+      - ./public:/app/public
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    environment:
+      # Application
+      - APP_PORT=${APP_PORT}
+      - APP_BASE_URL=${APP_BASE_URL}
