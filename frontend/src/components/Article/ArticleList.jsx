@@ -54,7 +54,7 @@ const ArticleList = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          "${import.meta.env.VITE_BASE_URL}/api/user/articles",
+          `${import.meta.env.VITE_BASE_URL}/api/user/articles`,
           { withCredentials: true }
         );
         if (response.data && response.data.data) {
@@ -268,7 +268,7 @@ const ArticleList = () => {
                         <img
                           src={`${
                             import.meta.env.VITE_BASE_URL
-                          }/api/public/images/${article.image}`}
+                          }/public/images/${article.image}`}
                           alt="image cover"
                           style={{
                             width: 200,

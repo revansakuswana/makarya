@@ -126,7 +126,7 @@ export default function MainContent() {
     const fetchArticles = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("http://localhost:3000/allarticles");
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/allarticles`);
         setArticles(response.data.data);
       } catch (err) {
         setAlertMessage("Terjadi kesalahan saat mengambil data");
@@ -141,7 +141,7 @@ export default function MainContent() {
     const fetchCategories = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("http://localhost:3000/allarticles");
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/allarticles`);
         setCategories(response.data.data);
       } catch (err) {
         setAlertMessage("Terjadi kesalahan saat mengambil data");
@@ -168,12 +168,12 @@ export default function MainContent() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/profile`, {
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/profile`, {
           withCredentials: true,
         });
         setUsers(response.data.data);
         response.data.data.image
-          ? `http://localhost:3000/public/images/${response.data.data.image}`
+          ? `${import.meta.env.VITE_BASE_URL}/api/public/images/${response.data.data.image}`
           : defaultImage;
       } catch (err) {
         err?.response?.data?.msg;
@@ -351,7 +351,7 @@ export default function MainContent() {
                 <CardMedia
                   component="img"
                   height="140"
-                  image={`http://localhost:3000/public/images/${articles.image}`}
+                  image={`${import.meta.env.VITE_BASE_URL}/public/images/${articles.image}`}
                   alt="image cover"
                 />
                 <SyledCardContent>
@@ -387,7 +387,7 @@ export default function MainContent() {
                       }}>
                       <Avatar
                         key={index}
-                        src={`http://localhost:3000/public/images/${users.image}`}
+                        src={`${import.meta.env.VITE_BASE_URL}/public/images/${users.image}`}
                         sx={{ width: 24, height: 24 }}
                       />
                       <Typography variant="caption">{articles.name}</Typography>

@@ -141,7 +141,7 @@ const ArticleItem = () => {
         });
         setUsers(response.data.data);
         response.data.data.image
-          ? `${import.meta.env.VITE_BASE_URL}/api/public/images/${response.data.data.image}`
+          ? `${import.meta.env.VITE_BASE_URL}/public/images/${response.data.data.image}`
           : defaultImage;
       } catch (err) {
         err?.response?.data?.msg;
@@ -193,7 +193,7 @@ const ArticleItem = () => {
               <CardMedia
                 component="img"
                 height="auto"
-                src={`${import.meta.env.VITE_BASE_URL}/api/public/images/${article.image}`}
+                src={`${import.meta.env.VITE_BASE_URL}/public/images/${article.image}`}
                 alt="Article Cover"
               />
 
@@ -229,7 +229,7 @@ const ArticleItem = () => {
                         alignItems: "center",
                       }}>
                       <Avatar
-                        src={`${import.meta.env.VITE_BASE_URL}/api/public/images/${users.image}`}
+                        src={`${import.meta.env.VITE_BASE_URL}/public/images/${users.image}`}
                         sx={{
                           width: { xs: 30, md: 30 },
                           height: { xs: 30, md: 30 },

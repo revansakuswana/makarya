@@ -48,7 +48,7 @@ export default function AvatarIcon({ handleLogout }) {
         setUsers(response.data.data);
         setPreviewImage(
           response.data.data.image
-            ? `${import.meta.env.VITE_BASE_URL}/api/public/images/${
+            ? `${import.meta.env.VITE_BASE_URL}/public/images/${
                 response.data.data.image
               }`
             : defaultImage
@@ -82,7 +82,7 @@ export default function AvatarIcon({ handleLogout }) {
             <Avatar
               src={
                 previewImage ||
-                `${import.meta.env.VITE_BASE_URL}/api/public/images/${
+                `${import.meta.env.VITE_BASE_URL}/public/images/${
                   users.image
                 }`
               }

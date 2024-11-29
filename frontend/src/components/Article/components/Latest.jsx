@@ -113,7 +113,7 @@ export default function Latest() {
     const fetchArticles = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`http://localhost:3000/allarticles`); // Replace with your API URL
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/allarticles`); // Replace with your API URL
         const sortedArticles = response.data.data.sort(
           (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
         );
@@ -142,12 +142,12 @@ export default function Latest() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/profile`, {
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/profile`, {
           withCredentials: true,
         });
         setUsers(response.data.data);
         response.data.data.image
-          ? `http://localhost:3000/public/images/${response.data.data.image}`
+          ? `${import.meta.env.VITE_BASE_URL}/api/public/images/${response.data.data.image}`
           : defaultImage;
       } catch (err) {
         err?.response?.data?.msg;
@@ -245,7 +245,7 @@ export default function Latest() {
                       }}>
                       <Avatar
                         key={index}
-                        src={`http://localhost:3000/public/images/${users.image}`}
+                        src={`${import.meta.env.VITE_BASE_URL}/public/images/${users.image}`}
                         sx={{ width: 24, height: 24 }}
                       />
                       <Typography variant="caption">{article.name}</Typography>
