@@ -37,7 +37,7 @@ export default async function runAllScraping() {
 
 cron.schedule("*/5 * * * *", async () => {
     console.log("Memulai scraping terjadwal...");
-    await runAllScraping();  // Pastikan hanya dijalankan di sini
+    await runAllScraping();  
   });
   console.log("Cron jobs telah dijadwalkan.");
 

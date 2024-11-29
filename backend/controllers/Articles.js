@@ -201,20 +201,18 @@ export const getUserArticles = async (req, res) => {
     const articles = await Articles.findAll({
       where: { name },
     });
-    console.log("Articles found:", articles);
 
     if (articles.length === 0) {
       return res.status(404).json({
-        message: `No articles found for user: ${name}`,
+        msg: `No articles found for user: ${name}`,
       });
     }
 
     res.status(200).json({
-      message: `Articles retrieved successfully for user: ${name}`,
+      msg: `Articles retrieved successfully for user: ${name}`,
       data: articles,
     });
   } catch (error) {
-    console.error("Error fetching articles by user:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ msg: `Error fetching articles by user: ${name}` });
   }
 };

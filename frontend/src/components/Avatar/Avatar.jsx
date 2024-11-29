@@ -9,7 +9,7 @@ import {
   Menu,
 } from "@mui/material";
 import {
-  BookmarkIcon,
+  // BookmarkIcon,
   NewspaperIcon,
   ArrowLeftStartOnRectangleIcon,
 } from "@heroicons/react/24/outline";
@@ -133,7 +133,7 @@ export default function AvatarIcon({ handleLogout }) {
           Profile
         </MenuItem>
 
-        <MenuItem
+        {/* <MenuItem
           onClick={handleClose}
           component="a"
           href="/savedjobs"
@@ -142,7 +142,7 @@ export default function AvatarIcon({ handleLogout }) {
             <BookmarkIcon className="h-5 w-5" />
           </ListItemIcon>
           Saved Jobs
-        </MenuItem>
+        </MenuItem> */}
 
         <MenuItem
           onClick={handleClose}

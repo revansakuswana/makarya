@@ -57,20 +57,27 @@ const ArticleList = () => {
           "http://localhost:3000/user/articles",
           { withCredentials: true }
         );
-        console.log("Response:", response); // Tambahkan log respons
-        setArticles(response.data.data);
+        if (response.data && response.data.data) {
+          setArticles(response.data.data);
+        } else {
+          throw new Error("Data format is invalid or missing");
+        }
       } catch (err) {
-        console.error("Error fetching articles:", err); // Tambahkan log error
-        setAlertMessage("Terjadi kesalahan saat mengambil data");
+        if (err.response && err.response.status === 404) {
+          setAlertMessage(err.response?.data?.msg)
+        } else {
+          setAlertMessage("Terjadi kesalahan saat mengambil data.");
+        }
         setAlertSeverity("error");
         setAlertOpen(true);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchArticles();
   }, []);
+  
 
   const getExcerpt = (content, maxLength = 150) => {
     const htmlContent = marked(content);

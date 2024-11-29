@@ -12,7 +12,6 @@ import { fileURLToPath } from "url";
 // import Jobs from "../backend/models/JobsModel.js";
 // import UserSavedJobs from "../backend/models/UserSavedJobs.js";
 
-
 dotenv.config();
 
 const app = express();
