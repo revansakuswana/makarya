@@ -54,7 +54,7 @@ const ArticleList = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          "${import.meta.env.VITE_BASE_URL}/user/articles",
+          "${import.meta.env.VITE_BASE_URL}/api/user/articles",
           { withCredentials: true }
         );
         if (response.data && response.data.data) {
@@ -64,7 +64,7 @@ const ArticleList = () => {
         }
       } catch (err) {
         if (err.response && err.response.status === 404) {
-          setAlertMessage(err.response?.data?.msg)
+          setAlertMessage(err.response?.data?.msg);
         } else {
           setAlertMessage("Terjadi kesalahan saat mengambil data.");
         }
@@ -74,10 +74,9 @@ const ArticleList = () => {
         setLoading(false);
       }
     };
-  
+
     fetchArticles();
   }, []);
-  
 
   const getExcerpt = (content, maxLength = 150) => {
     const htmlContent = marked(content);
@@ -121,7 +120,7 @@ const ArticleList = () => {
     if (articleIdToDelete) {
       try {
         await axios.delete(
-          `${import.meta.env.VITE_BASE_URL}/articles/${articleIdToDelete}`,
+          `${import.meta.env.VITE_BASE_URL}/api/articles/${articleIdToDelete}`,
           { withCredentials: true }
         );
         setAlertMessage("Artikel berhasil dihapus");
@@ -267,7 +266,9 @@ const ArticleList = () => {
                           padding: 1,
                         }}>
                         <img
-                          src={`${import.meta.env.VITE_BASE_URL}/public/images/${article.image}`}
+                          src={`${
+                            import.meta.env.VITE_BASE_URL
+                          }/api/public/images/${article.image}`}
                           alt="image cover"
                           style={{
                             width: 200,

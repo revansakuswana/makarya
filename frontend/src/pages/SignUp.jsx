@@ -66,7 +66,7 @@ export default function SignUp() {
     if (validateInputs()) {
       try {
         const response = await axios.post(
-          `${import.meta.env.VITE_BASE_URL}/users/signup`,
+          `${import.meta.env.VITE_BASE_URL}/api/users/signup`,
           {
             name: name,
             email: email,

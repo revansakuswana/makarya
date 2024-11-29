@@ -67,13 +67,18 @@ const Profile = () => {
     const fetchUsers = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/profile`, {
-          withCredentials: true,
-        });
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/api/profile`,
+          {
+            withCredentials: true,
+          }
+        );
         setUsers(response.data.data);
         setPreviewImage(
           response.data.data.image
-            ? `${import.meta.env.VITE_BASE_URL}/public/images/${response.data.data.image}`
+            ? `${import.meta.env.VITE_BASE_URL}/api/public/images/${
+                response.data.data.image
+              }`
             : defaultImage
         );
       } catch (err) {
@@ -111,7 +116,7 @@ const Profile = () => {
 
     try {
       const response = await axios.put(
-        `${import.meta.env.VITE_BASE_URL}/profile/`,
+        `${import.meta.env.VITE_BASE_URL}/api/profile/`,
         formData,
         {
           withCredentials: true,
@@ -133,7 +138,9 @@ const Profile = () => {
 
           setPreviewImage(
             updatedUser.image
-              ? `${import.meta.env.VITE_BASE_URL}/public/images/${updatedUser.image}`
+              ? `${import.meta.env.VITE_BASE_URL}/api/public/images/${
+                  updatedUser.image
+                }`
               : defaultImage
           );
         }
@@ -191,7 +198,7 @@ const Profile = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.delete(`${import.meta.env.VITE_BASE_URL}/users/logout`, {
+      await axios.delete(`${import.meta.env.VITE_BASE_URL}/api/users/logout`, {
         withCredentials: true,
       });
       navigate("/users/signin");
@@ -202,9 +209,12 @@ const Profile = () => {
 
   const handleDeleteAccount = async () => {
     try {
-      const response = await axios.delete(`${import.meta.env.VITE_BASE_URL}/profile/`, {
-        withCredentials: true,
-      });
+      const response = await axios.delete(
+        `${import.meta.env.VITE_BASE_URL}/api/profile/`,
+        {
+          withCredentials: true,
+        }
+      );
       setAlertSeverity("success");
       setAlertMessage(response.data.msg);
       setAlertOpen(true);
@@ -237,9 +247,12 @@ const Profile = () => {
   const handleVerify = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/verify-email`, {
-        email: users.email,
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/verify-email`,
+        {
+          email: users.email,
+        }
+      );
       if (response.status === 200) {
         setAlertSeverity("success");
         setAlertMessage(response?.data?.msg);
