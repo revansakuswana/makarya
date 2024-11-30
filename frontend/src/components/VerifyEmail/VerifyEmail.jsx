@@ -25,15 +25,19 @@ function VerifyEmail() {
     const verifyEmail = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_BASE_URL}/api/verify-email/${encodeURIComponent(token)}`
+          `${
+            import.meta.env.VITE_BASE_URL
+          }/api/verify-email/${encodeURIComponent(
+            token
+          )}?timestamp=${new Date().getTime()}`
         );
         setMessage(response.data.msg);
       } catch (error) {
         setMessage(
-          error.response?.data?.msg || "An unexpected error occurred."
+          error.response?.data?.msg
         );
       } finally {
-        setLoading(false); // Set loading menjadi false setelah respons diterima
+        setLoading(false);
       }
     };
     verifyEmail();
