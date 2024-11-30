@@ -57,7 +57,7 @@ const ArticleList = () => {
           `${import.meta.env.VITE_BASE_URL}/api/user/articles`,
           { withCredentials: true }
         );
-        if (response.data && response.data.data) {
+        if (response.data?.data) {
           setArticles(response.data.data);
         } else {
           throw new Error("Data format is invalid or missing");
@@ -269,7 +269,7 @@ const ArticleList = () => {
                           src={`${
                             import.meta.env.VITE_BASE_URL
                           }/public/images/${article.image}`}
-                          alt="image cover"
+                          alt="img cover"
                           style={{
                             width: 200,
                             height: 60,
