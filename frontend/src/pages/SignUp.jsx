@@ -16,12 +16,12 @@ import {
   FormLabel,
   TextField,
 } from "@mui/material";
-// import { GoogleIcon } from "../components/SignUp/CustomIcons.jsx";
+import { Card as MuiCard } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import MuiCard from "@mui/material/Card";
 import getSignUpTheme from "../components/SignUp/getSignUpTheme.jsx";
 import axios from "axios";
+// import { GoogleIcon } from "../components/SignUp/CustomIcons.jsx";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -39,9 +39,8 @@ const Card = styled(MuiCard)(({ theme }) => ({
 }));
 
 export default function SignUp() {
-  const [mode] = React.useState("light");
-  const SignUpTheme = createTheme(getSignUpTheme(mode));
   const defaultTheme = createTheme();
+  const SignUpTheme = createTheme(getSignUpTheme("light"));
 
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
@@ -186,13 +185,8 @@ export default function SignUp() {
               p: 2,
             }}>
             <Card variant="outlined">
-              <Typography
-                component="h1"
-                variant="h4"
-                sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}>
-                Sign up
-              </Typography>
-              <ThemeProvider theme={defaultTheme}></ThemeProvider>
+            <Typography variant="h2">Sign up</Typography>
+
               <Box
                 component="form"
                 onSubmit={handleSignup}
