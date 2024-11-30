@@ -49,6 +49,7 @@ const Profile = () => {
   const [setError] = useState(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
+  const [initialUserData, setInitialUserData] = useState(null);
   const [users, setUsers] = useState({
     id: "",
     name: "",
@@ -73,7 +74,9 @@ const Profile = () => {
             withCredentials: true,
           }
         );
-        setUsers(response.data.data);
+        const userData = response.data.data;
+        setUsers(userData);
+        setInitialUserData(userData);
         setPreviewImage(
           response.data.data.image
             ? `${import.meta.env.VITE_BASE_URL}/public/images/${
@@ -129,6 +132,9 @@ const Profile = () => {
         setAlertSeverity("success");
         setAlertMessage(response?.data?.msg);
         setAlertOpen(true);
+        const updatedUser = response.data.data;
+        setUsers(updatedUser); 
+        setInitialUserData(updatedUser);
         if (response.data.data.image) {
           const updatedUser = response.data.data;
           setUsers((prev) => ({
@@ -193,6 +199,9 @@ const Profile = () => {
   };
 
   const handleCancel = () => {
+    if (initialUserData) {
+      setUsers(initialUserData);
+    }
     setIsEditing(false);
   };
 
@@ -257,9 +266,6 @@ const Profile = () => {
         setAlertSeverity("success");
         setAlertMessage(response?.data?.msg);
         setAlertOpen(true);
-        setTimeout(() => {
-          setAlertOpen(false);
-        }, 2000);
       }
     } catch (error) {
       const statusCode = error.response?.status;
@@ -270,10 +276,10 @@ const Profile = () => {
         setAlertMessage(error.response?.data?.msg);
       }
       setAlertOpen(true);
-      setTimeout(() => {
-        setAlertOpen(false);
-      }, 2000);
     }
+    setTimeout(() => {
+      setAlertOpen(false);
+    }, 2000);
   };
 
   return (
