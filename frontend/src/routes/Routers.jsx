@@ -34,8 +34,8 @@ const Routers = () => {
       <Route path="/users/signup" element={<SignUp />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password/:token" element={<ResetPassword />} />
-      <Route path="/verify-email/:token" element={<VerifyEmail />} />
+      <Route path="/api/reset-password/:token" element={<ResetPassword />} />
+      <Route path="/api/verify-email/:token" element={<VerifyEmail />} />
       {/* Protected Routes */}
       <Route
         path="/articles/articlesform"
