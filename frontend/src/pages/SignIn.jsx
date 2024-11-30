@@ -15,8 +15,8 @@ import {
   FormLabel,
   Box,
   FormControl,
+  Card as MuiCard,
 } from "@mui/material";
-import { Card as MuiCard } from "@mui/material";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import getSignInTheme from "../components/SignIn/getSignInTheme.jsx";
@@ -69,12 +69,10 @@ export default function SignIn() {
         { email, password },
         { withCredentials: true }
       );
-      if (response.status === 200 && response.data.accessToken) {
+      if (response.status === 200 && response.data) {
         setAlertSeverity("success");
         setAlertMessage(response?.data?.msg);
         setAlertOpen(true);
-        const { accessToken } = response.data;
-        localStorage.setItem("accessToken", accessToken);
         setTimeout(() => {
           navigate(from, { replace: true, state: {} });
         }, 1500);
