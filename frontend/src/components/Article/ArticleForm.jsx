@@ -163,7 +163,7 @@ const ArticleForm = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file && file.type.startsWith("image/")) {
+    if (file?.type?.startsWith("image/")) {
       if (file.size > 5 * 1024 * 1024) {
         setAlertMessage("The image file is too large. Maximum size is 3MB.");
         setAlertSeverity("error");
