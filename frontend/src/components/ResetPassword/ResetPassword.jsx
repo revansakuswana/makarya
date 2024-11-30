@@ -55,10 +55,10 @@ export default function ResetPassword() {
         setAlertMessage(error.response?.data?.msg);
       }
       setAlertOpen(true);
-      setTimeout(() => {
-        setAlertOpen(false);
-      }, 2000);
     }
+    setTimeout(() => {
+      setAlertOpen(false);
+    }, 2000);
   };
 
   const handleCloseAlert = (event, reason) => {
