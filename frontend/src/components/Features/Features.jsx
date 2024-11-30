@@ -69,7 +69,7 @@ function MobileLayout({ selectedItemIndex, handleItemClick, selectedFeature }) {
         {items.map(({ title }, index) => (
           <Chip
             size="medium"
-            key={index}
+            key={title}
             label={title}
             onClick={() => handleItemClick(index)}
             selected={selectedItemIndex === index}
@@ -167,7 +167,7 @@ export default function Features() {
             }}>
             {items.map(({ icon, title, description }, index) => (
               <Box
-                key={index}
+                key={title}
                 component={Button}
                 onClick={() => handleItemClick(index)}
                 sx={[
