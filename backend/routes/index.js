@@ -11,6 +11,7 @@ import {
   resetPassword,
   getJobs,
   getJobsById,
+  getSession,
   // postsavedJobs,
   // deletesavedJobs,
   // getsavedJobs,
@@ -31,11 +32,11 @@ import express from "express";
 
 const router = express.Router();
 
-router.get("/test", getProfile, (req, res) => {
-  // Mengakses data pengguna yang sudah disimpan di req.user
-  const user = req.user;
-  res.json({ message: "Data pengguna", user });
-});
+// router.get("/test", getProfile, (req, res) => {
+//   // Mengakses data pengguna yang sudah disimpan di req.user
+//   const user = req.user;
+//   res.json({ message: "Data pengguna", user });
+// });
 
 // Rute untuk profile
 router.get("/profile", verifyToken, getProfile);
@@ -46,6 +47,7 @@ router.delete("/profile", verifyToken, deleteProfile);
 router.post("/users/signup", SignUp);
 router.post("/users/signin", SignIn);
 router.delete("/users/logout", logout);
+router.get("/session", getSession);
 router.post("/verify-email", sendVerificationEmail);
 router.get("/verify-email/:token", verifyEmail);
 router.post("/forgot-password", forgotPassword);
