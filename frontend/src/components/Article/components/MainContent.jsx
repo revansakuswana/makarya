@@ -126,9 +126,7 @@ export default function MainContent() {
     const fetchArticles = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_BASE_URL}/api/allarticles`
-        );
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/allarticles`);
         setArticles(response.data.data);
       } catch (err) {
         setAlertMessage("Terjadi kesalahan saat mengambil data");
@@ -143,9 +141,7 @@ export default function MainContent() {
     const fetchCategories = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_BASE_URL}/api/allarticles`
-        );
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/allarticles`);
         setCategories(response.data.data);
       } catch (err) {
         setAlertMessage("Terjadi kesalahan saat mengambil data");
@@ -169,12 +165,9 @@ export default function MainContent() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_BASE_URL}/api/profile`,
-          {
-            withCredentials: true,
-          }
-        );
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/profile`, {
+          withCredentials: true,
+        });
         setUsers(response.data.data);
       } catch (err) {
         console.error(err?.response?.data?.msg);
@@ -346,15 +339,13 @@ export default function MainContent() {
         </div>
       ) : (
         <Grid container spacing={2} columns={12}>
-          {filteredArticles.map((article) => (
-            <Grid key={article.id} size={{ xs: 12, sm: 6, md: 4 }}>
+          {filteredArticles.map((articles, index) => (
+            <Grid key={index} size={{ xs: 12, sm: 6, md: 4 }}>
               <SyledCard tabIndex={0}>
                 <CardMedia
                   component="img"
                   height="140"
-                  image={`${import.meta.env.VITE_BASE_URL}/public/images/${
-                    articles.image
-                  }`}
+                  image={`${import.meta.env.VITE_BASE_URL}/public/images/${articles.image}`}
                   alt="image cover"
                 />
                 <SyledCardContent>
@@ -389,10 +380,8 @@ export default function MainContent() {
                         alignItems: "center",
                       }}>
                       <Avatar
-                        key={article.id}
-                        src={`${import.meta.env.VITE_BASE_URL}/public/images/${
-                          users.image
-                        }`}
+                        key={index}
+                        src={`${import.meta.env.VITE_BASE_URL}/public/images/${users.image}`}
                         sx={{ width: 24, height: 24 }}
                       />
                       <Typography variant="caption">{articles.name}</Typography>
