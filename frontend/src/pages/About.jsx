@@ -17,7 +17,6 @@ const About = () => {
   const blogTheme = createTheme(getBlogTheme(mode));
 
   return (
-    <>
       <ThemeProvider theme={blogTheme}>
         <Container
           maxWidth="lg"
@@ -117,7 +116,6 @@ const About = () => {
           </Box>
         </Container>
       </ThemeProvider>
-    </>
   );
 };
 
