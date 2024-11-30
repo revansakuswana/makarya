@@ -1,10 +1,10 @@
 import express from "express";
-import db from "../backend/config/database.js";
+// import db from "../backend/config/database.js";
 import router from "../backend/routes/index.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
-import articleRoutes from "./routes/index.js";
+// import articleRoutes from "./routes/index.js";
 import path from "path";
 import { fileURLToPath } from "url";
 // import { scheduleJobs } from "../backend/cron/jobs.js";
@@ -41,7 +41,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 // app.use('/uploads', express.static('uploads'));
 app.use("/public", express.static(path.join(__dirname, "public")));
-app.use("/articles", articleRoutes);
+// app.use("/articles", articleRoutes);
 app.use(cookieParser());
 app.use(express.json());
 app.use(
