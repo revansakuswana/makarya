@@ -44,9 +44,7 @@ export default function ForgotPassword() {
     } catch (error) {
       const statusCode = error.response?.status;
       setAlertSeverity("error");
-      if (statusCode === 500) {
-        setAlertMessage(error.response?.data?.msg);
-      } else if (statusCode === 404) {
+      if (statusCode === 500 || statusCode === 404) {
         setAlertMessage(error.response?.data?.msg);
       }
       setAlertOpen(true);
