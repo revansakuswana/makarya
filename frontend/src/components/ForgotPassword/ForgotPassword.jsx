@@ -31,7 +31,7 @@ export default function ForgotPassword() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:3000/forgot-password",
+        `${import.meta.env.VITE_BASE_URL}/api/forgot-password`,
         {
           email,
         }
@@ -40,9 +40,6 @@ export default function ForgotPassword() {
         setAlertSeverity("success");
         setAlertMessage(response?.data?.msg);
         setAlertOpen(true);
-        setTimeout(() => {
-          setAlertOpen(false);
-        }, 2000);
       }
     } catch (error) {
       const statusCode = error.response?.status;
@@ -53,10 +50,10 @@ export default function ForgotPassword() {
         setAlertMessage(error.response?.data?.msg);
       }
       setAlertOpen(true);
-      setTimeout(() => {
-        setAlertOpen(false);
-      }, 2000);
     }
+    setTimeout(() => {
+      setAlertOpen(false);
+    }, 2000);
   };
 
   const handleCloseAlert = (event, reason) => {
