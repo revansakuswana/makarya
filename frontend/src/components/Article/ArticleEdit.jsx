@@ -232,7 +232,7 @@ const ArticleEdit = () => {
                     <Typography mb={1}>Current Image:</Typography>
                     <img
                       src={`http://localhost:3000/public/images/${article.image}`}
-                      alt="Current image cover"
+                      alt="Current img cover"
                       style={{
                         width: 200,
                         height: "auto",
