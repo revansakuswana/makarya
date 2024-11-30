@@ -16,8 +16,8 @@ import {
   FormControl,
   FormLabel,
   TextField,
+  Card as MuiCard,
 } from "@mui/material";
-import { Card as MuiCard } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import getSignUpTheme from "../components/SignUp/getSignUpTheme.jsx";
@@ -167,7 +167,6 @@ export default function SignUp() {
   };
 
   return (
-    <>
       <ThemeProvider theme={SignUpTheme}>
         <CssBaseline />
         <Container
@@ -314,6 +313,5 @@ export default function SignUp() {
           </ThemeProvider>
         </Container>
       </ThemeProvider>
-    </>
   );
 }
