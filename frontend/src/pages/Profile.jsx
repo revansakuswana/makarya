@@ -270,9 +270,7 @@ const Profile = () => {
     } catch (error) {
       const statusCode = error.response?.status;
       setAlertSeverity("error");
-      if (statusCode === 500) {
-        setAlertMessage(error.response?.data?.msg);
-      } else if (statusCode === 404) {
+      if (statusCode === 500 || statusCode === 404) {
         setAlertMessage(error.response?.data?.msg);
       }
       setAlertOpen(true);
@@ -283,7 +281,6 @@ const Profile = () => {
   };
 
   return (
-    <>
       <ThemeProvider theme={blogTheme}>
         <CssBaseline enableColorScheme />
         <Container
@@ -370,7 +367,7 @@ const Profile = () => {
                         variant="body1">
                         {users.email}
                       </Typography>
-                      {(users.isVerified === 1 || users.isVerified === "1") && (
+                      {(users.isVerified == 1 || users.isVerified == "1") && (
                         <CheckBadgeIcon
                           style={{
                             height: 20,
@@ -382,7 +379,7 @@ const Profile = () => {
                       )}
                     </Grid>
 
-                    {!(users.isVerified === 1 || users.isVerified === "1") && (
+                    {!(users.isVerified == 1 || users.isVerified == "1") && (
                       <Grid sx={{ display: "flex" }}>
                         <ExclamationCircleIcon
                           style={{
@@ -633,7 +630,6 @@ const Profile = () => {
           </Snackbar>
         </ThemeProvider>
       </ThemeProvider>
-    </>
   );
 };
 
