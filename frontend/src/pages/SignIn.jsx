@@ -19,9 +19,9 @@ import {
 import { Card as MuiCard } from "@mui/material";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-// import { GoogleIcon } from "../components/SignIn/CustomIcons.jsx";
 import getSignInTheme from "../components/SignIn/getSignInTheme.jsx";
 import axios from "axios";
+// import { GoogleIcon } from "../components/SignIn/CustomIcons.jsx";
 // import ResetPassword from "../components/ResetPassword/ResetPassword.jsx";
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -166,14 +166,10 @@ export default function SignIn() {
         <Stack sx={{ justifyContent: "center", height: "90dvh", p: 2 }}>
           <Card variant="outlined">
             <Typography variant="h2">Sign in</Typography>
-            <ThemeProvider theme={defaultTheme}>
-              <Stack sx={{ width: "100%" }} spacing={2}></Stack>
-            </ThemeProvider>
 
             <Box
               component="form"
               onSubmit={handleSignin}
-              noValidate
               sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
               <FormControl>
                 <FormLabel htmlFor="email">Email</FormLabel>
