@@ -34,8 +34,7 @@ export default function Footer() {
   const blogTheme = createTheme(getBlogTheme(mode));
 
   return (
-    <React.Fragment>
-      <ThemeProvider theme={blogTheme}>
+    <ThemeProvider theme={blogTheme}>
         <Divider />
         <Container
           sx={{
@@ -61,7 +60,7 @@ export default function Footer() {
                 minWidth: { xs: "100%", sm: "60%" },
               }}>
               <Box sx={{ width: { xs: "100%", sm: "60%" } }}>
-                <img src={logo}></img>
+                <img src={logo} alt="Makarya logo"></img>
                 <Typography
                   variant="body2"
                   gutterBottom
@@ -213,6 +212,5 @@ export default function Footer() {
           </Box>
         </Container>
       </ThemeProvider>
-    </React.Fragment>
   );
 }
