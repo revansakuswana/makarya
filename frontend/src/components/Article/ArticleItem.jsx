@@ -130,9 +130,6 @@ const ArticleItem = () => {
     image: "",
   });
 
-  const defaultImage =
-    "https://img.freepik.com/free-vector/user-circles-set_78370-4704.jpg?t=st=1729519206~exp=1729522806~hmac=a5904ebe3507f7c9b87354d2ba19241b1c6cb9077818d95299677a2ed083ca74&w=1060";
-
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -140,11 +137,8 @@ const ArticleItem = () => {
           withCredentials: true,
         });
         setUsers(response.data.data);
-        response.data.data.image
-          ? `${import.meta.env.VITE_BASE_URL}/public/images/${response.data.data.image}`
-          : defaultImage;
       } catch (err) {
-        err?.response?.data?.msg;
+        console.error(err?.response?.data?.msg);
       }
     };
 
