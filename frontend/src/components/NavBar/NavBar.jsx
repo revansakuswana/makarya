@@ -51,17 +51,10 @@ export default function NavBar() {
 
   const getSessionLogin = async () => {
     try {
-      const cookies = document.cookie;
-      let jwt;
-      const jwtToken = cookies.split("jwt=");
-      if (jwtToken.length === 2) {
-        jwt = jwtToken[1].split(";")[0];
-      }
-
-      if (!jwt) {
-        setIsLoggedIn(false);
-        return;
-      } else setIsLoggedIn(true);
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/session`, {
+        withCredentials: true,
+      });
+      setIsLoggedIn(response.data.isLoggedIn);
     } catch (error) {
       console.error("Error validating session", error);
       setIsLoggedIn(false);
@@ -168,9 +161,7 @@ export default function NavBar() {
                     Sign in
                   </Button>
                 ) : (
-                  <>
-                    <AvatarIcon handleLogout={handleLogout} />
-                  </>
+                  <AvatarIcon handleLogout={handleLogout} />
                 )}
               </Box>
             </Box>
@@ -248,9 +239,7 @@ export default function NavBar() {
                         Sign in
                       </Button>
                     ) : (
-                      <>
-                        <AvatarIcon handleLogout={handleLogout} />
-                      </>
+                      <AvatarIcon handleLogout={handleLogout} />
                     )}
                   </MenuItem>
                 </Box>
