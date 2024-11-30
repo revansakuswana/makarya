@@ -49,9 +49,7 @@ export default function ResetPassword() {
     } catch (error) {
       const statusCode = error.response?.status;
       setAlertSeverity("error");
-      if (statusCode === 500) {
-        setAlertMessage(error.response?.data?.msg);
-      } else if (statusCode === 400) {
+      if (statusCode === 500 || statusCode === 400) {
         setAlertMessage(error.response?.data?.msg);
       }
       setAlertOpen(true);
