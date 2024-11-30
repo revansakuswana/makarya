@@ -1,6 +1,7 @@
 import * as React from "react";
 import {
   createTheme,
+  CssBaseline,
   ThemeProvider,
   Container,
   Button,
@@ -168,6 +169,7 @@ export default function SignUp() {
   return (
     <>
       <ThemeProvider theme={SignUpTheme}>
+        <CssBaseline />
         <Container
           maxWidth="lg"
           component="main"
@@ -185,7 +187,7 @@ export default function SignUp() {
               p: 2,
             }}>
             <Card variant="outlined">
-            <Typography variant="h2">Sign up</Typography>
+              <Typography variant="h2">Sign up</Typography>
 
               <Box
                 component="form"
