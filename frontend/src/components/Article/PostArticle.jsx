@@ -128,7 +128,7 @@ const PostArticle = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file && file.type.startsWith("image/")) {
+    if (file?.type?.startsWith("image/")) {
       setImage(file);
       setImageName(file.name);
     } else {
