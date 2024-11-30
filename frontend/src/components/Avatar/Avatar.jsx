@@ -54,7 +54,7 @@ export default function AvatarIcon({ handleLogout }) {
             : defaultImage
         );
       } catch (err) {
-        err?.response?.data?.msg;
+        console.error(err?.response?.data?.msg);
       }
     };
 
