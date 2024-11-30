@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import db from "../config/database.js";
 import upload from "../middleware/multerConfig.js";
 import Jobs from "../models/JobsModel.js";
-import SavedJobs from "../models/JobsModel.js";
+// import SavedJobs from "../models/JobsModel.js";
 import nodemailer from "nodemailer";
 import { Op } from "sequelize";
 
@@ -50,7 +50,7 @@ export const updateProfile = async (req, res) => {
       return res.status(500).json({ error: err.message });
     }
 
-    const { userId } = req.user; 
+    const { userId } = req.user;
     try {
       const existingUser = await Users.findOne({ where: { id: userId } });
       if (!existingUser) {
@@ -145,9 +145,9 @@ export const SignUp = async (req, res) => {
       },
     });
 
-    const verificationUrl = `${process.env.APP_BASE_URL}/${encodeURIComponent(
-      verificationToken
-    )}`;
+    const verificationUrl = `${
+      process.env.APP_BASE_URL
+    }/api/verify-email/${encodeURIComponent(verificationToken)}`;
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
@@ -249,9 +249,9 @@ export const sendVerificationEmail = async (req, res) => {
       },
     });
 
-    const verificationUrl = `${process.env.APP_BASE_URL}/verify-email/${encodeURIComponent(
-      verificationToken
-    )}`;
+    const verificationUrl = `${
+      process.env.APP_BASE_URL
+    }/api/verify-email/${encodeURIComponent(verificationToken)}`;
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
@@ -335,13 +335,14 @@ export const verifyEmail = async (req, res) => {
 
     user.isVerified = true;
     await user.save();
+
+    res.setHeader("Cache-Control", "no-store");
     res.status(200).json({ msg: "Email berhasil diverifikasi" });
 
     user.verificationToken = null;
     user.verificationExpires = null;
     await user.save();
   } catch (error) {
-    console.error(error);
     res.status(500).json({ msg: "Pengguna sudah melakukan verifikasi" });
   }
 };
@@ -476,9 +477,9 @@ export const forgotPassword = async (req, res) => {
       },
     });
 
-    const resetUrl = `${process.env.APP_BASE_URL}/reset-password/${encodeURIComponent(
-      token
-    )}`;
+    const resetUrl = `${
+      process.env.APP_BASE_URL
+    }/api/reset-password/${encodeURIComponent(token)}`;
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
@@ -627,125 +628,125 @@ export const getJobsById = async (req, res) => {
   }
 };
 
-export const postsavedJobs = async (req, res) => {
-  const jobsId = req.params.id;
-  const jwt_token = req.cookies.jwt;
-  if (!jwt_token) return res.sendStatus(403);
+// export const postsavedJobs = async (req, res) => {
+//   const jobsId = req.params.id;
+//   const jwt_token = req.cookies.jwt;
+//   if (!jwt_token) return res.sendStatus(403);
 
-  try {
-    const decode = jwt.decode(jwt_token);
-    const { userId } = decode;
+//   try {
+//     const decode = jwt.decode(jwt_token);
+//     const { userId } = decode;
 
-    const jobs = await Jobs.findByPk(jobsId);
-    if (!jobs) {
-      return res.status(404).json({ message: "Job not found" });
-    }
+//     const jobs = await Jobs.findByPk(jobsId);
+//     if (!jobs) {
+//       return res.status(404).json({ message: "Job not found" });
+//     }
 
-    const alreadySaved = await SavedJobs.findOne({
-      where: {
-        job_id: jobs.id,
-        user_id: userId,
-      },
-    });
+//     const alreadySaved = await SavedJobs.findOne({
+//       where: {
+//         job_id: jobs.id,
+//         user_id: userId,
+//       },
+//     });
 
-    if (alreadySaved) {
-      return res.status(400).json({ message: "Job already saved" });
-    }
+//     if (alreadySaved) {
+//       return res.status(400).json({ message: "Job already saved" });
+//     }
 
-    await SavedJobs.create({
-      id: jobs.id,
-      job_title: jobs.job_title,
-      company: jobs.company,
-      location: jobs.location,
-      work_type: jobs.work_type,
-      working_type: jobs.working_type,
-      experience: jobs.experience,
-      study_requirement: jobs.study_requirement,
-      salary: jobs.salary,
-      link: jobs.link,
-      link_img: jobs.link_img,
-      skills: jobs.skills,
-      updatedAt: jobs.updatedAt,
-    });
+//     await SavedJobs.create({
+//       id: jobs.id,
+//       job_title: jobs.job_title,
+//       company: jobs.company,
+//       location: jobs.location,
+//       work_type: jobs.work_type,
+//       working_type: jobs.working_type,
+//       experience: jobs.experience,
+//       study_requirement: jobs.study_requirement,
+//       salary: jobs.salary,
+//       link: jobs.link,
+//       link_img: jobs.link_img,
+//       skills: jobs.skills,
+//       updatedAt: jobs.updatedAt,
+//     });
 
-    res.status(200).json({ message: "Job saved successfully" });
-  } catch (error) {
-    console.error("Error saving job:", error);
-    res.status(500).json({ error: error.message });
-  }
-};
+//     res.status(200).json({ message: "Job saved successfully" });
+//   } catch (error) {
+//     console.error("Error saving job:", error);
+//     res.status(500).json({ error: error.message });
+//   }
+// };
 
-export const deletesavedJobs = async (req, res) => {
-  const jwt_token = req.cookies.jwt;
-  if (!jwt_token) return res.status(403).json({ msg: "Token is required" });
+// export const deletesavedJobs = async (req, res) => {
+//   const jwt_token = req.cookies.jwt;
+//   if (!jwt_token) return res.status(403).json({ msg: "Token is required" });
 
-  let userId;
-  try {
-    const decode = jwt.decode(jwt_token);
-    userId = decode.userId;
-  } catch (error) {
-    return res.status(403).json({ msg: "Invalid or expired token" });
-  }
+//   let userId;
+//   try {
+//     const decode = jwt.decode(jwt_token);
+//     userId = decode.userId;
+//   } catch (error) {
+//     return res.status(403).json({ msg: "Invalid or expired token" });
+//   }
 
-  const { jobId } = req.params;
-  if (!jobId) return res.status(400).json({ msg: "Job ID is required" });
+//   const { jobId } = req.params;
+//   if (!jobId) return res.status(400).json({ msg: "Job ID is required" });
 
-  try {
-    db.query(
-      "DELETE FROM saved_jobs WHERE user_id = ? AND job_id = ?",
-      [userId, jobId],
-      (err) => {
-        if (err) {
-          console.error("Error deleting job:", err);
-          return res.status(500).json({ msg: "Error deleting job" });
-        }
-        res.status(200).json({ msg: "Job deleted from saved jobs!" });
-      }
-    );
-  } catch (error) {
-    console.error("Error executing query:", error);
-    res.status(500).json({ msg: "Internal server error" });
-  }
-};
+//   try {
+//     db.query(
+//       "DELETE FROM saved_jobs WHERE user_id = ? AND job_id = ?",
+//       [userId, jobId],
+//       (err) => {
+//         if (err) {
+//           console.error("Error deleting job:", err);
+//           return res.status(500).json({ msg: "Error deleting job" });
+//         }
+//         res.status(200).json({ msg: "Job deleted from saved jobs!" });
+//       }
+//     );
+//   } catch (error) {
+//     console.error("Error executing query:", error);
+//     res.status(500).json({ msg: "Internal server error" });
+//   }
+// };
 
-export const getsavedJobs = async (req, res) => {
-  const jwt_token = req.cookies.jwt;
-  if (!jwt_token) return res.status(403).json({ msg: "Token is required" });
+// export const getsavedJobs = async (req, res) => {
+//   const jwt_token = req.cookies.jwt;
+//   if (!jwt_token) return res.status(403).json({ msg: "Token is required" });
 
-  let userId;
-  try {
-    const decode = jwt.decode(jwt_token);
-    userId = decode.userId;
-  } catch (error) {
-    return res.status(403).json({ msg: "Invalid or expired token" });
-  }
+//   let userId;
+//   try {
+//     const decode = jwt.decode(jwt_token);
+//     userId = decode.userId;
+//   } catch (error) {
+//     return res.status(403).json({ msg: "Invalid or expired token" });
+//   }
 
-  try {
-    db.query(
-      `SELECT jobs.id, jobs.job_title, jobs.company, jobs.location, jobs.salary, jobs.link
-       FROM saved_jobs 
-       JOIN jobs ON saved_jobs.job_id = jobs.id 
-       WHERE saved_jobs.user_id = ?`,
-      [userId],
-      (err, results) => {
-        if (err) {
-          return res
-            .status(500)
-            .json({ msg: "Error fetching saved jobs", error: err.message });
-        }
-        if (results.length === 0) {
-          return res
-            .status(404)
-            .json({ msg: "No saved jobs found for this user" });
-        }
-        res
-          .status(200)
-          .json({ msg: "Saved Jobs retrieved successfully", data: results });
-      }
-    );
-  } catch (error) {
-    res
-      .status(500)
-      .json({ msg: "Internal server error", error: error.message });
-  }
-};
+//   try {
+//     db.query(
+//       `SELECT jobs.id, jobs.job_title, jobs.company, jobs.location, jobs.salary, jobs.link
+//        FROM saved_jobs 
+//        JOIN jobs ON saved_jobs.job_id = jobs.id 
+//        WHERE saved_jobs.user_id = ?`,
+//       [userId],
+//       (err, results) => {
+//         if (err) {
+//           return res
+//             .status(500)
+//             .json({ msg: "Error fetching saved jobs", error: err.message });
+//         }
+//         if (results.length === 0) {
+//           return res
+//             .status(404)
+//             .json({ msg: "No saved jobs found for this user" });
+//         }
+//         res
+//           .status(200)
+//           .json({ msg: "Saved Jobs retrieved successfully", data: results });
+//       }
+//     );
+//   } catch (error) {
+//     res
+//       .status(500)
+//       .json({ msg: "Internal server error", error: error.message });
+//   }
+// };
