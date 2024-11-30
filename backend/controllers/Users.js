@@ -223,6 +223,92 @@ export const SignUp = async (req, res) => {
   }
 };
 
+export const SignIn = async (req, res) => {
+  try {
+    const user = await Users.findOne({
+      where: {
+        email: req.body.email,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        msg: "Email tidak ditemukan. Periksa alamat email Anda.",
+      });
+    }
+
+    const match = await bcrypt.compare(req.body.password, user.password);
+    if (!match) {
+      return res
+        .status(400)
+        .json({ msg: "Kata sandi salah. Silakan coba lagi" });
+    }
+
+    const userId = user.id;
+    const name = user.name;
+    const email = user.email;
+
+    const accessToken = jwt.sign(
+      { userId, name, email },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "1d" }
+    );
+    res.cookie("jwt", accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "Strict",
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+    const refreshToken = jwt.sign(
+      { userId, name, email },
+      process.env.REFRESH_TOKEN_SECRET,
+      {
+        expiresIn: "1d",
+      }
+    );
+
+    await Users.update(
+      { refresh_token: refreshToken },
+      {
+        where: {
+          id: userId,
+        },
+      }
+    );
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "Strict",
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
+    res.json({
+      msg: "Sign In berhasil, Selamat Datang kembali!",
+      accessToken,
+    });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ msg: "Terjadi kesalahan saat login, Silakan coba lagi nanti" });
+  }
+};
+
+export const getSession = async (req, res) => {
+  const token = req.cookies.jwt;
+  if (!token) {
+    return res.status(401).json({ isLoggedIn: false });
+  }
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ isLoggedIn: false });
+    }
+    return res.status(200).json({ isLoggedIn: true, user: decoded });
+  });
+};
+
 export const sendVerificationEmail = async (req, res) => {
   const { email } = req.body;
 
@@ -344,75 +430,6 @@ export const verifyEmail = async (req, res) => {
     await user.save();
   } catch (error) {
     res.status(500).json({ msg: "Pengguna sudah melakukan verifikasi" });
-  }
-};
-
-export const SignIn = async (req, res) => {
-  try {
-    const user = await Users.findOne({
-      where: {
-        email: req.body.email,
-      },
-    });
-
-    if (!user) {
-      return res.status(404).json({
-        msg: "Email tidak ditemukan. Periksa alamat email Anda.",
-      });
-    }
-
-    const match = await bcrypt.compare(req.body.password, user.password);
-    if (!match) {
-      return res
-        .status(400)
-        .json({ msg: "Kata sandi salah. Silakan coba lagi" });
-    }
-
-    const userId = user.id;
-    const name = user.name;
-    const email = user.email;
-
-    const accessToken = jwt.sign(
-      { userId, name, email },
-      process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "1d" }
-    );
-    res.cookie("jwt", accessToken, {
-      secure: true,
-      sameSite: "Strict",
-      maxAge: 24 * 60 * 60 * 1000,
-    });
-    const refreshToken = jwt.sign(
-      { userId, name, email },
-      process.env.REFRESH_TOKEN_SECRET,
-      {
-        expiresIn: "1d",
-      }
-    );
-
-    await Users.update(
-      { refresh_token: refreshToken },
-      {
-        where: {
-          id: userId,
-        },
-      }
-    );
-
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
-    });
-
-    res.json({
-      msg: "Sign In berhasil, Selamat Datang kembali!",
-      accessToken,
-    });
-  } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .json({ msg: "Terjadi kesalahan saat login, Silakan coba lagi nanti" });
   }
 };
 
@@ -724,8 +741,8 @@ export const getJobsById = async (req, res) => {
 //   try {
 //     db.query(
 //       `SELECT jobs.id, jobs.job_title, jobs.company, jobs.location, jobs.salary, jobs.link
-//        FROM saved_jobs 
-//        JOIN jobs ON saved_jobs.job_id = jobs.id 
+//        FROM saved_jobs
+//        JOIN jobs ON saved_jobs.job_id = jobs.id
 //        WHERE saved_jobs.user_id = ?`,
 //       [userId],
 //       (err, results) => {
