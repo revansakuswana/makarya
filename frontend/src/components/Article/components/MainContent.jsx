@@ -126,7 +126,9 @@ export default function MainContent() {
     const fetchArticles = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/allarticles`);
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/api/allarticles`
+        );
         setArticles(response.data.data);
       } catch (err) {
         setAlertMessage("Terjadi kesalahan saat mengambil data");
@@ -141,7 +143,9 @@ export default function MainContent() {
     const fetchCategories = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/allarticles`);
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/api/allarticles`
+        );
         setCategories(response.data.data);
       } catch (err) {
         setAlertMessage("Terjadi kesalahan saat mengambil data");
@@ -162,21 +166,18 @@ export default function MainContent() {
     image: "",
   });
 
-  const defaultImage =
-    "https://img.freepik.com/free-vector/user-circles-set_78370-4704.jpg?t=st=1729519206~exp=1729522806~hmac=a5904ebe3507f7c9b87354d2ba19241b1c6cb9077818d95299677a2ed083ca74&w=1060";
-
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/profile`, {
-          withCredentials: true,
-        });
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/api/profile`,
+          {
+            withCredentials: true,
+          }
+        );
         setUsers(response.data.data);
-        response.data.data.image
-          ? `${import.meta.env.VITE_BASE_URL}/api/public/images/${response.data.data.image}`
-          : defaultImage;
       } catch (err) {
-        err?.response?.data?.msg;
+        console.error(err?.response?.data?.msg);
       }
     };
 
@@ -345,13 +346,15 @@ export default function MainContent() {
         </div>
       ) : (
         <Grid container spacing={2} columns={12}>
-          {filteredArticles.map((articles, index) => (
-            <Grid key={index} size={{ xs: 12, sm: 6, md: 4 }}>
+          {filteredArticles.map((article) => (
+            <Grid key={article.id} size={{ xs: 12, sm: 6, md: 4 }}>
               <SyledCard tabIndex={0}>
                 <CardMedia
                   component="img"
                   height="140"
-                  image={`${import.meta.env.VITE_BASE_URL}/public/images/${articles.image}`}
+                  image={`${import.meta.env.VITE_BASE_URL}/public/images/${
+                    articles.image
+                  }`}
                   alt="image cover"
                 />
                 <SyledCardContent>
@@ -386,8 +389,10 @@ export default function MainContent() {
                         alignItems: "center",
                       }}>
                       <Avatar
-                        key={index}
-                        src={`${import.meta.env.VITE_BASE_URL}/public/images/${users.image}`}
+                        key={article.id}
+                        src={`${import.meta.env.VITE_BASE_URL}/public/images/${
+                          users.image
+                        }`}
                         sx={{ width: 24, height: 24 }}
                       />
                       <Typography variant="caption">{articles.name}</Typography>
