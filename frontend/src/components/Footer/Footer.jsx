@@ -3,16 +3,16 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
+// import IconButton from "@mui/material/IconButton";
 import InputLabel from "@mui/material/InputLabel";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import FacebookIcon from "@mui/icons-material/GitHub";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import TwitterIcon from "@mui/icons-material/X";
+// import FacebookIcon from "@mui/icons-material/GitHub";
+// import LinkedInIcon from "@mui/icons-material/LinkedIn";
+// import TwitterIcon from "@mui/icons-material/X";
 import getBlogTheme from "../Article/theme/getBlogTheme";
 import logo from "../../assets/images/logo header.svg";
 
@@ -180,7 +180,7 @@ export default function Footer() {
               </Link>
               <Copyright />
             </div>
-            <Stack
+            {/* <Stack
               direction="row"
               spacing={1}
               useFlexGap
@@ -209,7 +209,7 @@ export default function Footer() {
                 sx={{ alignSelf: "center" }}>
                 <LinkedInIcon />
               </IconButton>
-            </Stack>
+            </Stack> */}
           </Box>
         </Container>
       </ThemeProvider>
