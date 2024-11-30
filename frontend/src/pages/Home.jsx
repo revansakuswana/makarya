@@ -126,7 +126,6 @@ const Home = () => {
   };
 
   return (
-    <>
       <ThemeProvider theme={blogTheme}>
         <CssBaseline enableColorScheme />
         <Container
@@ -617,7 +616,6 @@ const Home = () => {
           </Box>
         </Container>
       </ThemeProvider>
-    </>
   );
 };
 
