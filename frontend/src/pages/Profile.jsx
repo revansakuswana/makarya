@@ -133,7 +133,7 @@ const Profile = () => {
         setAlertMessage(response?.data?.msg);
         setAlertOpen(true);
         const updatedUser = response.data.data;
-        setUsers(updatedUser); 
+        setUsers(updatedUser);
         setInitialUserData(updatedUser);
         if (response.data.data.image) {
           const updatedUser = response.data.data;
@@ -200,10 +200,17 @@ const Profile = () => {
 
   const handleCancel = () => {
     if (initialUserData) {
-      setUsers(initialUserData);
+      setUsers(initialUserData); // Mengembalikan data pengguna ke nilai awal
+      setPreviewImage(
+        initialUserData.image
+          ? `${import.meta.env.VITE_BASE_URL}/public/images/${initialUserData.image}`
+          : defaultImage // Mengembalikan preview ke gambar awal atau default
+      );
     }
+    setImage(null); // Menghapus file gambar yang dipilih
     setIsEditing(false);
   };
+  
 
   const handleLogout = async () => {
     try {
@@ -281,355 +288,356 @@ const Profile = () => {
   };
 
   return (
-      <ThemeProvider theme={blogTheme}>
-        <CssBaseline enableColorScheme />
-        <Container
-          maxWidth="lg"
-          component="main"
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            my: { xs: 16, md: 23 },
-            gap: 4,
-            justifyContent: "space-between",
-          }}>
-          {loading ? (
-            <div className="flex justify-center items-center h-full my-72">
-              <Loaders size={70} />
-            </div>
-          ) : (
+    <ThemeProvider theme={blogTheme}>
+      <CssBaseline enableColorScheme />
+      <Container
+        maxWidth="lg"
+        component="main"
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          my: { xs: 16, md: 23 },
+          gap: 4,
+          justifyContent: "space-between",
+        }}>
+        {loading ? (
+          <div className="flex justify-center items-center h-full my-72">
+            <Loaders size={70} />
+          </div>
+        ) : (
+          <Grid
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", md: "row" },
+              justifyContent: "space-between",
+              gap: 4,
+            }}>
             <Grid
               sx={{
                 display: "flex",
-                flexDirection: { xs: "column", md: "row" },
-                justifyContent: "space-between",
-                gap: 4,
+                flexDirection: "column",
+                alignItems: "left",
+                justifyContent: "left",
+                gap: 2,
+                width: { xs: "100%", md: 400 },
               }}>
               <Grid
                 sx={{
                   display: "flex",
                   flexDirection: "column",
-                  alignItems: "left",
-                  justifyContent: "left",
+                  alignItems: "center",
+                  justifyContent: "center",
                   gap: 2,
-                  width: { xs: "100%", md: 400 },
+                }}>
+                <label htmlFor="avatar-upload">
+                  <Avatar
+                    src={previewImage || defaultImage}
+                    alt="Profile Picture"
+                    sx={{
+                      width: 180,
+                      height: 180,
+                      cursor: isEditing ? "pointer" : "default",
+                    }}
+                  />
+                </label>
+                <input
+                  id="avatar-upload"
+                  type="file"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  onChange={handleImageChange}
+                  disabled={!isEditing} // Disable saat tidak dalam mode edit
+                />
+                <Typography variant="h5" fontWeight="bold">
+                  {users.name}
+                </Typography>
+              </Grid>
+
+              <Grid
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "left",
+                  gap: 2.2,
                 }}>
                 <Grid
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 2,
-                  }}>
-                  <label htmlFor="avatar-upload">
-                    <Avatar
-                      src={previewImage || defaultImage}
-                      alt="Profile Picture"
-                      sx={{ width: 180, height: 180, cursor: "pointer" }}
+                  container
+                  spacing={1}
+                  sx={{ display: "flex", justifyContent: "space-between" }}>
+                  <Grid sx={{ display: "flex", gap: 1 }}>
+                    <EnvelopeIcon
+                      style={{
+                        height: 24,
+                        width: 24,
+                      }}
                     />
-                  </label>
-                  <input
-                    id="avatar-upload"
-                    type="file"
-                    accept="image/*"
-                    style={{ display: "none" }}
-                    onChange={handleImageChange}
-                  />
-                  <Typography variant="h5" fontWeight="bold">
-                    {users.name}
-                  </Typography>
-                </Grid>
-
-                <Grid
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "left",
-                    gap: 2.2,
-                  }}>
-                  <Grid
-                    container
-                    spacing={1}
-                    sx={{ display: "flex", justifyContent: "space-between" }}>
-                    <Grid sx={{ display: "flex", gap: 1 }}>
-                      <EnvelopeIcon
+                    <Typography
+                      sx={{
+                        fontWeight: "medium",
+                        fontSize: { xs: 13, md: 15 },
+                      }}
+                      variant="body1">
+                      {users.email}
+                    </Typography>
+                    {(users.isVerified == 1 || users.isVerified == "1") && (
+                      <CheckBadgeIcon
                         style={{
-                          height: 24,
-                          width: 24,
+                          height: 20,
+                          width: 20,
+                          alignSelf: "center",
+                          color: "#016FDD",
                         }}
                       />
-                      <Typography
-                        sx={{
-                          fontWeight: "medium",
-                          fontSize: { xs: 13, md: 15 },
-                        }}
-                        variant="body1">
-                        {users.email}
-                      </Typography>
-                      {(users.isVerified == 1 || users.isVerified == "1") && (
-                        <CheckBadgeIcon
-                          style={{
-                            height: 20,
-                            width: 20,
-                            alignSelf: "center",
-                            color: "#016FDD",
-                          }}
-                        />
-                      )}
-                    </Grid>
-
-                    {!(users.isVerified == 1 || users.isVerified == "1") && (
-                      <Grid sx={{ display: "flex" }}>
-                        <ExclamationCircleIcon
-                          style={{
-                            height: 20,
-                            width: 20,
-                            alignSelf: "center",
-                            marginRight: 4,
-                            color: "#e50000",
-                          }}
-                        />
-                        <Link onClick={handleVerify}>Verifikasi email</Link>
-                      </Grid>
                     )}
                   </Grid>
 
-                  <Grid container spacing={1} alignItems="left">
-                    <Grid>
-                      <MapPinIcon
+                  {!(users.isVerified == 1 || users.isVerified == "1") && (
+                    <Grid sx={{ display: "flex" }}>
+                      <ExclamationCircleIcon
                         style={{
-                          height: 24,
-                          width: 24,
+                          height: 20,
+                          width: 20,
+                          alignSelf: "center",
+                          marginRight: 4,
+                          color: "#e50000",
                         }}
                       />
+                      <Link onClick={handleVerify}>Verifikasi email</Link>
                     </Grid>
-                    <Grid>
-                      <Typography
-                        sx={{
-                          fontWeight: "medium",
-                          fontSize: { xs: 13, md: 15 },
-                        }}
-                        variant="body1">
-                        {users.location}
-                      </Typography>
-                    </Grid>
-                  </Grid>
+                  )}
                 </Grid>
 
-                {/* Tombol Edit, Logout, dan Hapus Akun */}
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "left",
-                    gap: 2,
-                  }}>
-                  <Button
-                    sx={{ fontWeight: "bold", fontSize: { xs: 13, md: 15 } }}
-                    variant="contained"
-                    color="secondary"
-                    size="small"
-                    onClick={handleLogout}>
-                    <ArrowRightStartOnRectangleIcon
+                <Grid container spacing={1} alignItems="left">
+                  <Grid>
+                    <MapPinIcon
                       style={{
-                        height: 20,
-                        width: 20,
+                        height: 24,
+                        width: 24,
                       }}
-                      className="mr-2"
                     />
-                    Logout
-                  </Button>
-
-                  <Button
-                    sx={{ fontWeight: "bold", fontSize: { xs: 13, md: 15 } }}
-                    variant="contained"
-                    color="error"
-                    size="small"
-                    onClick={handleOpenDeleteDialog}>
-                    <TrashIcon
-                      style={{
-                        height: 20,
-                        width: 20,
+                  </Grid>
+                  <Grid>
+                    <Typography
+                      sx={{
+                        fontWeight: "medium",
+                        fontSize: { xs: 13, md: 15 },
                       }}
-                      className="mr-2"
-                    />
-                    Delete Account
-                  </Button>
-                </Box>
+                      variant="body1">
+                      {users.location}
+                    </Typography>
+                  </Grid>
+                </Grid>
               </Grid>
 
-              {/* Form Edit */}
+              {/* Tombol Edit, Logout, dan Hapus Akun */}
               <Box
-                component="form"
                 sx={{
-                  width: { xs: "100%", md: 800 },
+                  display: "flex",
+                  justifyContent: "left",
+                  gap: 2,
                 }}>
-                {isEditing ? (
-                  <>
-                    <TextField
-                      fullWidth
-                      margin="normal"
-                      label="Name"
-                      name="name"
-                      value={users.name}
-                      onChange={handleInputChange}
-                    />
-                    <TextField
-                      fullWidth
-                      margin="normal"
-                      label="Location"
-                      name="location"
-                      value={users.location}
-                      onChange={handleInputChange}
-                    />
-                    <TextField
-                      fullWidth
-                      margin="normal"
-                      label="Education"
-                      name="education"
-                      value={users.education}
-                      onChange={handleInputChange}
-                    />
-                    <TextField
-                      fullWidth
-                      margin="normal"
-                      label="Skills"
-                      name="skills"
-                      multiline
-                      value={users.skills}
-                      onChange={handleInputChange}
-                    />
-                    <TextField
-                      fullWidth
-                      margin="normal"
-                      label="Email"
-                      name="email"
-                      value={users.email}
-                      onChange={handleInputChange}
-                    />
+                <Button
+                  sx={{ fontWeight: "bold", fontSize: { xs: 13, md: 15 } }}
+                  variant="contained"
+                  color="secondary"
+                  size="small"
+                  onClick={handleLogout}>
+                  <ArrowRightStartOnRectangleIcon
+                    style={{
+                      height: 20,
+                      width: 20,
+                    }}
+                    className="mr-2"
+                  />
+                  Logout
+                </Button>
 
-                    {/* Tombol Simpan dan Batal */}
-                    <Box
-                      sx={{
-                        display: "flex",
-                        gap: 2,
-                        mt: 1.8,
-                      }}>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        size="small"
-                        onClick={handleSubmit}>
-                        Save
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="error"
-                        size="small"
-                        onClick={handleCancel}>
-                        Cancel
-                      </Button>
-                    </Box>
-                  </>
-                ) : (
-                  <>
-                    <Grid
-                      sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        gap: 2.2,
-                      }}>
-                      <Grid xs={12} sm={6}>
-                        <Typography variant="h6" fontWeight="bold">
-                          Name
-                        </Typography>
-                        <Typography variant="body1">{users.name}</Typography>
-                      </Grid>
-                      <Grid xs={12} sm={6}>
-                        <Typography variant="h6" fontWeight="bold">
-                          Location
-                        </Typography>
-                        <Typography variant="body1">
-                          {users.location}
-                        </Typography>
-                      </Grid>
-                      <Grid xs={12} sm={6}>
-                        <Typography variant="h6" fontWeight="bold">
-                          Education
-                        </Typography>
-                        <Typography variant="body1">
-                          {users.education}
-                        </Typography>
-                      </Grid>
-                      <Grid xs={12} sm={6}>
-                        <Typography variant="h6" fontWeight="bold">
-                          Skills
-                        </Typography>
-                        <Typography variant="body1">{users.skills}</Typography>
-                      </Grid>
-                      <Grid xs={12} sm={6}>
-                        <Typography variant="h6" fontWeight="bold">
-                          Email
-                        </Typography>
-                        <Typography variant="body1">{users.email}</Typography>
-                      </Grid>
-                    </Grid>
+                <Button
+                  sx={{ fontWeight: "bold", fontSize: { xs: 13, md: 15 } }}
+                  variant="contained"
+                  color="error"
+                  size="small"
+                  onClick={handleOpenDeleteDialog}>
+                  <TrashIcon
+                    style={{
+                      height: 20,
+                      width: 20,
+                    }}
+                    className="mr-2"
+                  />
+                  Delete Account
+                </Button>
+              </Box>
+            </Grid>
+
+            {/* Form Edit */}
+            <Box
+              component="form"
+              sx={{
+                width: { xs: "100%", md: 800 },
+              }}>
+              {isEditing ? (
+                <>
+                  <TextField
+                    fullWidth
+                    margin="normal"
+                    label="Name"
+                    name="name"
+                    value={users.name}
+                    onChange={handleInputChange}
+                  />
+                  <TextField
+                    fullWidth
+                    margin="normal"
+                    label="Location"
+                    name="location"
+                    value={users.location}
+                    onChange={handleInputChange}
+                  />
+                  <TextField
+                    fullWidth
+                    margin="normal"
+                    label="Education"
+                    name="education"
+                    value={users.education}
+                    onChange={handleInputChange}
+                  />
+                  <TextField
+                    fullWidth
+                    margin="normal"
+                    label="Skills"
+                    name="skills"
+                    multiline
+                    value={users.skills}
+                    onChange={handleInputChange}
+                  />
+                  <TextField
+                    fullWidth
+                    margin="normal"
+                    label="Email"
+                    name="email"
+                    value={users.email}
+                    onChange={handleInputChange}
+                  />
+
+                  {/* Tombol Simpan dan Batal */}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      gap: 2,
+                      mt: 1.8,
+                    }}>
                     <Button
-                      sx={{
-                        marginTop: 1.8,
-                      }}
                       variant="contained"
                       color="secondary"
                       size="small"
-                      onClick={handleEditToggle}>
-                      Edit
+                      onClick={handleSubmit}>
+                      Save
                     </Button>
-                  </>
-                )}
-              </Box>
-            </Grid>
-          )}
-        </Container>
-
-        <Dialog open={deleteConfirmOpen} onClose={handleCloseDeleteDialog}>
-          <Grid sx={{ textAlign: "center" }}>
-            <DialogTitle variant="h4">Konfirmasi</DialogTitle>
-            <DialogContent>
-              <Typography>
-                Apakah anda yakin ingin menghapus akun anda?
-              </Typography>
-            </DialogContent>
+                    <Button
+                      variant="contained"
+                      color="error"
+                      size="small"
+                      onClick={handleCancel}>
+                      Cancel
+                    </Button>
+                  </Box>
+                </>
+              ) : (
+                <>
+                  <Grid
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      gap: 2.2,
+                    }}>
+                    <Grid xs={12} sm={6}>
+                      <Typography variant="h6" fontWeight="bold">
+                        Name
+                      </Typography>
+                      <Typography variant="body1">{users.name}</Typography>
+                    </Grid>
+                    <Grid xs={12} sm={6}>
+                      <Typography variant="h6" fontWeight="bold">
+                        Location
+                      </Typography>
+                      <Typography variant="body1">{users.location}</Typography>
+                    </Grid>
+                    <Grid xs={12} sm={6}>
+                      <Typography variant="h6" fontWeight="bold">
+                        Education
+                      </Typography>
+                      <Typography variant="body1">{users.education}</Typography>
+                    </Grid>
+                    <Grid xs={12} sm={6}>
+                      <Typography variant="h6" fontWeight="bold">
+                        Skills
+                      </Typography>
+                      <Typography variant="body1">{users.skills}</Typography>
+                    </Grid>
+                    <Grid xs={12} sm={6}>
+                      <Typography variant="h6" fontWeight="bold">
+                        Email
+                      </Typography>
+                      <Typography variant="body1">{users.email}</Typography>
+                    </Grid>
+                  </Grid>
+                  <Button
+                    sx={{
+                      marginTop: 1.8,
+                    }}
+                    variant="contained"
+                    color="secondary"
+                    size="small"
+                    onClick={handleEditToggle}>
+                    Edit
+                  </Button>
+                </>
+              )}
+            </Box>
           </Grid>
-          <DialogActions>
-            <Button
-              onClick={handleCloseDeleteDialog}
-              variant="contained"
-              size="small"
-              color="secondary">
-              Cancel
-            </Button>
-            <Button
-              onClick={handleDeleteAccount}
-              variant="contained"
-              size="small"
-              color="error">
-              Delete
-            </Button>
-          </DialogActions>
-        </Dialog>
+        )}
+      </Container>
 
-        <ThemeProvider theme={defaultTheme}>
-          <Snackbar
-            open={alertOpen}
-            autoHideDuration={6000}
-            onClose={handleCloseAlert}>
-            <Alert onClose={handleCloseAlert} severity={alertSeverity}>
-              {alertMessage}
-            </Alert>
-          </Snackbar>
-        </ThemeProvider>
+      <Dialog open={deleteConfirmOpen} onClose={handleCloseDeleteDialog}>
+        <Grid sx={{ textAlign: "center" }}>
+          <DialogTitle variant="h4">Konfirmasi</DialogTitle>
+          <DialogContent>
+            <Typography>
+              Apakah anda yakin ingin menghapus akun anda?
+            </Typography>
+          </DialogContent>
+        </Grid>
+        <DialogActions>
+          <Button
+            onClick={handleCloseDeleteDialog}
+            variant="contained"
+            size="small"
+            color="secondary">
+            Cancel
+          </Button>
+          <Button
+            onClick={handleDeleteAccount}
+            variant="contained"
+            size="small"
+            color="error">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <ThemeProvider theme={defaultTheme}>
+        <Snackbar
+          open={alertOpen}
+          autoHideDuration={6000}
+          onClose={handleCloseAlert}>
+          <Alert onClose={handleCloseAlert} severity={alertSeverity}>
+            {alertMessage}
+          </Alert>
+        </Snackbar>
       </ThemeProvider>
+    </ThemeProvider>
   );
 };
 
