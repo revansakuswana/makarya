@@ -25,7 +25,7 @@ import {
   updateArticle,
 } from "../controllers/Articles.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
-import { assignJobToUser } from "../controllers/jobAssignment.js";
+// import { assignJobToUser } from "../controllers/jobAssignment.js";
 import { refreshToken } from "../controllers/RefreshToken.js";
 import express from "express";
 
@@ -52,7 +52,7 @@ router.post("/forgot-password", forgotPassword);
 router.post("/reset-password/:token", resetPassword);
 
 // Rute untuk saved jobs
-router.post("/assign-job", verifyToken, assignJobToUser);
+// router.post("/assign-job", verifyToken, assignJobToUser);
 // router.post("/savedjobs", postsavedJobs);
 // router.delete("/savedjobs", deletesavedJobs);
 // router.get("/savedjobs", getsavedJobs);
