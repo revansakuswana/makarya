@@ -1,7 +1,6 @@
 import puppeteer from "puppeteer";
 import axios from "axios";
 import * as cheerio from "cheerio";
-import * as fs from "fs";
 import mysql from "mysql2/promise";
 
 async function createConnection() {
@@ -209,8 +208,4 @@ export default async function scrapeKalibrr(numPagesToScrape = 2) {
 
   await connection.end();
   await browser.close();
-
-  const jsonFileName = "kalibrr-data.json";
-  fs.writeFileSync(jsonFileName, JSON.stringify(jobData, null, 2), "utf-8");
-  console.log(`Job details saved to '${jsonFileName}'`);
 }

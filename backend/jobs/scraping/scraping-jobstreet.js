@@ -1,5 +1,4 @@
 import puppeteer from "puppeteer";
-import fs from "fs";
 import mysql from "mysql2/promise";
 
 // Membuat koneksi ke database MySQL
@@ -71,7 +70,7 @@ async function fetchJobData(page, url) {
 
   console.log("Fetching job links...");
   const jobCards = await page.$$eval(
-    "div._1ungv2r0._1viagsn4v._1viagsn51",
+    "div._1tghpaf0._1bnjhlp4z._1bnjhlp4x",
     (cards) => {
       return cards.map((card) => {
         const anchorTag = card.querySelector("a");
@@ -192,22 +191,13 @@ export default async function scrapeJobstreet() {
   await browser.close();
 
   if (job_data.length > 0) {
-    // Simpan data ke file JSON
-    fs.writeFileSync(
-      "jobstreet-data.json",
-      JSON.stringify(job_data, null, 2),
-      "utf-8"
-    );
-    console.log("Data has been scraped and saved to jobstreet-data.json");
-
+    console.log("Data has been scraped successfully.");
     // Masukkan data ke database
     for (const job of job_data) {
       await insertJobData(connection, job);
     }
-
     // Tutup koneksi setelah selesai
     await connection.end();
-
     console.log("Data has been inserted into the database.");
   } else {
     console.log("No job data found to save.");

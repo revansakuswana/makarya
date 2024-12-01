@@ -1,7 +1,7 @@
 import cron from "node-cron";
-import scrapeGlints from "../cron/scraping/scraping-glints.js";
-import scrapeJobstreet from "../cron/scraping/scraping-jobstreet.js";
-import scrapeKalibrr from "../cron/scraping/scraping-kalibrr.js";
+import scrapeGlints from "./scraping/scraping-glints.js";
+import scrapeJobstreet from "./scraping/scraping-jobstreet.js";
+import scrapeKalibrr from "./scraping/scraping-kalibrr.js";
 
 export default async function runAllScraping() {
     console.log("Memulai scraping...");

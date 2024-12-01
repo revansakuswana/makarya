@@ -1,7 +1,6 @@
 import puppeteer from "puppeteer";
 import axios from "axios";
 import * as cheerio from "cheerio";
-import * as fs from "fs";
 import mysql from "mysql2/promise";
 
 async function createConnection() {
@@ -149,7 +148,7 @@ async function scrapeJobCards(url, cookies) {
 
     const $ = cheerio.load(html);
     const jobCards = $(
-      ".JobCardsc__JobcardContainer-sc-hmqj50-0.iirqVR.CompactOpportunityCardsc__CompactJobCardWrapper-sc-dkg8my-5.hRilQl.compact_job_card"
+      "div.JobCardsc__JobcardContainer-sc-hmqj50-0.iirqVR.CompactOpportunityCardsc__CompactJobCardWrapper-sc-dkg8my-5.hRilQl"
     );
 
     if (!jobCards.length) {
@@ -168,7 +167,7 @@ async function scrapeJobCards(url, cookies) {
         .text();
 
       const company = $(card)
-        .find("a.CompactOpportunityCardsc__CompanyLink-sc-dkg8my-12.gFOSRP")
+        .find("a.CompactOpportunityCardsc__CompanyLink-sc-dkg8my-13.ciWEKu")
         .text();
 
       let work_type = $(card)
@@ -196,9 +195,7 @@ async function scrapeJobCards(url, cookies) {
         : "Tidak ditampilkan";
 
       const location = $(card)
-        .find(
-          "span.CardJobLocation__StyledTruncatedLocation-sc-1by41tq-0.DgFSy"
-        )
+        .find("div.CardJobLocation__LocationWrapper-sc-v7ofa9-0.gdyDBb")
         .text();
 
       const salary =
@@ -242,11 +239,7 @@ async function scrapeJobDetails(link) {
     const html = response.data;
     const $ = cheerio.load(html);
 
-    const category =
-      $("div.TopFoldsc__JobOverViewInfo-sc-1fbktg5-9.iqoKuL")
-        ?.eq(1)
-        ?.text()
-        .trim() || "Tidak ditampilkan";
+    const category = $("div.a")?.text().trim() || "Tidak ditampilkan";
 
     // Scrape study requirement and apply validation
     let study_requirement = $(
@@ -329,16 +322,7 @@ export default async function scrapeGlints() {
   }
   // Tutup koneksi setelah selesai
   await connection.end();
-
   console.log("Scraping and insertion completed.");
-
-  if (jobData.length) {
-    const jsonData = JSON.stringify(jobData, null, 2);
-    fs.writeFileSync("glints-data.json", jsonData, "utf-8");
-    console.log("Data has been scraped and saved to glints-data.json");
-  } else {
-    console.log("No job data found to save.");
-  }
 }
 
 scrapeGlints().catch((error) => console.error(error));
