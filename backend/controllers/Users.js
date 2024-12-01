@@ -620,8 +620,8 @@ export const resetPassword = async (req, res) => {
 
 export const getJobs = async (req, res) => {
   try {
-    const [rows] = await db.query("SELECT * FROM jobs");
-    res.status(200).json(rows);
+    const jobs = await Jobs.findAll();
+    res.status(200).json(jobs);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error fetching jobs data" });
