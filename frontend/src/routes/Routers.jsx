@@ -11,7 +11,6 @@ import ArticleForm from "../components/Article/ArticleForm";
 import ArticleItem from "../components/Article/ArticleItem";
 import ArticleList from "../components/Article/ArticleList";
 import ArticleEdit from "../components/Article/ArticleEdit";
-import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
 import JobsItem from "../components/Jobs/JobsItem";
 import ForgotPassword from "../components/ForgotPassword/ForgotPassword";
 import ResetPassword from "../components/ResetPassword/ResetPassword";
@@ -36,15 +35,7 @@ const Routers = () => {
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/api/reset-password/:token" element={<ResetPassword />} />
       <Route path="/api/verify-email/:token" element={<VerifyEmail />} />
-      {/* Protected Routes */}
-      <Route
-        path="/articles/articlesform"
-        element={
-          <ProtectedRoute>
-            <ArticleForm /> {/* Ini hanya bisa diakses jika login */}
-          </ProtectedRoute>
-        }
-      />
+      <Route path="/articles/articlesform" element={<ArticleForm />} />
     </Routes>
   );
 };
