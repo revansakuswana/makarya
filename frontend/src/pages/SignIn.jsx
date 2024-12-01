@@ -57,7 +57,7 @@ export default function SignIn() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from = location.state?.from?.pathname || "/home";
+  const from = location.state?.redirect || "/home";
 
   const handleSignin = async (e) => {
     e.preventDefault();
