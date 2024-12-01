@@ -23,6 +23,7 @@ import {
 } from "@mui/material";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { marked } from "marked";
+import { useNavigate } from 'react-router-dom';
 import Grid from "@mui/material/Grid2";
 import PropTypes from "prop-types";
 import axios from "axios";
@@ -118,6 +119,9 @@ export default function MainContent() {
   const [alertMessage, setAlertMessage] = useState("");
   const [alertSeverity, setAlertSeverity] = useState("error");
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
   const handleClick = (category) => {
     setSelectedCategory(category);
   };
@@ -126,7 +130,9 @@ export default function MainContent() {
     const fetchArticles = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/allarticles`);
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/api/allarticles`
+        );
         setArticles(response.data.data);
       } catch (err) {
         setAlertMessage("Terjadi kesalahan saat mengambil data");
@@ -141,7 +147,9 @@ export default function MainContent() {
     const fetchCategories = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/allarticles`);
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/api/allarticles`
+        );
         setCategories(response.data.data);
       } catch (err) {
         setAlertMessage("Terjadi kesalahan saat mengambil data");
@@ -165,9 +173,12 @@ export default function MainContent() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/profile`, {
-          withCredentials: true,
-        });
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/api/profile`,
+          {
+            withCredentials: true,
+          }
+        );
         setUsers(response.data.data);
       } catch (err) {
         console.error(err?.response?.data?.msg);
@@ -176,6 +187,33 @@ export default function MainContent() {
 
     fetchUsers();
   }, []);
+
+  useEffect(() => {
+    const getSessionLogin = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/api/session`,
+          {
+            withCredentials: true,
+          }
+        );
+        setIsLoggedIn(response.data.isLoggedIn);
+      } catch (error) {
+        console.error("Error validating session", error);
+        setIsLoggedIn(false);
+      }
+    };
+
+    getSessionLogin();
+  }, []);
+
+  const handleCreateArticleClick = () => {
+    if (isLoggedIn) {
+      navigate("/articles/articlesform");
+    } else {
+      navigate("/users/signin", { state: { redirect: "/articles/articlesform" } });
+    }
+  };
 
   const handleCloseAlert = (event, reason) => {
     if (reason === "clickaway") {
@@ -224,7 +262,7 @@ export default function MainContent() {
           color="secondary"
           variant="contained"
           size="small"
-          href="/articles/articlesform">
+          onClick={handleCreateArticleClick}>
           <PencilSquareIcon
             style={{
               height: 20,
@@ -345,7 +383,9 @@ export default function MainContent() {
                 <CardMedia
                   component="img"
                   height="140"
-                  image={`${import.meta.env.VITE_BASE_URL}/api/public/images/${articles.image}`}
+                  image={`${import.meta.env.VITE_BASE_URL}/public/images/${
+                    articles.image
+                  }`}
                   alt="image cover"
                 />
                 <SyledCardContent>
@@ -381,7 +421,9 @@ export default function MainContent() {
                       }}>
                       <Avatar
                         key={index}
-                        src={`${import.meta.env.VITE_BASE_URL}/api/public/images/${users.image}`}
+                        src={`${import.meta.env.VITE_BASE_URL}/public/images/${
+                          users.image
+                        }`}
                         sx={{ width: 24, height: 24 }}
                       />
                       <Typography variant="caption">{articles.name}</Typography>

@@ -268,7 +268,7 @@ const ArticleList = () => {
                         <img
                           src={`${
                             import.meta.env.VITE_BASE_URL
-                          }/api/public/images/${article.image}`}
+                          }/public/images/${article.image}`}
                           alt="img cover"
                           style={{
                             width: 200,
