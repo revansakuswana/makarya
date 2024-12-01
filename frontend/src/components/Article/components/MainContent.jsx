@@ -345,7 +345,7 @@ export default function MainContent() {
                 <CardMedia
                   component="img"
                   height="140"
-                  image={`${import.meta.env.VITE_BASE_URL}/public/images/${articles.image}`}
+                  image={`${import.meta.env.VITE_BASE_URL}/api/public/images/${articles.image}`}
                   alt="image cover"
                 />
                 <SyledCardContent>
@@ -381,7 +381,7 @@ export default function MainContent() {
                       }}>
                       <Avatar
                         key={index}
-                        src={`${import.meta.env.VITE_BASE_URL}/public/images/${users.image}`}
+                        src={`${import.meta.env.VITE_BASE_URL}/api/public/images/${users.image}`}
                         sx={{ width: 24, height: 24 }}
                       />
                       <Typography variant="caption">{articles.name}</Typography>

@@ -231,7 +231,7 @@ const ArticleEdit = () => {
                   <Grid>
                     <Typography mb={1}>Current Image:</Typography>
                     <img
-                      src={`http://localhost:3000/public/images/${article.image}`}
+                      src={`${import.meta.env.VITE_BASE_URL}/api/public/images/${article.image}`}
                       alt="Current img cover"
                       style={{
                         width: 200,
