@@ -18,6 +18,7 @@ import getBlogTheme from "./theme/getBlogTheme";
 import Breadcrumb from "../Breadcrumb/Breadcrumb";
 import Loaders from "../Loaders/Loaders";
 import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import axios from "axios";
 
 const ArticleEdit = () => {
@@ -34,7 +35,7 @@ const ArticleEdit = () => {
   const [imageName] = useState("");
   const [previewImage, setPreviewImage] = useState(null);
 
-  const [errors, setErrors] = useState({});
+  const [errors] = useState({});
   const [error, setError] = useState(null);
 
   const { id } = useParams();
@@ -145,7 +146,7 @@ const ArticleEdit = () => {
         errors.forEach((error) => {
           formattedErrors[error.field] = error.message;
         });
-        setErrors(formattedErrors);
+        setError(formattedErrors);
       } else {
         setError(err.message); // Set error message for other errors
         setAlertMessage("Gagal memperbarui artikel. Silakan coba lagi.");
@@ -231,7 +232,9 @@ const ArticleEdit = () => {
                   <Grid>
                     <Typography mb={1}>Current Image:</Typography>
                     <img
-                      src={`${import.meta.env.VITE_BASE_URL}/public/images/${article.image}`}
+                      src={`${import.meta.env.VITE_BASE_URL}/public/images/${
+                        article.image
+                      }`}
                       alt="Current img cover"
                       style={{
                         width: 200,
