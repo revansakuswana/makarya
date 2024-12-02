@@ -31,7 +31,7 @@ export default function ForgotPassword() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `https://makarya.my.id/api/forgot-password`,
+        `${import.meta.env.VITE_BASE_URL}/api/forgot-password`,
         {
           email,
         }
