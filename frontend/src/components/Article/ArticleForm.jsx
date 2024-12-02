@@ -15,11 +15,11 @@ import {
 import Grid from "@mui/material/Grid2";
 import Breadcrumb from "../Breadcrumb/Breadcrumb";
 import getBlogTheme from "./theme/getBlogTheme";
-import "quill/dist/quill.snow.css";
 import Loaders from "../Loaders/Loaders";
 import axios from "axios";
 import ReactQuill from "react-quill";
-import { useParams, useNavigate } from "react-router-dom";
+import "react-quill/dist/quill.snow.css";
+import { useNavigate } from "react-router-dom";
 
 const ArticleForm = () => {
   const defaultTheme = createTheme();
@@ -30,18 +30,17 @@ const ArticleForm = () => {
   const [category, setCategory] = useState("");
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
-  const [imageName, setImageName] = useState("");
+  const [imageName] = useState("");
+  const [previewImage, setPreviewImage] = useState(null);
+  const [setError] = useState(null);
   const [errors, setErrors] = useState({});
-
   const [loading, setLoading] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertSeverity, setAlertSeverity] = useState("error");
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
-  const { id } = useParams();
   const navigate = useNavigate();
-
-  const isEdit = Boolean(id);
 
   const quillModules = {
     toolbar: [
@@ -58,20 +57,29 @@ const ArticleForm = () => {
   };
 
   useEffect(() => {
-    if (isEdit) {
-      // Ambil data artikel yang akan diedit
-      const fetchArticle = async () => {
-        try {
-          const response = await axios.get(`/article/${id}`);
-          setTitle(response.data.title);
-          setContent(response.data.content);
-        } catch (error) {
-          console.error("Error fetching article:", error);
-        }
-      };
-      fetchArticle();
-    }
-  }, [id, isEdit]);
+    const handleBeforeUnload = (event) => {
+      if (hasUnsavedChanges) {
+        event.preventDefault();
+        event.returnValue = ""; // Chrome requires returnValue to be set
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [hasUnsavedChanges]);
+
+  const handleInputChange = (setter) => (event) => {
+    setter(event.target.value);
+    setHasUnsavedChanges(true);
+  };
+
+  const handleContentChange = (value) => {
+    setContent(value);
+    setHasUnsavedChanges(true);
+  };
 
   const handleSubmit = async () => {
     let validationErrors = {}; // Tempat menyimpan kesalahan
@@ -124,7 +132,6 @@ const ArticleForm = () => {
         setCategory("");
         setContent("");
         setImage(null);
-        setImageName("");
       }
     } catch (err) {
       if (err.response && err.response.status === 400) {
@@ -133,7 +140,7 @@ const ArticleForm = () => {
         errors.forEach((error) => {
           formattedErrors[error.field] = error.message;
         });
-        setErrors(formattedErrors);
+        setError(formattedErrors);
       } else {
         setAlertMessage("Gagal memposting artikel. Silakan coba lagi.");
       }
@@ -149,7 +156,6 @@ const ArticleForm = () => {
     setCategory("");
     setContent("");
     setImage(null);
-    setImageName("");
     setAlertOpen(false);
     navigate(-1);
   };
@@ -164,14 +170,14 @@ const ArticleForm = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file?.type?.startsWith("image/")) {
-      if (file.size > 5 * 1024 * 1024) {
+      if (file.size > 3 * 1024 * 1024) {
         setAlertMessage("The image file is too large. Maximum size is 3MB.");
         setAlertSeverity("error");
         setAlertOpen(true);
         return;
       }
       setImage(file);
-      setImageName(file.name);
+      setPreviewImage(URL.createObjectURL(file));
     } else {
       setAlertMessage("Please upload a valid image file.");
       setAlertSeverity("error");
@@ -201,10 +207,7 @@ const ArticleForm = () => {
               fullWidth
               label="Title"
               value={title}
-              onChange={(e) => {
-                setTitle(e.target.value);
-                setErrors((prev) => ({ ...prev, title: "" })); // Hapus kesalahan saat mengedit
-              }}
+              onChange={handleInputChange(setTitle)}
               error={!!errors.title}
               helperText={errors.title}
               variant="outlined"
@@ -215,24 +218,36 @@ const ArticleForm = () => {
               fullWidth
               label="Category"
               value={category}
-              onChange={(e) => {
-                setCategory(e.target.value);
-                setErrors((prev) => ({ ...prev, category: "" }));
-              }}
+              onChange={handleInputChange(setCategory)}
               error={!!errors.category}
               helperText={errors.category}
               variant="outlined"
-              sx={{ mb: 3 }}
             />
 
+            {previewImage && (
+              <Grid>
+                <img
+                  src={previewImage}
+                  alt="Preview"
+                  style={{
+                    width: 200,
+                    height: "auto",
+                    objectFit: "cover",
+                    borderRadius: 4,
+                  }}
+                />
+              </Grid>
+            )}
+
             {/* Input Gambar terpisah dengan Button dan Input */}
-            <Grid container spacing={2} alignItems="center" sx={{ mb: 3 }}>
+            <Grid container spacing={2} alignItems="center" sx={{ my: 2 }}>
               <Grid>
                 <Button variant="contained" component="label" color="secondary">
                   Upload Image
                   <Input
                     type="file"
                     onChange={handleImageChange}
+                    error={!!errors.image}
                     sx={{ display: "none" }}
                   />
                 </Button>
@@ -250,10 +265,7 @@ const ArticleForm = () => {
             <Grid mb={3}>
               <ReactQuill
                 value={content}
-                onChange={(value) => {
-                  setContent(value);
-                  setErrors((prev) => ({ ...prev, content: "" })); // Hapus kesalahan saat mengedit
-                }}
+                onChange={handleContentChange}
                 modules={quillModules}
                 theme="snow"
                 style={{ height: "300px", marginBottom: "50px" }}
