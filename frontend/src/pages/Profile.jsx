@@ -79,7 +79,7 @@ const Profile = () => {
         setInitialUserData(userData);
         setPreviewImage(
           response.data.data.image
-            ? `${import.meta.env.VITE_BASE_URL}/api/public/images/${
+            ? `${import.meta.env.VITE_BASE_URL}/public/images/${
                 response.data.data.image
               }`
             : defaultImage
@@ -144,7 +144,7 @@ const Profile = () => {
 
           setPreviewImage(
             updatedUser.image
-              ? `${import.meta.env.VITE_BASE_URL}/api/public/images/${
+              ? `${import.meta.env.VITE_BASE_URL}/public/images/${
                   updatedUser.image
                 }`
               : defaultImage
@@ -203,7 +203,7 @@ const Profile = () => {
       setUsers(initialUserData); // Mengembalikan data pengguna ke nilai awal
       setPreviewImage(
         initialUserData.image
-          ? `${import.meta.env.VITE_BASE_URL}/api/public/images/${initialUserData.image}`
+          ? `${import.meta.env.VITE_BASE_URL}/public/images/${initialUserData.image}`
           : defaultImage // Mengembalikan preview ke gambar awal atau default
       );
     }
