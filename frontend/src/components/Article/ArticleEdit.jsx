@@ -34,6 +34,7 @@ const ArticleEdit = () => {
   const [image, setImage] = useState(null);
   const [imageName] = useState("");
   const [previewImage, setPreviewImage] = useState(null);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
   const [errors] = useState({});
   const [error, setError] = useState(null);
@@ -63,6 +64,31 @@ const ArticleEdit = () => {
   });
 
   useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      if (hasUnsavedChanges) {
+        event.preventDefault();
+        event.returnValue = ""; // Chrome requires returnValue to be set
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [hasUnsavedChanges]);
+
+  const handleInputChange = (setter) => (event) => {
+    setter(event.target.value);
+    setHasUnsavedChanges(true);
+  };
+
+  const handleContentChange = (value) => {
+    setArticle((prevArticle) => ({ ...prevArticle, content: value }));
+    setHasUnsavedChanges(true);
+  };
+
+  useEffect(() => {
     const fetchArticle = async () => {
       setLoading(true); // Set loading to true when fetching
       try {
@@ -81,21 +107,6 @@ const ArticleEdit = () => {
     };
     fetchArticle();
   }, [id]);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setArticle({
-      ...article,
-      [name]: value,
-    });
-  };
-
-  const handleQuillChange = (value) => {
-    setArticle({
-      ...article,
-      content: value,
-    });
-  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -198,7 +209,12 @@ const ArticleEdit = () => {
                   name="title"
                   fullWidth
                   value={article.title}
-                  onChange={handleInputChange}
+                  onChange={handleInputChange((value) =>
+                    setArticle((prevArticle) => ({
+                      ...prevArticle,
+                      title: value,
+                    }))
+                  )}
                   required
                 />
               </Grid>
@@ -206,9 +222,14 @@ const ArticleEdit = () => {
                 <TextField
                   label="Category"
                   name="category"
-                  fullWidth
                   value={article.category}
-                  onChange={handleInputChange}
+                  onChange={handleInputChange((value) =>
+                    setArticle((prevArticle) => ({
+                      ...prevArticle,
+                      category: value,
+                    }))
+                  )}
+                  fullWidth
                   required
                 />
               </Grid>
@@ -278,7 +299,7 @@ const ArticleEdit = () => {
               <Grid mb={3}>
                 <ReactQuill
                   value={article.content}
-                  onChange={handleQuillChange}
+                  onChange={handleContentChange}
                   modules={quillModules}
                   required
                 />
