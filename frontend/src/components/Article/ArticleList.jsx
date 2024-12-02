@@ -343,13 +343,15 @@ const ArticleList = () => {
             <Button
               onClick={handleCloseDialog}
               variant="contained"
-              color="secondary">
+              color="secondary"
+              size="small">
               Batal
             </Button>
             <Button
               onClick={handleDeleteArticle}
               variant="contained"
-              color="error">
+              color="error"
+              size="small">
               Hapus
             </Button>
           </DialogActions>
