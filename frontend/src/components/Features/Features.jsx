@@ -4,35 +4,32 @@ import { Container, Box, Button, Card, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import MuiChip from "@mui/material/Chip";
 import {
-  BookmarkIcon,
-  RectangleGroupIcon,
+  AdjustmentsHorizontalIcon,
+  CogIcon,
   NewspaperIcon,
 } from "@heroicons/react/24/solid";
 
 const items = [
   {
-    icon: <RectangleGroupIcon />,
+    icon: <CogIcon />,
     title: "Integrasi Lowongan Kerja",
     description:
       "Jelajahi ribuan lowongan kerja dari berbagai platform, semuanya dalam satu tempat. Tidak perlu repot berpindah-pindah situs, cukup dengan Makarya, semua informasi lowongan ada dalam genggaman Anda.",
-    imageLight:
-      'url("https://img.freepik.com/free-vector/job-hunt-concept-illustration_114360-326.jpg?t=st=1730431970~exp=1730435570~hmac=bb583f83c87996d2fb7dd864cda63fbf75da2ea0adf9534af73fb110f5343e63&w=1060")',
+    imageLight: 'url("https://i.ibb.co.com/bRYF1PT/12463953-4966428.jpg")',
   },
   {
-    icon: <BookmarkIcon />,
-    title: "Simpan Pekerjaan",
+    icon: <AdjustmentsHorizontalIcon />,
+    title: "Filter Pekerjaan",
     description:
-      "Temukan pekerjaan impian Anda dan simpan dengan mudah. Fitur ini memudahkan Anda mengakses kembali lowongan yang diminati kapan saja, sehingga Anda tidak akan melewatkan kesempatan terbaik.",
-    imageLight:
-      'url("https://img.freepik.com/free-vector/personal-files-concept-illustration_114360-4049.jpg?t=st=1730428900~exp=1730432500~hmac=d3611ca4da309ae8ee83e8fd9070d3b210c48942f08f33c1bbc544f30f245644&w=1060")',
+      "Filter pekerjaan sesuai preferensi anda. Fitur ini memungkinkan pengguna untuk menyaring daftar lowongan kerja berdasarkan kategori, lokasi, atau kriteria lainnya yang relevan, sehingga mempermudah pencarian pekerjaan yang sesuai dengan kebutuhan dan preferensi.",
+    imageLight: 'url("https://i.ibb.co.com/xhYLF3h/5463047-2808304.jpg")',
   },
   {
     icon: <NewspaperIcon />,
     title: "Artikel",
     description:
       "Kami hadir dengan beragam artikel penuh tips dan panduan untuk mendukung perkembangan karir Anda. Temukan inspirasi, panduan, dan pengetahuan yang Anda butuhkan untuk sukses dalam dunia kerja.",
-    imageLight:
-      'url("https://img.freepik.com/free-vector/publish-article-concept-illustration_114360-5042.jpg?t=st=1730431625~exp=1730435225~hmac=28608dbf2ad666e88860ed3554853fecd8d2df4197154f73d5e4eb00c6e05692&w=1060")',
+    imageLight: 'url("https://i.ibb.co.com/KjzStG5/12704403-5002471.jpg")',
   },
 ];
 
