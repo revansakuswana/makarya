@@ -145,7 +145,7 @@ export const SignUp = async (req, res) => {
       },
     });
 
-    const verificationUrl = `https://makarya.my.id/api/verify-email/${encodeURIComponent(verificationToken)}`;
+    const verificationUrl = `https://makarya.my.id/verify-email/${encodeURIComponent(verificationToken)}`;
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
@@ -333,7 +333,7 @@ export const sendVerificationEmail = async (req, res) => {
       },
     });
 
-    const verificationUrl = `https://makarya.my.id/api/verify-email/${encodeURIComponent(verificationToken)}`;
+    const verificationUrl = `https://makarya.my.id/verify-email/${encodeURIComponent(verificationToken)}`;
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
@@ -490,7 +490,7 @@ export const forgotPassword = async (req, res) => {
       },
     });
 
-    const resetUrl = `https://makarya.my.id/api/reset-password/${encodeURIComponent(token)}`;
+    const resetUrl = `https://makarya.my.id/reset-password/${encodeURIComponent(token)}`;
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
