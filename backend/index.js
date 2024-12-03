@@ -40,7 +40,7 @@ app.use(
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 // app.use('/uploads', express.static('uploads'));
-app.use("/public", express.static(path.join(__dirname, "public")));
+app.use('/public/images', express.static(path.join(__dirname, 'public/images')));
 // app.use("/articles", articleRoutes);
 app.use(cookieParser());
 app.use(express.json());
