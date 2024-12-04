@@ -128,9 +128,9 @@ const Profile = () => {
           },
         }
       );
-      if (response.status === 200 || response.data.success) {
+      if (response.status === 200) {
         setAlertSeverity("success");
-        setAlertMessage(response?.data?.msg);
+        setAlertMessage(response.data.msg);
         setAlertOpen(true);
         const updatedUser = response.data.data;
         setUsers(updatedUser);
@@ -153,7 +153,7 @@ const Profile = () => {
         setIsEditing(false);
       }
     } catch (err) {
-      if (err.response && err.response.status === 400) {
+      if (err.response.status === 400) {
         const errors = err.response.data.errors;
         const formattedErrors = {};
         errors.forEach((error) => {
