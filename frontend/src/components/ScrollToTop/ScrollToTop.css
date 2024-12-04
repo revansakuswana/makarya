@@ -6,7 +6,7 @@
 }
 
 .scroll-button {
-  background-color: #3d65f5;
+  background-color: #0372E3;
   border: none;
   border-radius: 50%;
   width: 50px;
@@ -20,7 +20,7 @@
 }
 
 .scroll-button:hover {
-  background-color: #3356d3;
+  background-color: #0064c9;
   transform: translateY(-5px);
 }
 
