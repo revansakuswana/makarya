@@ -39,7 +39,7 @@ export const getProfile = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      msg: "Terjadi kesalahan saat memperbarui profil",
+      msg: "Terjadi kesalahan pada server",
     });
   }
 };
@@ -47,14 +47,14 @@ export const getProfile = async (req, res) => {
 export const updateProfile = async (req, res) => {
   upload.single("image")(req, res, async (err) => {
     if (err) {
-      return res.status(500).json({ error: err.message });
+      return res.status(500).json({ msg: "Terjadi kesalahan pada server", });
     }
 
     const { userId } = req.user;
     try {
       const existingUser = await Users.findOne({ where: { id: userId } });
       if (!existingUser) {
-        return res.status(404).json({ message: "User not found" });
+        return res.status(404).json({ msg: "User not found" });
       }
 
       const data = {
@@ -79,7 +79,7 @@ export const updateProfile = async (req, res) => {
     } catch (error) {
       res
         .status(500)
-        .json({ msg: "Terjadi kesalahan saat memperbarui profil" });
+        .json({ msg: "Terjadi kesalahan pada server" });
     }
   });
 };
@@ -217,7 +217,7 @@ export const SignUp = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ msg: "Error saat register" });
+    res.status(500).json({ msg: "Terjadi kesalahan pada server" });
   }
 };
 
@@ -289,7 +289,7 @@ export const SignIn = async (req, res) => {
     console.error(error);
     res
       .status(500)
-      .json({ msg: "Terjadi kesalahan saat login, Silakan coba lagi nanti" });
+      .json({ msg: "Terjadi kesalahan pada server" });
   }
 };
 
@@ -402,7 +402,7 @@ export const sendVerificationEmail = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ msg: "Error saat mengirim email verifikasi" });
+    res.status(500).json({ msg: "Terjadi kesalahan pada server" });
   }
 };
 
@@ -556,7 +556,7 @@ export const forgotPassword = async (req, res) => {
       if (error) {
         return res
           .status(500)
-          .json({ msg: "Terjadi kesalahan saat mengirim email" });
+          .json({ msg: "Terjadi kesalahan pada server" });
       }
       res.status(200).json({
         msg: "Email pengaturan ulang kata sandi berhasil dikirim",
@@ -564,7 +564,7 @@ export const forgotPassword = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ msg: "Kesalahan server" });
+    res.status(500).json({ msg: "Terjadi kesalahan pada server" });
   }
 };
 
@@ -607,7 +607,7 @@ export const resetPassword = async (req, res) => {
       .json({ msg: "Kata sandi Anda telah berhasil diatur ulang" });
   } catch (error) {
     res.status(500).json({
-      msg: "Terjadi kesalahan server yang tidak terduga. Silakan coba lagi nanti",
+      msg: "Terjadi kesalahan pada server",
     });
   }
 };
@@ -618,7 +618,7 @@ export const getJobs = async (req, res) => {
     res.status(200).json(jobs);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error fetching jobs data" });
+    res.status(500).json({ msg: "Terjadi kesalahan pada server" });
   }
 };
 
@@ -628,14 +628,14 @@ export const getJobsById = async (req, res) => {
   try {
     const jobs = await Jobs.findByPk(id);
     if (!jobs) {
-      return res.status(404).json({ message: "Jobs not found" });
+      return res.status(404).json({ msg: "Data pekerjaan tidak ditemukan" });
     }
     res.status(200).json({
-      message: "Jobs retrieved successfully",
+      msg: "Jobs retrieved successfully",
       data: jobs,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ msg: "Terjadi kesalahan pada server" });
   }
 };
 
