@@ -95,8 +95,7 @@ const getTimeAgo = (updatedAt) => {
 
 export default function Latest() {
   const defaultTheme = createTheme();
-  const [mode] = React.useState("light");
-  const blogTheme = createTheme(getBlogTheme(mode));
+  const blogTheme = createTheme(getBlogTheme("light"));
 
   const [articles, setArticles] = React.useState([]);
   const [currentPage, setCurrentPage] = React.useState(1);
