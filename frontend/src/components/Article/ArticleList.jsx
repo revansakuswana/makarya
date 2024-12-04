@@ -163,6 +163,7 @@ const ArticleList = () => {
                     <TableCell
                       sx={{
                         border: "1px solid #e0e0e0",
+                        textAlign: "center",
                         fontWeight: "bold",
                         padding: 1,
                       }}>
@@ -171,6 +172,7 @@ const ArticleList = () => {
                     <TableCell
                       sx={{
                         border: "1px solid #e0e0e0",
+                        textAlign: "center",
                         fontWeight: "bold",
                         padding: 1,
                       }}>
@@ -179,6 +181,7 @@ const ArticleList = () => {
                     <TableCell
                       sx={{
                         border: "1px solid #e0e0e0",
+                        textAlign: "center",
                         fontWeight: "bold",
                         padding: 1,
                       }}>
@@ -187,6 +190,7 @@ const ArticleList = () => {
                     <TableCell
                       sx={{
                         border: "1px solid #e0e0e0",
+                        textAlign: "center",
                         fontWeight: "bold",
                         padding: 1,
                       }}>
@@ -195,6 +199,7 @@ const ArticleList = () => {
                     <TableCell
                       sx={{
                         border: "1px solid #e0e0e0",
+                        textAlign: "center",
                         fontWeight: "bold",
                         padding: 1,
                       }}>
@@ -203,6 +208,7 @@ const ArticleList = () => {
                     <TableCell
                       sx={{
                         border: "1px solid #e0e0e0",
+                        textAlign: "center",
                         fontWeight: "bold",
                         padding: 1,
                       }}>
@@ -211,9 +217,9 @@ const ArticleList = () => {
                     <TableCell
                       sx={{
                         border: "1px solid #e0e0e0",
+                        textAlign: "center",
                         fontWeight: "bold",
                         padding: 1,
-                        textAlign: "center",
                       }}>
                       Actions
                     </TableCell>
@@ -261,8 +267,10 @@ const ArticleList = () => {
                       </TableCell>
                       <TableCell
                         sx={{
+                          width: 200,
                           textAlign: "center",
                           border: "1px solid #e0e0e0",
+                          justifyItems: "center",
                           padding: 1,
                         }}>
                         <img
@@ -271,9 +279,9 @@ const ArticleList = () => {
                           }/public/images/${article.image}`}
                           alt="img cover"
                           style={{
-                            width: 200,
-                            height: 60,
                             objectFit: "cover",
+                            width: "auto",
+                            transform: "scale(1.0)",
                             borderRadius: 4,
                           }}
                         />
@@ -284,10 +292,14 @@ const ArticleList = () => {
                           border: "1px solid #e0e0e0",
                           padding: 1,
                         }}>
-                        {getExcerpt(article.content, 150)}
+                        {getExcerpt(article.content, 500)}
                       </TableCell>
                       <TableCell
-                        sx={{ border: "1px solid #e0e0e0", padding: 1.5 }}>
+                        sx={{
+                          width: 50,
+                          border: "1px solid #e0e0e0",
+                          padding: 1.5,
+                        }}>
                         <Box
                           sx={{
                             display: "flex",
