@@ -1,16 +1,19 @@
-import { z } from "zod";
 import upload from "../middleware/multerConfig.js";
-import Articles from "../models/ArticlesModel.js";
+import models from "../models/index.js";
+import path from "path";
+import { z } from "zod";
+
+const { Articles, Users } = models;
 
 const articleSchema = z.object({
-  title: z.string().min(1, { message: "Silakan isi judul artikel." }),
-  category: z.string().min(1, { message: "Silakan isi kategori artikel." }),
-  image: z.string().min(1, { message: "Silakan unggah gambar artikel." }),
+  title: z.string().min(1, { msg: "Silakan isi judul artikel." }),
+  category: z.string().min(1, { msg: "Silakan isi kategori artikel." }),
+  image: z.string().min(1, { msg: "Silakan unggah gambar artikel." }),
   content: z.string().min(1, { message: "Silakan isi konten artikel." }),
 });
 
 export const createArticles = async (req, res) => {
-  const { name } = req.user;
+  const { name, userId } = req.user;
 
   try {
     upload.single("image")(req, res, async (err) => {
@@ -27,6 +30,7 @@ export const createArticles = async (req, res) => {
         });
 
         const data = {
+          author_id: userId,
           name,
           title: parsedData.title,
           category: parsedData.category,
@@ -36,22 +40,22 @@ export const createArticles = async (req, res) => {
 
         const result = await Articles.create(data);
         res.status(201).json({
-          message: "Article created successfully",
+          msg: "Artikel berhasil diposting",
           data: result,
         });
       } catch (error) {
         if (error instanceof z.ZodError) {
           const formattedErrors = error.errors.map((e) => ({
             field: e.path[0],
-            message: e.message,
+            msg: e.msg,
           }));
           return res.status(400).json({ errors: formattedErrors });
         }
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: "Gagal memposting artikel" });
       }
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ msg: "Terjadi kesalahan pada server" });
   }
 };
 
@@ -59,7 +63,6 @@ export const updateArticle = async (req, res) => {
   const { name } = req.user;
 
   try {
-    // Proses upload gambar
     upload.single("image")(req, res, async (err) => {
       if (err) {
         return res.status(500).json({ error: err.message });
@@ -67,48 +70,41 @@ export const updateArticle = async (req, res) => {
 
       const id = req.params.id;
 
-      // Cari artikel berdasarkan ID
       const existingArticle = await Articles.findByPk(id);
 
-      // Validasi: Artikel tidak ditemukan atau tidak dimiliki oleh user
       if (!existingArticle) {
-        return res.status(404).json({ message: "Article not found" });
+        return res.status(404).json({ msg: "Artikel tidak ditemukan" });
       }
 
       if (existingArticle.name !== name) {
-        return res.status(403).json({ message: "Access denied" });
+        return res.status(403).json({ msg: "Akses ditolak" });
       }
 
-      // Data yang diperbarui
       const data = {
         title: req.body.title,
-        content: req.body.content,
         category: req.body.category,
-        image: req.file ? req.file.filename : existingArticle.image, // Gunakan gambar baru jika ada
+        image: req.file ? req.file.filename : existingArticle.image,
+        content: req.body.content,
       };
 
       try {
-        // Validasi data menggunakan Zod
         articleSchema.parse(data);
 
-        // Update artikel
         await Articles.update(data, { where: { id } });
-        res.status(200).json({ message: "Article updated successfully" });
+        res.status(200).json({ msg: "Artikel berhasil diperbarui" });
       } catch (error) {
         if (error instanceof z.ZodError) {
-          // Format error validasi
           const formattedErrors = error.errors.map((e) => ({
             field: e.path[0],
-            message: e.message,
+            msg: e.message,
           }));
           return res.status(400).json({ errors: formattedErrors });
         }
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ msg: "Gagal memperbarui artikel" });
       }
     });
   } catch (error) {
-    console.error("Error updating article:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ msg: "Terjadi kesalahan pada server" });
   }
 };
 
@@ -120,28 +116,38 @@ export const deleteArticles = async (req, res) => {
     const article = await Articles.findByPk(id);
 
     if (!article || article.name !== name) {
-      return res.status(403).json({ message: "Access denied" });
+      return res.status(403).json({ msg: "Akses ditolak" });
     }
 
     await Articles.destroy({ where: { id } });
-    res.status(200).json({ message: "Article deleted successfully" });
+    res.status(200).json({ msg: "Artikel berhasil dihapus" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ msg: "Terjadi kesalahan pada server" });
   }
 };
 
 export const getAllArticles = async (req, res) => {
   try {
     const articles = await Articles.findAll({
-      attributes: { exclude: ["userId", "tags"] },
+      include: [
+        {
+          model: Users,
+          as: "author",
+          attributes: ["name", "avatar"],
+        },
+      ],
     });
 
+    if (!articles) {
+      return res.status(404).json({ msg: "Artikel tidak ditemukan" });
+    }
+
     res.status(200).json({
-      message: "Articles retrieved successfully",
+      msg: "Artikel berhasil dimuat",
       data: articles,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ msg: "Terjadi kesalahan saat mengambil data" });
   }
 };
 
@@ -149,24 +155,27 @@ export const getAllArticlesById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const article = await Articles.findOne({
+    const articles = await Articles.findOne({
       where: { id },
-      attributes: { exclude: ["userId", "tags"] },
+      include: [
+        {
+          model: Users,
+          as: "author",
+          attributes: ["name", "avatar"],
+        },
+      ],
     });
 
-    if (!article) {
-      return res
-        .status(404)
-        .json({ message: "Article not found or not published" });
+    if (!articles) {
+      return res.status(404).json({ msg: "Artikel tidak ditemukan" });
     }
 
     res.status(200).json({
-      message: "Article retrieved successfully",
-      data: article,
+      msg: "Artikel berhasil dimuat",
+      data: articles,
     });
   } catch (error) {
-    console.error("Error retrieving published article:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ msg: "Terjadi kesalahan saat mengambil data" });
   }
 };
 
@@ -178,20 +187,19 @@ export const getUserArticleById = async (req, res) => {
     const article = await Articles.findByPk(id);
 
     if (!article) {
-      return res.status(404).json({ message: "Article not found" });
+      return res.status(404).json({ msg: "Artikel tidak ditemukan" });
     }
 
     if (article.name !== name) {
-      return res.status(403).json({ message: "Access denied" });
+      return res.status(403).json({ msg: "Akses ditolak" });
     }
 
     res.status(200).json({
-      message: "Article retrieved successfully",
+      msg: "Artikel berhasil dimuat",
       data: article,
     });
   } catch (error) {
-    console.error("Error fetching article by ID:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ msg: "Terjadi kesalahan saat mengambil data" });
   }
 };
 
@@ -204,15 +212,15 @@ export const getUserArticles = async (req, res) => {
 
     if (articles.length === 0) {
       return res.status(404).json({
-        msg: `No articles found for user: ${name}`,
+        msg: `Tidak ada artikel yang ditemukan`,
       });
     }
 
     res.status(200).json({
-      msg: `Articles retrieved successfully for user: ${name}`,
+      msg: `Artikel berhasil dimuat`,
       data: articles,
     });
   } catch (error) {
-    res.status(500).json({ msg: `Error fetching articles by user: ${name}` });
+    res.status(500).json({ msg: "Terjadi kesalahan saat mengambil data" });
   }
 };
