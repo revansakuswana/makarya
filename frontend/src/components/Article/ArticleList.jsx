@@ -59,14 +59,12 @@ const ArticleList = () => {
         );
         if (response.data?.data) {
           setArticles(response.data.data);
-        } else {
-          throw new Error("Data format is invalid or missing");
         }
       } catch (err) {
-        if (err.response && err.response.status === 404) {
-          setAlertMessage(err.response?.data?.msg);
+        if (err.response.status === 404) {
+          setAlertMessage(err.response.data.msg);
         } else {
-          setAlertMessage("Terjadi kesalahan saat mengambil data.");
+          setAlertMessage(err.response.data.msg);
         }
         setAlertSeverity("error");
         setAlertOpen(true);
@@ -119,18 +117,20 @@ const ArticleList = () => {
   const handleDeleteArticle = async () => {
     if (articleIdToDelete) {
       try {
-        await axios.delete(
+        const response = await axios.delete(
           `${import.meta.env.VITE_BASE_URL}/api/articles/${articleIdToDelete}`,
           { withCredentials: true }
         );
-        setAlertMessage("Artikel berhasil dihapus");
+        if (response.status === 200) {
+        setAlertMessage(response.data.msg);
         setAlertSeverity("success");
         setAlertOpen(true);
         setArticles((prevArticles) =>
           prevArticles.filter((article) => article.id !== articleIdToDelete)
         );
+      }
       } catch (err) {
-        setAlertMessage("Terjadi kesalahan saat menghapus artikel");
+        setAlertMessage(err.response.data.msg);
         setAlertSeverity("error");
         setAlertOpen(true);
       } finally {
