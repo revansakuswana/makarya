@@ -11,6 +11,7 @@ import {
   Snackbar,
   Input,
   FormHelperText,
+  Box,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import Breadcrumb from "../Breadcrumb/Breadcrumb";
@@ -30,9 +31,9 @@ const ArticleForm = () => {
   const [category, setCategory] = useState("");
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
-  const [imageName] = useState("");
+  const [imageName, setImageName] = useState("");
   const [previewImage, setPreviewImage] = useState(null);
-  const [setError] = useState(null);
+
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
@@ -81,24 +82,24 @@ const ArticleForm = () => {
     setHasUnsavedChanges(true);
   };
 
-  const handleSubmit = async () => {
-    let validationErrors = {}; // Tempat menyimpan kesalahan
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    // Validasi untuk setiap field
+    let validationErrors = {};
+
     if (!title) {
-      validationErrors.title = "Silakan isi judul artikel.";
+      validationErrors.title = "Silakan isi judul artikel";
     }
     if (!category) {
-      validationErrors.category = "Silakan isi kategori artikel.";
+      validationErrors.category = "Silakan isi kategori artikel";
     }
     if (!image) {
-      validationErrors.image = "Silakan unggah gambar artikel.";
+      validationErrors.image = "Silakan unggah gambar artikel";
     }
     if (!content) {
-      validationErrors.content = "Silakan isi konten artikel.";
+      validationErrors.content = "Silakan isi konten artikel";
     }
 
-    // Jika ada kesalahan, set state dan return
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
@@ -121,9 +122,9 @@ const ArticleForm = () => {
           },
         }
       );
-      if (response.status === 201 || response.data.success) {
+      if (response.status === 201) {
         setAlertSeverity("success");
-        setAlertMessage("Artikel berhasil diposting.");
+        setAlertMessage(response.data.msg);
         setAlertOpen(true);
         setTimeout(() => {
           navigate("/articles");
@@ -134,15 +135,15 @@ const ArticleForm = () => {
         setImage(null);
       }
     } catch (err) {
-      if (err.response && err.response.status === 400) {
+      if (err.response.status === 400) {
         const errors = err.response.data.errors;
         const formattedErrors = {};
         errors.forEach((error) => {
-          formattedErrors[error.field] = error.message;
+          formattedErrors[error.field] = error.msg;
         });
-        setError(formattedErrors);
+        setErrors(formattedErrors);
       } else {
-        setAlertMessage("Gagal memposting artikel. Silakan coba lagi.");
+        setAlertMessage(err.response.data.error);
       }
       setAlertSeverity("error");
       setAlertOpen(true);
@@ -177,6 +178,7 @@ const ArticleForm = () => {
         return;
       }
       setImage(file);
+      setImageName(file.name);
       setPreviewImage(URL.createObjectURL(file));
     } else {
       setAlertMessage("Please upload a valid image file.");
@@ -203,98 +205,124 @@ const ArticleForm = () => {
               Posting Artikel
             </Typography>
 
-            <TextField
-              fullWidth
-              label="Title"
-              value={title}
-              onChange={handleInputChange(setTitle)}
-              error={!!errors.title}
-              helperText={errors.title}
-              variant="outlined"
-              sx={{ mb: 3 }}
-            />
-
-            <TextField
-              fullWidth
-              label="Category"
-              value={category}
-              onChange={handleInputChange(setCategory)}
-              error={!!errors.category}
-              helperText={errors.category}
-              variant="outlined"
-            />
-
-            {previewImage && (
-              <Grid>
-                <img
-                  src={previewImage}
-                  alt="Preview"
-                  style={{
-                    width: 200,
-                    height: "auto",
-                    objectFit: "cover",
-                    borderRadius: 4,
-                  }}
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                <Typography variant="body" sx={{ fontWeight: "bold" }}>
+                  Title
+                </Typography>
+                <TextField
+                  label="Title"
+                  value={title}
+                  variant="outlined"
+                  required
+                  fullWidth
+                  onChange={handleInputChange(setTitle)}
+                  error={!!errors.title}
+                  helperText={errors.title}
                 />
-              </Grid>
-            )}
+              </Box>
 
-            {/* Input Gambar terpisah dengan Button dan Input */}
-            <Grid container spacing={2} alignItems="center" sx={{ my: 2 }}>
-              <Grid>
-                <Button variant="contained" component="label" color="secondary">
-                  Upload Image
-                  <Input
-                    type="file"
-                    onChange={handleImageChange}
-                    error={!!errors.image}
-                    sx={{ display: "none" }}
-                  />
-                </Button>
-              </Grid>
-              <Grid>
-                <FormHelperText>
-                  {imageName || "No file selected"}
-                </FormHelperText>
-                {errors.image && (
-                  <FormHelperText error>{errors.image}</FormHelperText>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                <Typography variant="body" sx={{ fontWeight: "bold" }}>
+                  Category
+                </Typography>
+                <TextField
+                  label="Category"
+                  value={category}
+                  variant="outlined"
+                  required
+                  fullWidth
+                  onChange={handleInputChange(setCategory)}
+                  error={!!errors.category}
+                  helperText={errors.category}
+                />
+              </Box>
+
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                <Typography variant="body" sx={{ fontWeight: "bold" }}>
+                  Image
+                </Typography>
+                {previewImage && (
+                  <Grid>
+                    <img
+                      src={previewImage}
+                      alt="Preview"
+                      style={{
+                        width: 200,
+                        height: "auto",
+                        objectFit: "cover",
+                        borderRadius: 4,
+                      }}
+                    />
+                  </Grid>
                 )}
-              </Grid>
-            </Grid>
 
-            <Grid mb={3}>
-              <ReactQuill
-                value={content}
-                onChange={handleContentChange}
-                modules={quillModules}
-                theme="snow"
-                style={{ height: "300px", marginBottom: "50px" }}
-              />
-              {errors.content && (
-                <FormHelperText error>{errors.content}</FormHelperText>
-              )}
-            </Grid>
+                {/* Input Gambar terpisah dengan Button dan Input */}
+                <Grid container spacing={2} alignItems="center">
+                  <Grid>
+                    <Button
+                      variant="contained"
+                      component="label"
+                      color="secondary"
+                      size="small">
+                      Unggah Gambar
+                      <Input
+                        type="file"
+                        onChange={handleImageChange}
+                        error={!!errors.image}
+                        sx={{ display: "none" }}
+                      />
+                    </Button>
+                  </Grid>
+                  <Grid>
+                    <FormHelperText>
+                      {imageName || "No file selected"}
+                    </FormHelperText>
+                    {errors.image && (
+                      <FormHelperText error>{errors.image}</FormHelperText>
+                    )}
+                  </Grid>
+                </Grid>
+              </Box>
 
-            <Grid container spacing={2} sx={{ mt: { xs: 10, sm: 7 } }}>
-              <Grid>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={handleSubmit}
-                  disabled={loading}>
-                  Submit
-                </Button>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                <Typography variant="body" sx={{ fontWeight: "bold" }}>
+                  Content
+                </Typography>
+                <Grid>
+                  <ReactQuill
+                    value={content}
+                    onChange={handleContentChange}
+                    modules={quillModules}
+                  />
+                  {errors.content && (
+                    <FormHelperText error>{errors.content}</FormHelperText>
+                  )}
+                </Grid>
+              </Box>
+
+              <Grid container spacing={2}>
+                <Grid>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    size="small"
+                    onClick={handleSubmit}
+                    disabled={loading}>
+                    Posting
+                  </Button>
+                </Grid>
+                <Grid>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    size="small"
+                    onClick={handleCancel}>
+                    Batalkan
+                  </Button>
+                </Grid>
               </Grid>
-              <Grid>
-                <Button
-                  variant="contained"
-                  color="error"
-                  onClick={handleCancel}>
-                  Cancel
-                </Button>
-              </Grid>
-            </Grid>
-            {errors.general && <Alert severity="error">{errors.general}</Alert>}
+            </Box>
           </Grid>
         )}
 
