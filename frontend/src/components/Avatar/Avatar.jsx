@@ -30,7 +30,7 @@ export default function AvatarIcon({ handleLogout }) {
     location: "",
     education: "",
     skills: "",
-    image: "",
+    avatar: "",
   });
 
   const defaultImage =
@@ -47,9 +47,9 @@ export default function AvatarIcon({ handleLogout }) {
         );
         setUsers(response.data.data);
         setPreviewImage(
-          response.data.data.image
+          response.data.data.avatar
             ? `${import.meta.env.VITE_BASE_URL}/public/images/${
-                response.data.data.image
+                response.data.data.avatar
               }`
             : defaultImage
         );
@@ -83,7 +83,7 @@ export default function AvatarIcon({ handleLogout }) {
               src={
                 previewImage ||
                 `${import.meta.env.VITE_BASE_URL}/public/images/${
-                  users.image
+                  users.avatar
                 }`
               }
               alt="Profile Picture"
