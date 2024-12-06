@@ -44,7 +44,7 @@ const Profile = () => {
 
   const [setErrors] = useState({});
   const navigate = useNavigate();
-  const [image, setImage] = useState(null);
+  const [avatar, setAvatar] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
   const [setError] = useState(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -57,8 +57,8 @@ const Profile = () => {
     location: "",
     education: "",
     skills: "",
-    image: "",
-    isVerified: "",
+    avatar: "",
+    is_verified: "",
   });
 
   const defaultImage =
@@ -78,9 +78,9 @@ const Profile = () => {
         setUsers(userData);
         setInitialUserData(userData);
         setPreviewImage(
-          response.data.data.image
+          response.data.data.avatar
             ? `${import.meta.env.VITE_BASE_URL}/public/images/${
-                response.data.data.image
+                response.data.data.avatar
               }`
             : defaultImage
         );
@@ -111,8 +111,8 @@ const Profile = () => {
     formData.append("location", users.location);
     formData.append("education", users.education);
     formData.append("skills", users.skills);
-    if (image) {
-      formData.append("image", image);
+    if (avatar) {
+      formData.append("avatar", avatar);
     }
 
     setLoading(true);
@@ -135,17 +135,17 @@ const Profile = () => {
         const updatedUser = response.data.data;
         setUsers(updatedUser);
         setInitialUserData(updatedUser);
-        if (response.data.data.image) {
+        if (response.data.data.avatar) {
           const updatedUser = response.data.data;
           setUsers((prev) => ({
             ...prev,
-            image: updatedUser.image || prev.image,
+            avatar: updatedUser.avatar || prev.avatar,
           }));
 
           setPreviewImage(
-            updatedUser.image
+            updatedUser.avatar
               ? `${import.meta.env.VITE_BASE_URL}/public/images/${
-                  updatedUser.image
+                  updatedUser.avatar
                 }`
               : defaultImage
           );
@@ -193,7 +193,7 @@ const Profile = () => {
         setError("File size should not exceed 5MB.");
         return;
       }
-      setImage(file);
+      setAvatar(file);
       setPreviewImage(URL.createObjectURL(file));
     }
   };
@@ -202,12 +202,12 @@ const Profile = () => {
     if (initialUserData) {
       setUsers(initialUserData); // Mengembalikan data pengguna ke nilai awal
       setPreviewImage(
-        initialUserData.image
-          ? `${import.meta.env.VITE_BASE_URL}/public/images/${initialUserData.image}`
+        initialUserData.avatar
+          ? `${import.meta.env.VITE_BASE_URL}/public/images/${initialUserData.avatar}`
           : defaultImage // Mengembalikan preview ke gambar awal atau default
       );
     }
-    setImage(null); // Menghapus file gambar yang dipilih
+    setAvatar(null); // Menghapus file gambar yang dipilih
     setIsEditing(false);
   };
   
@@ -343,7 +343,7 @@ const Profile = () => {
                 <input
                   id="avatar-upload"
                   type="file"
-                  accept="image/*"
+                  accept="avatar/*"
                   style={{ display: "none" }}
                   onChange={handleImageChange}
                   disabled={!isEditing} // Disable saat tidak dalam mode edit
@@ -379,7 +379,7 @@ const Profile = () => {
                       variant="body1">
                       {users.email}
                     </Typography>
-                    {(users.isVerified == 1 || users.isVerified == "1") && (
+                    {(users.is_verified == 1 || users.is_verified == "1") && (
                       <CheckBadgeIcon
                         style={{
                           height: 20,
@@ -391,7 +391,7 @@ const Profile = () => {
                     )}
                   </Grid>
 
-                  {!(users.isVerified == 1 || users.isVerified == "1") && (
+                  {!(users.is_verified == 1 || users.is_verified == "1") && (
                     <Grid sx={{ display: "flex" }}>
                       <ExclamationCircleIcon
                         style={{
