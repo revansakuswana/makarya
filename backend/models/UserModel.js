@@ -11,23 +11,28 @@ const Users = db.define(
     },
     name: {
       type: DataTypes.STRING,
+      allowNull: false,
     },
     email: {
       type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
     },
     password: {
       type: DataTypes.STRING,
+      allowNull: false,
     },
     refresh_token: {
       type: DataTypes.TEXT,
     },
-    isVerified: {
+    is_verified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    verification_token: {
       type: DataTypes.STRING,
     },
-    verificationToken: {
-      type: DataTypes.STRING,
-    },
-    verificationExpires: {
+    verification_expires: {
       type: DataTypes.STRING,
     },
     reset_password_token: {
@@ -51,7 +56,7 @@ const Users = db.define(
       allowNull: true,
       defaultValue: "",
     },
-    image: {
+    avatar: {
       type: DataTypes.STRING(255),
       allowNull: true,
       defaultValue: "",
@@ -59,7 +64,13 @@ const Users = db.define(
   },
   {
     freezeTableName: true,
+    timestamps: true,
+    underscored: true,
   }
 );
+
+Users.associate = (models) => {
+  Users.hasMany(models.Articles, { foreignKey: 'author_id', as: 'articles' });
+};
 
 export default Users;
