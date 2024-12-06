@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   ThemeProvider,
@@ -118,7 +118,7 @@ export default function Latest() {
         );
         setArticles(sortedArticles);
       } catch (err) {
-        setAlertMessage("Terjadi kesalahan saat mengambil data");
+        setAlertMessage(err.response.data.msg);
         setAlertSeverity("error");
         setAlertOpen(true);
       } finally {
@@ -130,25 +130,6 @@ export default function Latest() {
 
     fetchArticles();
   }, [id]);
-
-  const [users, setUsers] = useState({
-    image: "",
-  });
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/profile`, {
-          withCredentials: true,
-        });
-        setUsers(response.data.data);
-      } catch (err) {
-        console.error(err?.response?.data?.msg);
-      }
-    };
-
-    fetchUsers();
-  }, []);
 
   const handleCloseAlert = (event, reason) => {
     if (reason === "clickaway") {
@@ -237,12 +218,14 @@ export default function Latest() {
                         alignItems: "center",
                       }}>
                       <Avatar
-                        key={index}
-                        src={`${import.meta.env.VITE_BASE_URL}/public/images/${users.image}`}
-                        sx={{ width: 24, height: 24 }}
-                      />
-                      <Typography variant="caption">{article.name}</Typography>
-                    </Box>
+                          src={`${import.meta.env.VITE_BASE_URL}/public/images/${article.author.avatar}`}
+                          alt={article.author.name}
+                          sx={{ width: 24, height: 24 }}
+                        />
+                        <Typography variant="caption">
+                          {article.author.name}
+                        </Typography>
+                      </Box>
                     <Typography variant="caption">
                       {getTimeAgo(article.updatedAt)}
                     </Typography>
