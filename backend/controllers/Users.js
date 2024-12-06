@@ -20,10 +20,10 @@ export const getProfile = async (req, res) => {
         "location",
         "education",
         "skills",
-        "image",
-        "isVerified",
-        "createdAt",
-        "updatedAt",
+        "avatar",
+        "is_verified",
+        "created_at",
+        "updated_at",
       ],
     });
 
@@ -45,9 +45,9 @@ export const getProfile = async (req, res) => {
 };
 
 export const updateProfile = async (req, res) => {
-  upload.single("image")(req, res, async (err) => {
+  upload.single("avatar")(req, res, async (err) => {
     if (err) {
-      return res.status(500).json({ msg: "Terjadi kesalahan pada server", });
+      return res.status(500).json({ msg: "Terjadi kesalahan pada server" });
     }
 
     const { userId } = req.user;
@@ -63,7 +63,7 @@ export const updateProfile = async (req, res) => {
         location: req.body.location,
         education: req.body.education,
         skills: req.body.skills,
-        image: req.file ? req.file.filename : existingUser.image, // Gunakan gambar baru jika ada
+        avatar: req.file ? req.file.filename : existingUser.avatar,
       };
 
       const result = await Users.update(data, { where: { id: userId } });
@@ -77,9 +77,7 @@ export const updateProfile = async (req, res) => {
         data: data,
       });
     } catch (error) {
-      res
-        .status(500)
-        .json({ msg: "Terjadi kesalahan pada server" });
+      res.status(500).json({ msg: "Terjadi kesalahan pada server" });
     }
   });
 };
@@ -121,8 +119,8 @@ export const SignUp = async (req, res) => {
     }
 
     const salt = await bcrypt.genSalt();
-    const verificationToken = await bcrypt.hash(email + Date.now(), salt);
-    const verificationExpires = Date.now() + 24 * 60 * 60 * 1000;
+    const verification_token = await bcrypt.hash(email + Date.now(), salt);
+    const verification_expires = Date.now() + 24 * 60 * 60 * 1000;
 
     await Users.create({
       name,
@@ -131,10 +129,10 @@ export const SignUp = async (req, res) => {
       location: "",
       education: "",
       skills: "",
-      image: "",
-      isVerified: false,
-      verificationToken,
-      verificationExpires,
+      avatar: "",
+      is_verified: false,
+      verification_token,
+      verification_expires,
     });
 
     const transporter = nodemailer.createTransport({
@@ -145,7 +143,9 @@ export const SignUp = async (req, res) => {
       },
     });
 
-    const verificationUrl = `https://makarya.my.id/verify-email/${encodeURIComponent(verificationToken)}`;
+    const verificationUrl = `https://makarya.my.id/verify-email/${encodeURIComponent(
+      verification_token
+    )}`;
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
@@ -287,9 +287,7 @@ export const SignIn = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({ msg: "Terjadi kesalahan pada server" });
+    res.status(500).json({ msg: "Terjadi kesalahan pada server" });
   }
 };
 
@@ -317,12 +315,12 @@ export const sendVerificationEmail = async (req, res) => {
     }
 
     const salt = await bcrypt.genSalt();
-    const verificationToken = await bcrypt.hash(email + Date.now(), salt);
-    const verificationExpires = Date.now() + 24 * 60 * 60 * 1000;
+    const verification_token = await bcrypt.hash(email + Date.now(), salt);
+    const verification_expires = Date.now() + 24 * 60 * 60 * 1000;
 
     await user.update({
-      verificationToken,
-      verificationExpires,
+      verification_token,
+      verification_expires,
     });
 
     const transporter = nodemailer.createTransport({
@@ -333,7 +331,9 @@ export const sendVerificationEmail = async (req, res) => {
       },
     });
 
-    const verificationUrl = `https://makarya.my.id/verify-email/${encodeURIComponent(verificationToken)}`;
+    const verificationUrl = `https://makarya.my.id/verify-email/${encodeURIComponent(
+      verification_token
+    )}`;
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
@@ -409,20 +409,20 @@ export const sendVerificationEmail = async (req, res) => {
 export const verifyEmail = async (req, res) => {
   const { token } = req.params;
   try {
-    const user = await Users.findOne({ where: { verificationToken: token } });
+    const user = await Users.findOne({ where: { verification_token: token } });
 
-    if (user.verificationExpires < Date.now()) {
+    if (user.verification_expires < Date.now()) {
       return res.status(400).json({ msg: "Waktu verifikasi sudah kadaluarsa" });
     }
 
-    user.isVerified = true;
+    user.is_verified = true;
     await user.save();
 
     res.setHeader("Cache-Control", "no-store");
     res.status(200).json({ msg: "Email berhasil diverifikasi" });
 
-    user.verificationToken = null;
-    user.verificationExpires = null;
+    user.verification_token = null;
+    user.verification_expires = null;
     await user.save();
   } catch (error) {
     res.status(500).json({ msg: "Pengguna sudah melakukan verifikasi" });
@@ -490,7 +490,9 @@ export const forgotPassword = async (req, res) => {
       },
     });
 
-    const resetUrl = `https://makarya.my.id/reset-password/${encodeURIComponent(token)}`;
+    const resetUrl = `https://makarya.my.id/reset-password/${encodeURIComponent(
+      token
+    )}`;
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
@@ -554,9 +556,7 @@ export const forgotPassword = async (req, res) => {
 
     transporter.sendMail(mailOptions, (error) => {
       if (error) {
-        return res
-          .status(500)
-          .json({ msg: "Terjadi kesalahan pada server" });
+        return res.status(500).json({ msg: "Terjadi kesalahan pada server" });
       }
       res.status(200).json({
         msg: "Email pengaturan ulang kata sandi berhasil dikirim",
