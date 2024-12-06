@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
   createTheme,
@@ -35,19 +35,15 @@ const ArticleItem = () => {
   const [mode] = useState("light");
   const blogTheme = createTheme(getBlogTheme(mode));
 
+  const [article, setArticle] = React.useState([]);
+  const [articlesList, setArticlesList] = useState([]);
+
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertSeverity, setAlertSeverity] = useState("error");
   const [loading, setLoading] = useState(false);
 
   const { id } = useParams();
-
-  const [article, setArticle] = useState({
-    title: "",
-    category: "",
-    content: "",
-    image: "",
-  });
 
   const getTimeAgo = (updatedAt) => {
     if (!updatedAt) return "Unknown time";
@@ -106,12 +102,12 @@ const ArticleItem = () => {
     fetchArticle();
   }, [id]);
 
-  const [articlesList, setArticlesList] = useState([]);
-
   useEffect(() => {
     const fetchArticlesList = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/allarticles`);
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/api/allarticles`
+        );
         setArticlesList(response.data.data);
       } catch (err) {
         setAlertMessage("Terjadi kesalahan saat mengambil data");
@@ -125,25 +121,6 @@ const ArticleItem = () => {
     };
     fetchArticlesList();
   }, [id]);
-
-  const [users, setUsers] = useState({
-    image: "",
-  });
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/profile`, {
-          withCredentials: true,
-        });
-        setUsers(response.data.data);
-      } catch (err) {
-        console.error(err?.response?.data?.msg);
-      }
-    };
-
-    fetchUsers();
-  }, []);
 
   const handleCloseAlert = (event, reason) => {
     if (reason === "clickaway") {
@@ -187,7 +164,9 @@ const ArticleItem = () => {
               <CardMedia
                 component="img"
                 height="auto"
-                src={`${import.meta.env.VITE_BASE_URL}/public/images/${article.image}`}
+                src={`${import.meta.env.VITE_BASE_URL}/public/images/${
+                  article.image
+                }`}
                 alt="Article Cover"
               />
 
@@ -213,28 +192,30 @@ const ArticleItem = () => {
                     }}>
                     <Box
                       sx={{
-                        width: { xs: 150, md: 200 },
-                        height: { xs: 40, md: 40 },
-                        backgroundColor: "#EDEDED",
-                        borderRadius: "50px",
                         display: "flex",
                         flexDirection: "row",
-                        gap: 1,
                         alignItems: "center",
+                        gap: 1,
+                        padding: 1,
+                        backgroundColor: "#EDEDED",
+                        borderRadius: "50px",
+                        maxHeight: { xs: 50, md: 60 },
+                        maxWidth: { xs: 200, md: 500 },
                       }}>
-                      <Avatar
-                        src={`${import.meta.env.VITE_BASE_URL}/public/images/${users.image}`}
-                        sx={{
-                          width: { xs: 30, md: 30 },
-                          height: { xs: 30, md: 30 },
-                          marginLeft: { xs: 0.8, md: 0.9 },
-                        }}
-                      />
-                      <Typography
-                        variant="h6"
-                        sx={{ marginLeft: 1, fontSize: 15 }}>
-                        {article.name}
-                      </Typography>
+                      {article.author && (
+                        <>
+                          <Avatar
+                            src={`${
+                              import.meta.env.VITE_BASE_URL
+                            }/public/images/${article.author.avatar}`}
+                            alt={article.author.name}
+                            sx={{ width: { xs: 35, md: 40 }, height: { xs: 35, md: 40 } }}
+                          />
+                          <Typography variant="caption">
+                            {article.author.name}
+                          </Typography>
+                        </>
+                      )}
                     </Box>
                     <Typography
                       variant="subtitle2"
@@ -296,7 +277,9 @@ const ArticleItem = () => {
                         <CardMedia
                           component="img"
                           height="auto"
-                          src={`${import.meta.env.VITE_BASE_URL}/public/images/${otherArticle.image}`}
+                          src={`${
+                            import.meta.env.VITE_BASE_URL
+                          }/public/images/${otherArticle.image}`}
                         />
                       </Grid>
 
