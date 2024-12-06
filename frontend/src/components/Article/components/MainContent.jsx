@@ -144,9 +144,11 @@ export default function MainContent() {
         );
         setArticles(response.data.data);
       } catch (err) {
-        setAlertMessage("Terjadi kesalahan saat mengambil data");
-        setAlertSeverity("error");
-        setAlertOpen(true);
+        if (err.response.status === 404) {
+          setAlertMessage(err.response.data.msg);
+          setAlertSeverity("error");
+          setAlertOpen(true);
+        }
       } finally {
         setTimeout(() => {
           setLoading(false);
@@ -162,12 +164,13 @@ export default function MainContent() {
         const uniqueCategories = Array.from(
           new Set(response.data.data.map((article) => article.category))
         );
-
         setCategories(uniqueCategories);
       } catch (err) {
-        setAlertMessage("Terjadi kesalahan saat mengambil data");
-        setAlertSeverity("error");
-        setAlertOpen(true);
+        if (err.response.status === 404) {
+          setAlertMessage(err.response.data.msg);
+          setAlertSeverity("error");
+          setAlertOpen(true);
+        }
       } finally {
         setTimeout(() => {
           setLoading(false);
@@ -177,28 +180,6 @@ export default function MainContent() {
 
     fetchArticles();
     fetchCategories();
-  }, []);
-
-  const [users, setUsers] = useState({
-    image: "",
-  });
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_BASE_URL}/api/profile`,
-          {
-            withCredentials: true,
-          }
-        );
-        setUsers(response.data.data);
-      } catch (err) {
-        console.error(err?.response?.data?.msg);
-      }
-    };
-
-    fetchUsers();
   }, []);
 
   useEffect(() => {
@@ -248,9 +229,9 @@ export default function MainContent() {
     return matchesCategory && matchesSearchQuery;
   });
 
-  // Menambahkan logika pagination ke filteredArticles
   const indexOfLastArticle = currentPage * articlesPerPage;
   const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
+
   const currentArticles = filteredArticles.slice(
     indexOfFirstArticle,
     indexOfLastArticle
@@ -263,9 +244,8 @@ export default function MainContent() {
   };
 
   const getExcerpt = (content, maxLength = 100) => {
-    // Mengonversi Markdown ke HTML dan kemudian menggunakannya untuk mendapatkan excerpt
     const htmlContent = marked(content);
-    const plainText = htmlContent.replace(/<\/?[^>]+(>|$)/g, ""); // Menghapus tag HTML
+    const plainText = htmlContent.replace(/<\/?[^>]+(>|$)/g, "");
     return plainText.length <= maxLength
       ? plainText
       : plainText.slice(0, maxLength) + "...";
@@ -444,14 +424,14 @@ export default function MainContent() {
                           alignItems: "center",
                         }}>
                         <Avatar
-                          key={index}
                           src={`${
                             import.meta.env.VITE_BASE_URL
-                          }/public/images/${users.image}`}
+                          }/public/images/${articles.author.avatar}`}
+                          alt={articles.author.name}
                           sx={{ width: 24, height: 24 }}
                         />
                         <Typography variant="caption">
-                          {articles.name}
+                          {articles.author.name}
                         </Typography>
                       </Box>
                       <Typography variant="caption">
