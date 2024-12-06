@@ -16,7 +16,7 @@ async function createConnection() {
 
 async function insertJobData(connection, job) {
   const query = `
-        INSERT INTO jobs (job_title, company, work_type, working_type, experience, location, salary, link, link_img, category, study_requirement, skills, description, createdAt, updatedAt)
+        INSERT INTO jobs (job_title, company, work_type, working_type, experience, location, salary, link, link_img, category, study_requirement, skills, description, created_at, updated_at)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
         ON DUPLICATE KEY UPDATE 
           job_title = VALUES(job_title),
@@ -31,23 +31,23 @@ async function insertJobData(connection, job) {
           study_requirement = VALUES(study_requirement),
           skills = VALUES(skills),
           description = VALUES(description),
-          updatedAt = CURRENT_TIMESTAMP
+          updated_at = CURRENT_TIMESTAMP
     `;
 
   const values = [
-    job.job_title || null,
+    job.job_title || null,          // job_title -> jobTitle
     job.company || null,
-    job.work_type || null,
-    job.working_type || null,
+    job.work_type || null,          // work_type -> workType
+    job.working_type || null,       // working_type -> workingType
     job.experience || null,
     job.location || null,
     job.salary || null,
     job.link || null,
-    job.link_img || null,
+    job.link_img || null,           // link_img -> linkImg
     job.category || null,
-    job.study_requirement || null,
+    job.study_requirement || null,  // study_requirement -> studyRequirement
     job.skills || null,
-    job.description, // Mengganti undefined dengan null jika tidak tersedia
+    job.description || null, 
   ];
 
   try {
