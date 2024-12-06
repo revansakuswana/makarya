@@ -56,19 +56,11 @@ const Jobs = db.define(
       type: DataTypes.STRING(255),
       allowNull: false,
     },
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
   },
   {
-    timestamps: true, // Menggunakan Sequelize timestamps untuk createdAt dan updateAt
-    tableName: "jobs", // Nama tabel di database
+    freezeTableName: true,
+    timestamps: true,
+    underscored: true,
   }
 );
 
