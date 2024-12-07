@@ -9,10 +9,6 @@ const Articles = db.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
     title: {
       type: DataTypes.STRING(255),
       allowNull: false,
@@ -21,20 +17,20 @@ const Articles = db.define(
       type: DataTypes.STRING(255),
       allowNull: false,
     },
-    content: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
     image: {
       type: DataTypes.STRING(255),
       allowNull: true,
+    },
+    content: {
+      type: DataTypes.TEXT,
+      allowNull: false,
     },
     author_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'Users',
-        key: 'id',
+        model: "Users",
+        key: "id",
       },
     },
   },

@@ -9,10 +9,6 @@ module.exports = {
         autoIncrement: true,
         allowNull: false,
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
       title: {
         type: Sequelize.STRING(255),
         allowNull: false,
@@ -21,13 +17,13 @@ module.exports = {
         type: Sequelize.STRING(255),
         allowNull: false,
       },
-      content: {
-        type: Sequelize.TEXT,
-        allowNull: false,
-      },
       image: {
         type: Sequelize.STRING(255),
         allowNull: true,
+      },
+      content: {
+        type: Sequelize.TEXT,
+        allowNull: false,
       },
       author_id: {
         type: Sequelize.INTEGER,
