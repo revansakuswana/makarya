@@ -160,13 +160,16 @@ const ArticleForm = () => {
         errors.forEach((error) => {
           formattedErrors[error.field] = error.msg;
         });
-        setAlertMessage(formattedErrors);
-      } else {
+        setErrors(formattedErrors);
+      } else if (err.response.status === 500) {
+        setAlertSeverity("error");
         setAlertMessage(err.response.data.msg);
+        setAlertOpen(true);
+      } else {
+        setAlertSeverity("error");
+        setAlertMessage(err.response.data.msg);
+        setAlertOpen(true);
       }
-      setAlertSeverity("error");
-      setAlertMessage(err.response.data.msg);
-      setAlertOpen(true);
     } finally {
       setLoading(false);
     }
@@ -293,6 +296,7 @@ const ArticleForm = () => {
                   value={content}
                   onChange={handleContentChange}
                   modules={quillModules}
+                  required
                 />
                 {errors.content && (
                   <FormHelperText error>{errors.content}</FormHelperText>
