@@ -77,6 +77,25 @@ const ArticleForm = () => {
     setHasUnsavedChanges(true);
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file?.type?.startsWith("image/")) {
+      if (file.size > 3 * 1024 * 1024) {
+        setAlertMessage("Ukuran maksimum gambar adalah 3MB");
+        setAlertSeverity("error");
+        setAlertOpen(true);
+        return;
+      }
+      setImage(file);
+      setImageName(file.name);
+      setPreviewImage(URL.createObjectURL(file));
+    } else {
+      setAlertMessage("Please upload a valid image file.");
+      setAlertSeverity("error");
+      setAlertOpen(true);
+    }
+  };
+
   const handleContentChange = (value) => {
     setContent(value);
     setHasUnsavedChanges(true);
@@ -141,11 +160,12 @@ const ArticleForm = () => {
         errors.forEach((error) => {
           formattedErrors[error.field] = error.msg;
         });
-        setErrors(formattedErrors);
+        setAlertMessage(formattedErrors);
       } else {
-        setAlertMessage(err.response.data.error);
+        setAlertMessage(err.response.data.msg);
       }
       setAlertSeverity("error");
+      setAlertMessage(err.response.data.msg);
       setAlertOpen(true);
     } finally {
       setLoading(false);
@@ -166,25 +186,6 @@ const ArticleForm = () => {
       return;
     }
     setAlertOpen(false);
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file?.type?.startsWith("image/")) {
-      if (file.size > 3 * 1024 * 1024) {
-        setAlertMessage("The image file is too large. Maximum size is 3MB.");
-        setAlertSeverity("error");
-        setAlertOpen(true);
-        return;
-      }
-      setImage(file);
-      setImageName(file.name);
-      setPreviewImage(URL.createObjectURL(file));
-    } else {
-      setAlertMessage("Please upload a valid image file.");
-      setAlertSeverity("error");
-      setAlertOpen(true);
-    }
   };
 
   return (
@@ -257,14 +258,13 @@ const ArticleForm = () => {
                   </Grid>
                 )}
 
-                {/* Input Gambar terpisah dengan Button dan Input */}
                 <Grid container spacing={2} alignItems="center">
                   <Grid>
                     <Button
                       variant="contained"
-                      component="label"
                       color="secondary"
-                      size="small">
+                      size="small"
+                      component="label">
                       Unggah Gambar
                       <Input
                         type="file"
@@ -289,16 +289,14 @@ const ArticleForm = () => {
                 <Typography variant="body" sx={{ fontWeight: "bold" }}>
                   Content
                 </Typography>
-                <Grid>
-                  <ReactQuill
-                    value={content}
-                    onChange={handleContentChange}
-                    modules={quillModules}
-                  />
-                  {errors.content && (
-                    <FormHelperText error>{errors.content}</FormHelperText>
-                  )}
-                </Grid>
+                <ReactQuill
+                  value={content}
+                  onChange={handleContentChange}
+                  modules={quillModules}
+                />
+                {errors.content && (
+                  <FormHelperText error>{errors.content}</FormHelperText>
+                )}
               </Box>
 
               <Grid container spacing={2}>
@@ -330,7 +328,7 @@ const ArticleForm = () => {
         <ThemeProvider theme={defaultTheme}>
           <Snackbar
             open={alertOpen}
-            autoHideDuration={5000}
+            autoHideDuration={2000}
             onClose={handleCloseAlert}>
             <Alert
               onClose={handleCloseAlert}
