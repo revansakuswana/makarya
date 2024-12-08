@@ -61,11 +61,7 @@ const ArticleList = () => {
           setArticles(response.data.data);
         }
       } catch (err) {
-        if (err.response.status === 404) {
-          setAlertMessage(err.response.data.msg);
-        } else {
-          setAlertMessage(err.response.data.msg);
-        }
+        setAlertMessage(err.response.data.msg);
         setAlertSeverity("error");
         setAlertOpen(true);
       } finally {
@@ -247,7 +243,7 @@ const ArticleList = () => {
                           border: "1px solid #e0e0e0",
                           padding: 1,
                         }}>
-                        {article.name}
+                        {article.author.name}
                       </TableCell>
                       <TableCell
                         sx={{
