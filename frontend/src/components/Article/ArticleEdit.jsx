@@ -38,7 +38,6 @@ const ArticleEdit = () => {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
   const [errors, setErrors] = useState({});
-  const [error, setError] = useState(null);
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -84,31 +83,6 @@ const ArticleEdit = () => {
     setHasUnsavedChanges(true);
   };
 
-  const handleContentChange = (value) => {
-    setArticle((prevArticle) => ({ ...prevArticle, content: value }));
-    setHasUnsavedChanges(true);
-  };
-
-  useEffect(() => {
-    const fetchArticle = async () => {
-      setLoading(true); // Set loading to true when fetching
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_BASE_URL}/api/articleslist/${id}`,
-          { withCredentials: true }
-        );
-        setArticle(response.data.data);
-      } catch (err) {
-        setErrors(err.message);
-      } finally {
-        setTimeout(() => {
-          setLoading(false);
-        }, 1000);
-      }
-    };
-    fetchArticle();
-  }, [id]);
-
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file?.type?.startsWith("image/")) {
@@ -128,8 +102,51 @@ const ArticleEdit = () => {
     }
   };
 
+  const handleContentChange = (value) => {
+    setArticle((prevArticle) => ({
+      ...prevArticle,
+      content: value,
+    }));
+  };
+
+  useEffect(() => {
+    const fetchArticle = async () => {
+      setLoading(true); // Set loading to true when fetching
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/api/articleslist/${id}`,
+          { withCredentials: true }
+        );
+        setArticle(response.data.data);
+      } catch (err) {
+        setErrors(err.response.data.msg);
+      } finally {
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
+      }
+    };
+    fetchArticle();
+  }, [id]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    let validationErrors = {};
+
+    if (!article.title) {
+      validationErrors.title = "Silakan isi judul artikel";
+    }
+    if (!article.category) {
+      validationErrors.category = "Silakan isi kategori artikel";
+    }
+    if (!article.content) {
+      validationErrors.content = "Silakan isi konten artikel";
+    }
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
 
     const formData = new FormData();
     formData.append("title", article.title);
@@ -163,13 +180,15 @@ const ArticleEdit = () => {
         const errors = err.response.data.errors;
         const formattedErrors = {};
         errors.forEach((error) => {
-          formattedErrors[error.field] = error.mesg;
+          formattedErrors[error.field] = error.msg;
         });
         setErrors(formattedErrors);
-        setAlertMessage(formattedErrors);
         console.log("Error:", formattedErrors);
+      } else if (err.response.status === 500) {
+        setAlertSeverity("error");
+        setAlertMessage(err.response.data.msg);
+        setAlertOpen(true);
       } else {
-        setErrors(err.response.data.msg);
         setAlertSeverity("error");
         setAlertMessage(err.response.data.msg);
         setAlertOpen(true);
@@ -225,6 +244,8 @@ const ArticleEdit = () => {
                     }))
                   )}
                   required
+                  error={!!errors.title}
+                  helperText={errors.title}
                 />
               </Box>
 
@@ -235,6 +256,7 @@ const ArticleEdit = () => {
                 <TextField
                   label="Category"
                   name="category"
+                  fullWidth
                   value={article.category}
                   onChange={handleInputChange((value) =>
                     setArticle((prevArticle) => ({
@@ -242,8 +264,9 @@ const ArticleEdit = () => {
                       category: value,
                     }))
                   )}
-                  fullWidth
                   required
+                  error={!!errors.category}
+                  helperText={errors.category}
                 />
               </Box>
 
@@ -320,6 +343,8 @@ const ArticleEdit = () => {
                   onChange={handleContentChange}
                   modules={quillModules}
                   required
+                  error={!!errors.content}
+                  helperText={errors.content}
                 />
               </Box>
 
@@ -355,7 +380,7 @@ const ArticleEdit = () => {
         <ThemeProvider theme={defaultTheme}>
           <Snackbar
             open={alertOpen}
-            autoHideDuration={3000}
+            autoHideDuration={2000}
             onClose={handleCloseAlert}>
             <Alert
               onClose={handleCloseAlert}
