@@ -142,7 +142,7 @@ const Home = () => {
           {/* ===== HERO SECTION ===== */}
           <Box sx={{ overflow: "hidden", pt: { xs: 0, sm: 6 } }}>
             <Box className="mx-auto max-w-7xl">
-              <Box className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
+              <Box className="grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
                 <Box className="mx-auto max-w-7xl content-center sm:static ">
                   <Box className="lg:max-w-lg flex flex-col gap-5">
                     <Typography
