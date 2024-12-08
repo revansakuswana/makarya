@@ -5,6 +5,7 @@ import {
   ThemeProvider,
   Container,
   CssBaseline,
+  Box,
   TextField,
   Button,
   Typography,
@@ -32,11 +33,11 @@ const ArticleEdit = () => {
   const [alertSeverity, setAlertSeverity] = useState("error");
 
   const [image, setImage] = useState(null);
-  const [imageName] = useState("");
+  const [imageName, setImageName] = useState("");
   const [previewImage, setPreviewImage] = useState(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
-  const [errors] = useState({});
+  const [errors, setErrors] = useState({});
   const [error, setError] = useState(null);
 
   const { id } = useParams();
@@ -98,7 +99,7 @@ const ArticleEdit = () => {
         );
         setArticle(response.data.data);
       } catch (err) {
-        setError(err.message);
+        setErrors(err.message);
       } finally {
         setTimeout(() => {
           setLoading(false);
@@ -110,13 +111,20 @@ const ArticleEdit = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      if (file.size > 5000000) {
-        setError("File size should not exceed 5MB.");
+    if (file?.type?.startsWith("image/")) {
+      if (file.size > 3 * 1024 * 1024) {
+        setAlertMessage("Ukuran maksimum gambar adalah 3MB");
+        setAlertSeverity("error");
+        setAlertOpen(true);
         return;
       }
       setImage(file);
+      setImageName(file.name);
       setPreviewImage(URL.createObjectURL(file));
+    } else {
+      setAlertMessage("Please upload a valid image file.");
+      setAlertSeverity("error");
+      setAlertOpen(true);
     }
   };
 
@@ -142,28 +150,30 @@ const ArticleEdit = () => {
           withCredentials: true,
         }
       );
-      if (response.status === 200 || response.data.success) {
+      if (response.status === 200) {
         setAlertSeverity("success");
-        setAlertMessage("Artikel berhasil diperbarui.");
+        setAlertMessage(response.data.msg);
         setAlertOpen(true);
         setTimeout(() => {
           navigate("/articleslist");
         }, 1000);
       }
     } catch (err) {
-      if (err.response && err.response.status === 400) {
+      if (err.response.status === 400) {
         const errors = err.response.data.errors;
         const formattedErrors = {};
         errors.forEach((error) => {
-          formattedErrors[error.field] = error.message;
+          formattedErrors[error.field] = error.mesg;
         });
-        setError(formattedErrors);
+        setErrors(formattedErrors);
+        setAlertMessage(formattedErrors);
+        console.log("Error:", formattedErrors);
       } else {
-        setError(err.message); // Set error message for other errors
-        setAlertMessage("Gagal memperbarui artikel. Silakan coba lagi.");
+        setErrors(err.response.data.msg);
+        setAlertSeverity("error");
+        setAlertMessage(err.response.data.msg);
+        setAlertOpen(true);
       }
-      setAlertSeverity("error");
-      setAlertOpen(true);
     } finally {
       setLoading(false);
     }
@@ -197,13 +207,12 @@ const ArticleEdit = () => {
             <Typography variant="h4" sx={{ mb: 3 }}>
               Edit Artikel
             </Typography>
-            {error && (
-              <Grid xs={12}>
-                <Alert severity="error">{error}</Alert>
-              </Grid>
-            )}
-            <form onSubmit={handleSubmit}>
-              <Grid mb={3}>
+
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                <Typography variant="body" sx={{ fontWeight: "bold" }}>
+                  Title
+                </Typography>
                 <TextField
                   label="Title"
                   name="title"
@@ -217,8 +226,12 @@ const ArticleEdit = () => {
                   )}
                   required
                 />
-              </Grid>
-              <Grid mb={3}>
+              </Box>
+
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                <Typography variant="body" sx={{ fontWeight: "bold" }}>
+                  Category
+                </Typography>
                 <TextField
                   label="Category"
                   name="category"
@@ -232,31 +245,17 @@ const ArticleEdit = () => {
                   fullWidth
                   required
                 />
-              </Grid>
+              </Box>
 
-              {previewImage ? (
-                <Grid>
-                  <Typography mb={1}>New Image:</Typography>
-                  <img
-                    src={previewImage}
-                    alt="New upload preview"
-                    style={{
-                      width: 200,
-                      height: "auto",
-                      objectFit: "cover",
-                      borderRadius: 4,
-                    }}
-                  />
-                </Grid>
-              ) : (
-                article.image && (
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                <Typography variant="body" sx={{ fontWeight: "bold" }}>
+                  Image
+                </Typography>
+                {previewImage ? (
                   <Grid>
-                    <Typography mb={1}>Current Image:</Typography>
                     <img
-                      src={`${import.meta.env.VITE_BASE_URL}/public/images/${
-                        article.image
-                      }`}
-                      alt="Current img cover"
+                      src={previewImage}
+                      alt="New upload preview"
                       style={{
                         width: 200,
                         height: "auto",
@@ -265,45 +264,64 @@ const ArticleEdit = () => {
                       }}
                     />
                   </Grid>
-                )
-              )}
+                ) : (
+                  article.image && (
+                    <Grid>
+                      <img
+                        src={`${import.meta.env.VITE_BASE_URL}/public/images/${
+                          article.image
+                        }`}
+                        alt="Current img cover"
+                        style={{
+                          width: 200,
+                          height: "auto",
+                          objectFit: "cover",
+                          borderRadius: 4,
+                        }}
+                      />
+                    </Grid>
+                  )
+                )}
 
-              <Grid container spacing={2} alignItems="center">
-                <Grid>
-                  <Button
-                    sx={{ marginY: 2 }}
-                    variant="contained"
-                    color="secondary"
-                    size="small"
-                    component="label">
-                    Upload Image
-                    <Input
-                      type="file"
-                      name="image"
-                      sx={{ display: "none" }}
-                      onChange={handleImageChange}
-                      accept="image/*"
-                    />
-                  </Button>
+                <Grid container spacing={2} alignItems="center">
+                  <Grid>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      size="small"
+                      component="label">
+                      Upload Image
+                      <Input
+                        type="file"
+                        name="image"
+                        sx={{ display: "none" }}
+                        onChange={handleImageChange}
+                        accept="image/*"
+                      />
+                    </Button>
+                  </Grid>
+                  <Grid>
+                    <FormHelperText>
+                      {imageName || "No file selected"}
+                    </FormHelperText>
+                    {errors.image && (
+                      <FormHelperText error>{errors.image}</FormHelperText>
+                    )}
+                  </Grid>
                 </Grid>
-                <Grid>
-                  <FormHelperText>
-                    {imageName || "No file selected"}
-                  </FormHelperText>
-                  {errors.image && (
-                    <FormHelperText error>{errors.image}</FormHelperText>
-                  )}
-                </Grid>
-              </Grid>
+              </Box>
 
-              <Grid mb={3}>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                <Typography variant="body" sx={{ fontWeight: "bold" }}>
+                  Content
+                </Typography>
                 <ReactQuill
                   value={article.content}
                   onChange={handleContentChange}
                   modules={quillModules}
                   required
                 />
-              </Grid>
+              </Box>
 
               <Grid
                 container
@@ -316,6 +334,7 @@ const ArticleEdit = () => {
                   color="secondary"
                   size="small"
                   type="submit"
+                  onClick={handleSubmit}
                   disabled={loading}>
                   Perbarui
                 </Button>
@@ -329,14 +348,14 @@ const ArticleEdit = () => {
                   Batalkan
                 </Button>
               </Grid>
-            </form>
+            </Box>
           </Grid>
         )}
         {/* ====== ALERT ====== */}
         <ThemeProvider theme={defaultTheme}>
           <Snackbar
             open={alertOpen}
-            autoHideDuration={6000}
+            autoHideDuration={3000}
             onClose={handleCloseAlert}>
             <Alert
               onClose={handleCloseAlert}
