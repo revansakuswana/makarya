@@ -32,6 +32,7 @@ import {
   BriefcaseIcon,
   ClockIcon,
   BanknotesIcon,
+  BuildingOffice2Icon,
 } from "@heroicons/react/24/outline";
 
 export default function JobsItem() {
@@ -221,13 +222,27 @@ export default function JobsItem() {
                       flexDirection: "column",
                       gap: 1,
                     }}>
-                    <Grid
-                      sx={{ display: "flex", flexDirection: "row", gap: 1 }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}>
+                      <BuildingOffice2Icon
+                        style={{
+                          height: 24,
+                          width: 24,
+                        }}
+                        className="mr-2"
+                      />
+                      <Typography>{jobs.company}</Typography>
+                    </Box>
+                    <Box sx={{ display: "flex", flexDirection: "row", gap: 1 }}>
                       <MapPinIcon style={{ height: 24, width: 24 }} />
                       <Typography>{jobs.location}</Typography>
-                    </Grid>
+                    </Box>
 
-                    <Grid
+                    <Box
                       sx={{
                         display: "flex",
                         flexDirection: "row",
@@ -236,19 +251,17 @@ export default function JobsItem() {
                       }}>
                       <BriefcaseIcon style={{ height: 24, width: 24 }} />
                       <Typography>{jobs.category}</Typography>
-                    </Grid>
+                    </Box>
 
-                    <Grid
-                      sx={{ display: "flex", flexDirection: "row", gap: 1 }}>
+                    <Box sx={{ display: "flex", flexDirection: "row", gap: 1 }}>
                       <ClockIcon style={{ height: 24, width: 24 }} />
                       <Typography>{jobs.work_type}</Typography>
-                    </Grid>
+                    </Box>
 
-                    <Grid
-                      sx={{ display: "flex", flexDirection: "row", gap: 1 }}>
+                    <Box sx={{ display: "flex", flexDirection: "row", gap: 1 }}>
                       <BanknotesIcon style={{ height: 24, width: 24 }} />
                       <Typography>{jobs.salary} /month</Typography>
-                    </Grid>
+                    </Box>
 
                     <Typography
                       variant="caption"
@@ -337,13 +350,53 @@ export default function JobsItem() {
                           <Typography variant="h6" component="div">
                             {otherJobs.job_title}
                           </Typography>
+                          <Box
+                            sx={{
+                              display: "flex",
+                            }}>
+                            <Typography
+                              variant="Body1"
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                              }}>
+                              <BuildingOffice2Icon
+                                style={{
+                                  height: 24,
+                                  width: 24,
+                                }}
+                                className="mr-1"
+                              />
+                              {otherJobs.company}
+                            </Typography>
+                          </Box>
+                          <Box
+                            sx={{
+                              display: "flex",
+                            }}>
+                            <Typography
+                              variant="Body1"
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                              }}>
+                              <MapPinIcon
+                                style={{
+                                  height: 24,
+                                  width: 24,
+                                }}
+                                className="mr-1"
+                              />
+                              {otherJobs.location}
+                            </Typography>
+                          </Box>
                           <Typography
                             variant="body1"
                             color="textPrimary"
                             dangerouslySetInnerHTML={{
                               __html: DOMPurify.sanitize(
                                 marked(
-                                  truncateContent(otherJobs.description, 100)
+                                  truncateContent(otherJobs.description, 1000)
                                 )
                               ),
                             }}
