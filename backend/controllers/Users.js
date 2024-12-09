@@ -208,12 +208,11 @@ export const SignUp = async (req, res) => {
           .status(500)
           .json({ msg: "Terjadi kesalahan saat mengirim email verifikasi" });
       }
-      res.status(200).json({
-        msg: "Register berhasil, Verifikasi email Anda untuk mengaktifkan akun",
-      });
+      res.status(201).json({
+        msg: "Register berhasil, Verifikasi email Anda untuk mengaktifkan akun" });
     });
   } catch (error) {
-    console.log(error);
+    console.error("Error during signup:", error);
     res.status(500).json({ msg: "Terjadi kesalahan pada server" });
   }
 };
