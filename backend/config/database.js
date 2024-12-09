@@ -3,8 +3,6 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-console.log(process.env.DB_PORT)
-
 const db = new Sequelize(
   process.env.DB_DATABASE || "makarya",
   process.env.DB_USERNAME || "root",
