@@ -74,7 +74,7 @@ export default function SignUp() {
             confPassword: confPassword,
           }
         );
-        if (response.status === 200) {
+        if (response.status === 201 && response.data) {
           setAlertSeverity("success");
           setAlertMessage(response?.data?.msg);
           setAlertOpen(true);
@@ -82,8 +82,14 @@ export default function SignUp() {
         }
       } catch (error) {
         const statusCode = error.response?.status;
+        const errorMsg = error.response?.data?.msg;
+        setAlertSeverity("error");
         if (statusCode === 400) {
-          setAlertMessage(error.response?.data?.msg);
+          setAlertMessage(errorMsg);
+        } else if (statusCode === 500) {
+          setAlertMessage(errorMsg);
+        } else {
+          setAlertMessage(errorMsg);
         }
         setAlertOpen(true);
         setTimeout(() => {
@@ -167,121 +173,121 @@ export default function SignUp() {
   };
 
   return (
-      <ThemeProvider theme={SignUpTheme}>
-        <CssBaseline />
-        <Container
-          maxWidth="lg"
-          component="main"
+    <ThemeProvider theme={SignUpTheme}>
+      <CssBaseline />
+      <Container
+        maxWidth="lg"
+        component="main"
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          my: 10,
+          gap: 4,
+          justifyContent: "space-between",
+        }}>
+        <Stack
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            my: 10,
-            gap: 4,
-            justifyContent: "space-between",
+            justifyContent: "center",
+            height: "90dvh",
+            p: 2,
           }}>
-          <Stack
-            sx={{
-              justifyContent: "center",
-              height: "90dvh",
-              p: 2,
-            }}>
-            <Card variant="outlined">
-              <Typography variant="h2">Sign up</Typography>
+          <Card variant="outlined">
+            <Typography variant="h2">Sign up</Typography>
 
-              <Box
-                component="form"
-                onSubmit={handleSignup}
-                sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                <FormControl>
-                  <FormLabel htmlFor="name">Full name</FormLabel>
-                  <TextField
-                    autoComplete="name"
-                    name="name"
-                    required
-                    fullWidth
-                    id="name"
-                    placeholder="type your name"
-                    value={name}
-                    onChange={handleNameChange}
-                    error={nameError}
-                    helperText={nameErrorMessage}
-                    color={nameError ? "error" : "primary"}
-                  />
-                </FormControl>
-                <FormControl>
-                  <FormLabel htmlFor="email">Email</FormLabel>
-                  <TextField
-                    required
-                    fullWidth
-                    id="email"
-                    placeholder="your@email.com"
-                    name="email"
-                    autoComplete="email"
-                    variant="outlined"
-                    value={email}
-                    onChange={handleEmailChange}
-                    error={emailError}
-                    helperText={emailErrorMessage}
-                    color={emailError ? "error" : "primary"}
-                  />
-                </FormControl>
-                <FormControl>
-                  <FormLabel htmlFor="password">Password</FormLabel>
-                  <TextField
-                    required
-                    fullWidth
-                    name="password"
-                    placeholder="••••••"
-                    type="password"
-                    id="password"
-                    autoComplete="new-password"
-                    variant="outlined"
-                    value={password}
-                    onChange={handlePasswordChange}
-                    error={passwordError}
-                    helperText={passwordErrorMessage}
-                    color={passwordError ? "error" : "primary"}
-                  />
-                </FormControl>
-                <FormControl>
-                  <FormLabel htmlFor="Confpassword">Confirm Password</FormLabel>
-                  <TextField
-                    required
-                    fullWidth
-                    name="Confpassword"
-                    placeholder="••••••"
-                    type="password"
-                    id="Confpassword"
-                    variant="outlined"
-                    value={confPassword}
-                    onChange={(e) => setConfPassword(e.target.value)}
-                    error={confPassword !== password}
-                    helperText={
-                      confPassword !== password ? "Passwords do not match." : ""
-                    }
-                    color={confPassword !== password ? "error" : "primary"}
-                  />
-                </FormControl>
-                <Button
-                  type="submit"
+            <Box
+              component="form"
+              onSubmit={handleSignup}
+              sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <FormControl>
+                <FormLabel htmlFor="name">Full name</FormLabel>
+                <TextField
+                  autoComplete="name"
+                  name="name"
+                  required
                   fullWidth
-                  variant="contained"
-                  color="secondary">
-                  Sign up
-                </Button>
-                <Typography sx={{ textAlign: "center" }}>
-                  Already have an account?{" "}
-                  <span>
-                    <Link
-                      href="/users/signin"
-                      variant="body2"
-                      sx={{ alignSelf: "center" }}>
-                      Sign in
-                    </Link>
-                  </span>
-                </Typography>
-              </Box>
-              {/* <Divider>
+                  id="name"
+                  placeholder="type your name"
+                  value={name}
+                  onChange={handleNameChange}
+                  error={nameError}
+                  helperText={nameErrorMessage}
+                  color={nameError ? "error" : "primary"}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel htmlFor="email">Email</FormLabel>
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  placeholder="your@email.com"
+                  name="email"
+                  autoComplete="email"
+                  variant="outlined"
+                  value={email}
+                  onChange={handleEmailChange}
+                  error={emailError}
+                  helperText={emailErrorMessage}
+                  color={emailError ? "error" : "primary"}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel htmlFor="password">Password</FormLabel>
+                <TextField
+                  required
+                  fullWidth
+                  name="password"
+                  placeholder="••••••"
+                  type="password"
+                  id="password"
+                  autoComplete="new-password"
+                  variant="outlined"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  error={passwordError}
+                  helperText={passwordErrorMessage}
+                  color={passwordError ? "error" : "primary"}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel htmlFor="Confpassword">Confirm Password</FormLabel>
+                <TextField
+                  required
+                  fullWidth
+                  name="Confpassword"
+                  placeholder="••••••"
+                  type="password"
+                  id="Confpassword"
+                  variant="outlined"
+                  value={confPassword}
+                  onChange={(e) => setConfPassword(e.target.value)}
+                  error={confPassword !== password}
+                  helperText={
+                    confPassword !== password ? "Passwords do not match." : ""
+                  }
+                  color={confPassword !== password ? "error" : "primary"}
+                />
+              </FormControl>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="secondary">
+                Sign up
+              </Button>
+              <Typography sx={{ textAlign: "center" }}>
+                Already have an account?{" "}
+                <span>
+                  <Link
+                    href="/users/signin"
+                    variant="body2"
+                    sx={{ alignSelf: "center" }}>
+                    Sign in
+                  </Link>
+                </span>
+              </Typography>
+            </Box>
+            {/* <Divider>
                 <Typography sx={{ color: "text.secondary" }}>or</Typography>
               </Divider>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -294,24 +300,24 @@ export default function SignUp() {
                   Sign up with Google
                 </Button>
               </Box> */}
-            </Card>
-          </Stack>
+          </Card>
+        </Stack>
 
-          {/* ====== ALERT ====== */}
-          <ThemeProvider theme={defaultTheme}>
-            <Snackbar
-              open={alertOpen}
-              autoHideDuration={5000}
-              onClose={handleCloseAlert}>
-              <Alert
-                onClose={handleCloseAlert}
-                severity={alertSeverity}
-                sx={{ width: "100%" }}>
-                {alertMessage}
-              </Alert>
-            </Snackbar>
-          </ThemeProvider>
-        </Container>
-      </ThemeProvider>
+        {/* ====== ALERT ====== */}
+        <ThemeProvider theme={defaultTheme}>
+          <Snackbar
+            open={alertOpen}
+            autoHideDuration={5000}
+            onClose={handleCloseAlert}>
+            <Alert
+              onClose={handleCloseAlert}
+              severity={alertSeverity}
+              sx={{ width: "100%" }}>
+              {alertMessage}
+            </Alert>
+          </Snackbar>
+        </ThemeProvider>
+      </Container>
+    </ThemeProvider>
   );
 }
