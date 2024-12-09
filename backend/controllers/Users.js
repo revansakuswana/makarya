@@ -1,10 +1,7 @@
 import Users from "../models/UserModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import db from "../config/database.js";
 import upload from "../middleware/multerConfig.js";
-import Jobs from "../models/JobsModel.js";
-// import SavedJobs from "../models/JobsModel.js";
 import nodemailer from "nodemailer";
 import { Op } from "sequelize";
 
@@ -29,12 +26,12 @@ export const getProfile = async (req, res) => {
 
     if (!user) {
       return res.status(404).json({
-        msg: `Pengguna dengan nama "${userId}" tidak ditemukand`,
+        msg: `Pengguna tidak ditemukan`,
       });
     }
 
     res.status(200).json({
-      msg: `Profil berhasil diambil untuk pengguna: ${userId}`,
+      msg: `Profil berhasil dimuat`,
       data: user,
     });
   } catch (error) {
@@ -54,7 +51,7 @@ export const updateProfile = async (req, res) => {
     try {
       const existingUser = await Users.findOne({ where: { id: userId } });
       if (!existingUser) {
-        return res.status(404).json({ msg: "User not found" });
+        return res.status(404).json({ msg: `Pengguna tidak ditemukan` });
       }
 
       const data = {
@@ -95,7 +92,7 @@ export const deleteProfile = async (req, res) => {
 
     res.status(200).json({ msg: "Akun berhasil dihapus" });
   } catch (error) {
-    res.status(500).json({ msg: "Terjadi kesalahan saat menghapus akun" });
+    res.status(500).json({ msg: "Terjadi kesalahan pada server" });
   }
 };
 
@@ -209,10 +206,10 @@ export const SignUp = async (req, res) => {
       if (error) {
         return res
           .status(500)
-          .json({ msg: "Error sending verification email" });
+          .json({ msg: "Terjadi kesalahan saat mengirim email verifikasi" });
       }
       res.status(200).json({
-        msg: "Register berhasil. Verifikasi email Anda untuk mengaktifkan akun.",
+        msg: "Register berhasil, Verifikasi email Anda untuk mengaktifkan akun",
       });
     });
   } catch (error) {
@@ -231,7 +228,7 @@ export const SignIn = async (req, res) => {
 
     if (!user) {
       return res.status(404).json({
-        msg: "Email tidak ditemukan. Periksa alamat email Anda.",
+        msg: "Email tidak ditemukan, Periksa alamat email Anda",
       });
     }
 
@@ -239,7 +236,7 @@ export const SignIn = async (req, res) => {
     if (!match) {
       return res
         .status(400)
-        .json({ msg: "Kata sandi salah. Silakan coba lagi" });
+        .json({ msg: "Kata sandi salah, Silakan coba lagi" });
     }
 
     const userId = user.id;
@@ -282,7 +279,7 @@ export const SignIn = async (req, res) => {
     });
 
     res.json({
-      msg: "Sign In berhasil, Selamat Datang kembali!",
+      msg: "Selamat Datang kembali!",
       accessToken,
     });
   } catch (error) {
@@ -396,7 +393,7 @@ export const sendVerificationEmail = async (req, res) => {
       if (error) {
         return res
           .status(500)
-          .json({ msg: "Error sending verification email" });
+          .json({ msg: "Terjadi kesalahan saat mengirim email verifikasi" });
       }
       res.status(200).json({ msg: "Email verifikasi telah dikirim" });
     });
@@ -435,8 +432,6 @@ export const logout = async (req, res) => {
   res.clearCookie("refreshToken");
   res.clearCookie("jwt");
 
-  console.log("Cookie cleared");
-
   if (!refreshToken) return res.sendStatus(204);
   const user = await Users.findOne({
     where: {
@@ -467,16 +462,14 @@ export const forgotPassword = async (req, res) => {
 
     if (!user) {
       return res.status(404).json({
-        msg: "Email tidak ditemukan. Periksa alamat email Anda.",
+        msg: "Email tidak ditemukan, Periksa alamat email Anda",
       });
     }
 
-    // Generate token and hash it with bcrypt
     const token = (Math.random() + 1).toString(36).substring(2);
     const hashedToken = await bcrypt.hash(token, 10);
-    const expires = new Date(Date.now() + 3600000).toISOString(); // Convert to ISO string
+    const expires = new Date(Date.now() + 3600000).toISOString();
 
-    // Update user model with token and expiration
     await user.update({
       reset_password_token: hashedToken,
       reset_password_expires: expires,
@@ -556,7 +549,9 @@ export const forgotPassword = async (req, res) => {
 
     transporter.sendMail(mailOptions, (error) => {
       if (error) {
-        return res.status(500).json({ msg: "Terjadi kesalahan pada server" });
+        return res
+          .status(500)
+          .json({ msg: "Terjadi kesalahan saat mengirim email verifikasi" });
       }
       res.status(200).json({
         msg: "Email pengaturan ulang kata sandi berhasil dikirim",
@@ -591,7 +586,7 @@ export const resetPassword = async (req, res) => {
     );
     if (!tokenIsValid) {
       return res.status(400).json({
-        msg: "Verifikasi token gagal. Pastikan Anda menggunakan tautan pengaturan ulang yang benar",
+        msg: "Verifikasi token gagal, Pastikan Anda menggunakan tautan pengaturan ulang yang benar",
       });
     }
 
@@ -611,153 +606,3 @@ export const resetPassword = async (req, res) => {
     });
   }
 };
-
-export const getJobs = async (req, res) => {
-  try {
-    const jobs = await Jobs.findAll();
-    res.status(200).json(jobs);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ msg: "Terjadi kesalahan pada server" });
-  }
-};
-
-export const getJobsById = async (req, res) => {
-  const id = req.params.id;
-
-  try {
-    const jobs = await Jobs.findByPk(id);
-    if (!jobs) {
-      return res.status(404).json({ msg: "Data pekerjaan tidak ditemukan" });
-    }
-    res.status(200).json({
-      msg: "Jobs retrieved successfully",
-      data: jobs,
-    });
-  } catch (error) {
-    res.status(500).json({ msg: "Terjadi kesalahan pada server" });
-  }
-};
-
-// export const postsavedJobs = async (req, res) => {
-//   const jobsId = req.params.id;
-//   const jwt_token = req.cookies.jwt;
-//   if (!jwt_token) return res.sendStatus(403);
-
-//   try {
-//     const decode = jwt.decode(jwt_token);
-//     const { userId } = decode;
-
-//     const jobs = await Jobs.findByPk(jobsId);
-//     if (!jobs) {
-//       return res.status(404).json({ message: "Job not found" });
-//     }
-
-//     const alreadySaved = await SavedJobs.findOne({
-//       where: {
-//         job_id: jobs.id,
-//         user_id: userId,
-//       },
-//     });
-
-//     if (alreadySaved) {
-//       return res.status(400).json({ message: "Job already saved" });
-//     }
-
-//     await SavedJobs.create({
-//       id: jobs.id,
-//       job_title: jobs.job_title,
-//       company: jobs.company,
-//       location: jobs.location,
-//       work_type: jobs.work_type,
-//       working_type: jobs.working_type,
-//       experience: jobs.experience,
-//       study_requirement: jobs.study_requirement,
-//       salary: jobs.salary,
-//       link: jobs.link,
-//       link_img: jobs.link_img,
-//       skills: jobs.skills,
-//       updatedAt: jobs.updatedAt,
-//     });
-
-//     res.status(200).json({ message: "Job saved successfully" });
-//   } catch (error) {
-//     console.error("Error saving job:", error);
-//     res.status(500).json({ error: error.message });
-//   }
-// };
-
-// export const deletesavedJobs = async (req, res) => {
-//   const jwt_token = req.cookies.jwt;
-//   if (!jwt_token) return res.status(403).json({ msg: "Token is required" });
-
-//   let userId;
-//   try {
-//     const decode = jwt.decode(jwt_token);
-//     userId = decode.userId;
-//   } catch (error) {
-//     return res.status(403).json({ msg: "Invalid or expired token" });
-//   }
-
-//   const { jobId } = req.params;
-//   if (!jobId) return res.status(400).json({ msg: "Job ID is required" });
-
-//   try {
-//     db.query(
-//       "DELETE FROM saved_jobs WHERE user_id = ? AND job_id = ?",
-//       [userId, jobId],
-//       (err) => {
-//         if (err) {
-//           console.error("Error deleting job:", err);
-//           return res.status(500).json({ msg: "Error deleting job" });
-//         }
-//         res.status(200).json({ msg: "Job deleted from saved jobs!" });
-//       }
-//     );
-//   } catch (error) {
-//     console.error("Error executing query:", error);
-//     res.status(500).json({ msg: "Internal server error" });
-//   }
-// };
-
-// export const getsavedJobs = async (req, res) => {
-//   const jwt_token = req.cookies.jwt;
-//   if (!jwt_token) return res.status(403).json({ msg: "Token is required" });
-
-//   let userId;
-//   try {
-//     const decode = jwt.decode(jwt_token);
-//     userId = decode.userId;
-//   } catch (error) {
-//     return res.status(403).json({ msg: "Invalid or expired token" });
-//   }
-
-//   try {
-//     db.query(
-//       `SELECT jobs.id, jobs.job_title, jobs.company, jobs.location, jobs.salary, jobs.link
-//        FROM saved_jobs
-//        JOIN jobs ON saved_jobs.job_id = jobs.id
-//        WHERE saved_jobs.user_id = ?`,
-//       [userId],
-//       (err, results) => {
-//         if (err) {
-//           return res
-//             .status(500)
-//             .json({ msg: "Error fetching saved jobs", error: err.message });
-//         }
-//         if (results.length === 0) {
-//           return res
-//             .status(404)
-//             .json({ msg: "No saved jobs found for this user" });
-//         }
-//         res
-//           .status(200)
-//           .json({ msg: "Saved Jobs retrieved successfully", data: results });
-//       }
-//     );
-//   } catch (error) {
-//     res
-//       .status(500)
-//       .json({ msg: "Internal server error", error: error.message });
-//   }
-// };
