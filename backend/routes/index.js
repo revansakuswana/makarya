@@ -9,13 +9,15 @@ import {
   sendVerificationEmail,
   forgotPassword,
   resetPassword,
+  getSession,
+} from "../controllers/Users.js";
+import {
   getJobs,
   getJobsById,
-  getSession,
   // postsavedJobs,
   // deletesavedJobs,
   // getsavedJobs,
-} from "../controllers/Users.js";
+} from "../controllers/jobs.js";
 import {
   createArticles,
   deleteArticles,
