@@ -13,7 +13,6 @@ async function createConnection() {
   });
   return connection;
 }
-
 async function insertJobData(connection, job) {
   const query = `
         INSERT INTO jobs (job_title, company, work_type, working_type, experience, location, salary, link, link_img, category, study_requirement, skills, description, created_at, updated_at)
@@ -35,19 +34,19 @@ async function insertJobData(connection, job) {
     `;
 
   const values = [
-    job.job_title || null,          // job_title -> jobTitle
+    job.job_title || null,
     job.company || null,
-    job.work_type || null,          // work_type -> workType
-    job.working_type || null,       // working_type -> workingType
+    job.work_type || null,
+    job.working_type || null,
     job.experience || null,
     job.location || null,
     job.salary || null,
     job.link || null,
-    job.link_img || null,           // link_img -> linkImg
+    job.link_img || null,
     job.category || null,
-    job.study_requirement || null,  // study_requirement -> studyRequirement
+    job.study_requirement || null,
     job.skills || null,
-    job.description || null, 
+    job.description || null,
   ];
 
   try {
@@ -58,10 +57,8 @@ async function insertJobData(connection, job) {
   }
 }
 
-// Regular expression to extract the image ID
 const patternImgLink = /(.*company-logo.)(.*)/;
 
-// Global variable to maintain the job ID counter
 let jobIdCounter = 0;
 
 const validWorkTypes = [
@@ -102,31 +99,24 @@ const validStudyRequirements = [
 // Function to log in and get cookies using Puppeteer
 async function loginWithPuppeteer() {
   console.log("Logging in to get cookies...");
-  const browser = await puppeteer.launch({ headless: false }); // Set to false to see the browser actions
+  const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
 
-  await page.goto("https://glints.com/id/login"); // Ganti dengan URL halaman login Glints
+  await page.goto("https://glints.com/id/login");
 
-  // Klik tombol "Masuk dengan Email"
   await page.click("a[aria-label='Login with Email button']");
 
-  // Tunggu hingga form login muncul
   await page.waitForSelector('input[name="email"]');
 
-  // Isi email dan password
-  await page.type('input[name="email"]', "revansakuswana@gmail.com"); // Ganti dengan email yang benar
-  await page.type('input[name="password"]', "Revan2109"); // Ganti dengan password yang benar
+  await page.type('input[name="email"]', "revansakuswana@gmail.com");
+  await page.type('input[name="password"]', "Revan2109");
 
-  // Klik tombol untuk login
   await page.click('button[type="submit"]');
 
-  // Tunggu hingga login selesai dan halaman dialihkan
   await page.waitForNavigation();
 
-  // Ambil cookies dari session login
   const cookies = await page.cookies();
 
-  // Close the browser
   await browser.close();
 
   console.log("Login successful. Cookies retrieved.");
@@ -239,16 +229,17 @@ async function scrapeJobDetails(link) {
     const html = response.data;
     const $ = cheerio.load(html);
 
-    const category = $("div.a")?.text().trim() || "Tidak ditampilkan";
+    const category =
+      $("div.a")
+        ?.text()
+        .trim() || "Tidak ditampilkan";
 
-    // Scrape study requirement and apply validation
     let study_requirement = $(
       "div.TagStyle__TagContentWrapper-sc-r1wv7a-1.koGVuk"
     )
       ?.eq(2)
       .text()
       .trim();
-    // Validate study requirement
     study_requirement = validStudyRequirements.includes(study_requirement)
       ? study_requirement
       : "Tidak ditampilkan";
@@ -277,13 +268,12 @@ async function scrapeJobDetails(link) {
 // Main function
 export default async function scrapeGlints() {
   console.log("Starting the scraping process...");
-  const cookies = await loginWithPuppeteer(); // Login first to get session cookies
+  const cookies = await loginWithPuppeteer();
   const baseUrl =
     "https://glints.com/id/opportunities/jobs/explore?country=ID&locationName=All+Cities%2FProvinces&sortBy=LATEST";
   const jobData = [];
   let pageNumber = 1;
 
-  // Buat koneksi MySQL
   const connection = await createConnection();
 
   while (pageNumber <= 2) {
@@ -314,13 +304,11 @@ export default async function scrapeGlints() {
         ...jobDetails,
       };
 
-      // Simpan ke database
       await insertJobData(connection, fullJobData);
     }
 
     pageNumber++;
   }
-  // Tutup koneksi setelah selesai
   await connection.end();
   console.log("Scraping and insertion completed.");
 }
