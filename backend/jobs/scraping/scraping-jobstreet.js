@@ -1,7 +1,6 @@
 import puppeteer from "puppeteer";
 import mysql from "mysql2/promise";
 
-// Membuat koneksi ke database MySQL
 async function createConnection() {
   const connection = await mysql.createConnection({
     host: "localhost",
@@ -13,10 +12,9 @@ async function createConnection() {
   return connection;
 }
 
-// Fungsi untuk memasukkan data pekerjaan ke database MySQL
 async function insertJobData(connection, job) {
   const query = `
-        INSERT INTO jobs (job_title, company, work_type, working_type, experience, location, salary, link, link_img, category, study_requirement, skills, description, createdAt, updatedAt)
+        INSERT INTO jobs (job_title, company, work_type, working_type, experience, location, salary, link, link_img, category, study_requirement, skills, description, created_at, updated_at)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
         ON DUPLICATE KEY UPDATE 
           job_title = VALUES(job_title),
@@ -31,7 +29,7 @@ async function insertJobData(connection, job) {
           study_requirement = VALUES(study_requirement),
           skills = VALUES(skills),
           description = VALUES(description),
-          updatedAt = CURRENT_TIMESTAMP
+          updated_at = CURRENT_TIMESTAMP
     `;
 
   const values = [
@@ -52,7 +50,7 @@ async function insertJobData(connection, job) {
 
   try {
     await connection.execute(query, values);
-    console.log(`Job ${job.job_title} inserted/updated successfully.`);
+    console.log(`Jobs ${job.job_title} inserted/updated successfully.`);
   } catch (error) {
     console.error("Error inserting job data:", error);
   }
@@ -192,11 +190,9 @@ export default async function scrapeJobstreet() {
 
   if (job_data.length > 0) {
     console.log("Data has been scraped successfully.");
-    // Masukkan data ke database
     for (const job of job_data) {
       await insertJobData(connection, job);
     }
-    // Tutup koneksi setelah selesai
     await connection.end();
     console.log("Data has been inserted into the database.");
   } else {
