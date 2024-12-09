@@ -1,19 +1,18 @@
 import upload from "../middleware/multerConfig.js";
 import models from "../models/index.js";
-import path from "path";
 import { z } from "zod";
 
 const { Articles, Users } = models;
 
 const articleSchema = z.object({
-  title: z.string().min(1, { msg: "Silakan isi judul artikel." }),
-  category: z.string().min(1, { msg: "Silakan isi kategori artikel." }),
-  image: z.string().min(1, { msg: "Silakan unggah gambar artikel." }),
-  content: z.string().min(1, { message: "Silakan isi konten artikel." }),
+  title: z.string().min(1, { message: "Silakan isi judul artikel" }),
+  category: z.string().min(1, { message: "Silakan isi kategori artikel" }),
+  image: z.string().min(1, { message: "Silakan unggah gambar artikel" }),
+  content: z.string().min(1, { message: "Silakan isi konten artikel" }),
 });
 
 export const createArticles = async (req, res) => {
-  const { name, userId } = req.user;
+  const { userId } = req.user;
 
   try {
     upload.single("image")(req, res, async (err) => {
@@ -31,7 +30,6 @@ export const createArticles = async (req, res) => {
 
         const data = {
           author_id: userId,
-          name,
           title: parsedData.title,
           category: parsedData.category,
           image: req.file.filename,
@@ -47,11 +45,11 @@ export const createArticles = async (req, res) => {
         if (error instanceof z.ZodError) {
           const formattedErrors = error.errors.map((e) => ({
             field: e.path[0],
-            msg: e.msg,
+            msg: e.message,
           }));
           return res.status(400).json({ errors: formattedErrors });
         }
-        res.status(500).json({ error: "Gagal memposting artikel" });
+        res.status(500).json({ msg: "Gagal memposting artikel" });
       }
     });
   } catch (error) {
@@ -60,7 +58,7 @@ export const createArticles = async (req, res) => {
 };
 
 export const updateArticle = async (req, res) => {
-  const { name } = req.user;
+  const { author_id: userId } = req.user;
 
   try {
     upload.single("image")(req, res, async (err) => {
@@ -76,7 +74,7 @@ export const updateArticle = async (req, res) => {
         return res.status(404).json({ msg: "Artikel tidak ditemukan" });
       }
 
-      if (existingArticle.name !== name) {
+      if (existingArticle.userId !== userId) {
         return res.status(403).json({ msg: "Akses ditolak" });
       }
 
@@ -109,13 +107,13 @@ export const updateArticle = async (req, res) => {
 };
 
 export const deleteArticles = async (req, res) => {
-  const { name } = req.user;
+  const { userId } = req.user;
 
   try {
     const id = req.params.id;
     const article = await Articles.findByPk(id);
 
-    if (!article || article.name !== name) {
+    if (!article || article.userId !== userId) {
       return res.status(403).json({ msg: "Akses ditolak" });
     }
 
@@ -147,7 +145,7 @@ export const getAllArticles = async (req, res) => {
       data: articles,
     });
   } catch (error) {
-    res.status(500).json({ msg: "Terjadi kesalahan saat mengambil data" });
+    res.status(500).json({ msg: "Terjadi kesalahan pada server" });
   }
 };
 
@@ -175,12 +173,12 @@ export const getAllArticlesById = async (req, res) => {
       data: articles,
     });
   } catch (error) {
-    res.status(500).json({ msg: "Terjadi kesalahan saat mengambil data" });
+    res.status(500).json({ msg: "Terjadi kesalahan pada server" });
   }
 };
 
 export const getUserArticleById = async (req, res) => {
-  const { name } = req.user;
+  const { author_id: userId } = req.user;
 
   try {
     const id = req.params.id;
@@ -190,7 +188,7 @@ export const getUserArticleById = async (req, res) => {
       return res.status(404).json({ msg: "Artikel tidak ditemukan" });
     }
 
-    if (article.name !== name) {
+    if (article.userId !== userId) {
       return res.status(403).json({ msg: "Akses ditolak" });
     }
 
@@ -199,15 +197,22 @@ export const getUserArticleById = async (req, res) => {
       data: article,
     });
   } catch (error) {
-    res.status(500).json({ msg: "Terjadi kesalahan saat mengambil data" });
+    res.status(500).json({ msg: "Terjadi kesalahan pada server" });
   }
 };
 
 export const getUserArticles = async (req, res) => {
-  const { name } = req.user;
+  const { userId } = req.user;
   try {
     const articles = await Articles.findAll({
-      where: { name },
+      where: { author_id: userId },
+      include: [
+        {
+          model: Users,
+          as: "author",
+          attributes: ["name", "avatar"],
+        },
+      ],
     });
 
     if (articles.length === 0) {
@@ -221,6 +226,6 @@ export const getUserArticles = async (req, res) => {
       data: articles,
     });
   } catch (error) {
-    res.status(500).json({ msg: "Terjadi kesalahan saat mengambil data" });
+    res.status(500).json({ msg: "Terjadi kesalahan pada servera" });
   }
 };
