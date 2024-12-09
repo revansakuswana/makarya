@@ -17,7 +17,7 @@ import {
   // postsavedJobs,
   // deletesavedJobs,
   // getsavedJobs,
-} from "../controllers/jobs.js";
+} from "../controllers/Jobs.js";
 import {
   createArticles,
   deleteArticles,
