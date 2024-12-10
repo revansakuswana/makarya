@@ -54,7 +54,7 @@ import Breadcrumb from "../components/Breadcrumb/Breadcrumb";
 import find from "../assets/images/find.svg";
 import Loaders from "../components/Loaders/Loaders";
 import getBlogTheme from "../components/Article/theme/getBlogTheme";
-// import Bookmark from "../components/Bookmark/Bookmark";
+import Bookmark from "../components/Bookmark/Bookmark";
 import axios from "axios";
 
 const getTimeAgo = (updatedAt) => {
@@ -995,9 +995,7 @@ const Jobs = () => {
                                                 borderColor: "grey.300",
                                               }}
                                             />
-                                            {/* <Box className="w-[40px] h-[40px] p-1 rounded border border-gray-200">
-                                              <Bookmark jobId={item} />
-                                            </Box> */}
+                                            <Bookmark jobsId={item.id.toString()} />
                                           </Box>
 
                                           <Box
