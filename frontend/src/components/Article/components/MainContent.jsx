@@ -448,7 +448,7 @@ export default function MainContent() {
         <ThemeProvider theme={defaultTheme}>
           <Snackbar
             open={alertOpen}
-            autoHideDuration={5000}
+            autoHideDuration={1500}
             onClose={handleCloseAlert}>
             <Alert
               onClose={handleCloseAlert}
