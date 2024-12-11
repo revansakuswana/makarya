@@ -112,7 +112,9 @@ export default function Latest() {
     const fetchArticles = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/allarticles`); // Replace with your API URL
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/api/allarticles`
+        ); // Replace with your API URL
         const sortedArticles = response.data.data.sort(
           (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
         );
@@ -163,17 +165,15 @@ export default function Latest() {
   return (
     <ThemeProvider theme={blogTheme}>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
-        <Typography variant="h2" >
-          Artikel Terbaru
-        </Typography>
+        <Typography variant="h2">Artikel Terbaru</Typography>
         {loading ? (
           <div className="flex justify-center items-center h-full my-72">
             <Loaders size={70} />
           </div>
         ) : (
           <Grid container spacing={6} columns={12}>
-            {currentArticles.map((article, index) => (
-              <Grid key={index} size={{ xs: 12, sm: 6 }}>
+            {currentArticles.map((article) => (
+              <Grid key={article} size={{ xs: 12, sm: 6 }}>
                 <Box
                   sx={{
                     display: "flex",
@@ -218,14 +218,16 @@ export default function Latest() {
                         alignItems: "center",
                       }}>
                       <Avatar
-                          src={`${import.meta.env.VITE_BASE_URL}/public/images/${article.author.avatar}`}
-                          alt={article.author.name}
-                          sx={{ width: 24, height: 24 }}
-                        />
-                        <Typography variant="caption">
-                          {article.author.name}
-                        </Typography>
-                      </Box>
+                        src={`${import.meta.env.VITE_BASE_URL}/public/images/${
+                          article.author.avatar
+                        }`}
+                        alt={article.author.name}
+                        sx={{ width: 24, height: 24 }}
+                      />
+                      <Typography variant="caption">
+                        {article.author.name}
+                      </Typography>
+                    </Box>
                     <Typography variant="caption">
                       {getTimeAgo(article.updatedAt)}
                     </Typography>
