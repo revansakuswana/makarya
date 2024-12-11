@@ -60,9 +60,6 @@ const Profile = () => {
     is_verified: "",
   });
 
-  const defaultImage =
-    "https://banner2.cleanpng.com/20180420/krw/avfa3ii00.webp";
-
   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true);
@@ -77,11 +74,9 @@ const Profile = () => {
         setUsers(userData);
         setInitialUserData(userData);
         setPreviewImage(
-          response.data.data.avatar
-            ? `${import.meta.env.VITE_BASE_URL}/public/images/${
-                response.data.data.avatar
-              }`
-            : defaultImage
+          `${import.meta.env.VITE_BASE_URL}/public/images/${
+            response.data.data.avatar
+          }`
         );
       } catch (err) {
         setAlertMessage(
@@ -142,11 +137,9 @@ const Profile = () => {
           }));
 
           setPreviewImage(
-            updatedUser.avatar
-              ? `${import.meta.env.VITE_BASE_URL}/public/images/${
-                  updatedUser.avatar
-                }`
-              : defaultImage
+            updatedUser.avatar`${import.meta.env.VITE_BASE_URL}/public/images/${
+              updatedUser.avatar
+            }`
           );
         }
         setIsEditing(false);
@@ -199,17 +192,16 @@ const Profile = () => {
 
   const handleCancel = () => {
     if (initialUserData) {
-      setUsers(initialUserData); // Mengembalikan data pengguna ke nilai awal
+      setUsers(initialUserData);
       setPreviewImage(
-        initialUserData.avatar
-          ? `${import.meta.env.VITE_BASE_URL}/public/images/${initialUserData.avatar}`
-          : defaultImage // Mengembalikan preview ke gambar awal atau default
+        `${import.meta.env.VITE_BASE_URL}/public/images/${
+          initialUserData.avatar
+        }`
       );
     }
-    setAvatar(null); // Menghapus file gambar yang dipilih
+    setAvatar(null);
     setIsEditing(false);
   };
-  
 
   const handleLogout = async () => {
     try {
@@ -330,8 +322,13 @@ const Profile = () => {
                 }}>
                 <label htmlFor="avatar-upload">
                   <Avatar
-                    src={previewImage || defaultImage}
-                    alt="Profile Picture"
+                    src={
+                      previewImage ||
+                      `${import.meta.env.VITE_BASE_URL}/public/images/${
+                        users.avatar
+                      }`
+                    }
+                    alt={users.name}
                     sx={{
                       width: 180,
                       height: 180,
@@ -360,7 +357,7 @@ const Profile = () => {
                   gap: 2.2,
                 }}>
                 <Box
-                  container
+                
                   spacing={1}
                   sx={{ display: "flex", justifyContent: "space-between" }}>
                   <Box sx={{ display: "flex", gap: 1 }}>
@@ -406,7 +403,7 @@ const Profile = () => {
                   )}
                 </Box>
 
-                <Box container spacing={1} alignItems="left">
+                <Box spacing={1} alignItems="left">
                   <Box>
                     <MapPinIcon
                       style={{
@@ -629,7 +626,7 @@ const Profile = () => {
       <ThemeProvider theme={defaultTheme}>
         <Snackbar
           open={alertOpen}
-          autoHideDuration={6000}
+          autoHideDuration={1500}
           onClose={handleCloseAlert}>
           <Alert onClose={handleCloseAlert} severity={alertSeverity}>
             {alertMessage}
