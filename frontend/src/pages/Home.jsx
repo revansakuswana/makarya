@@ -187,11 +187,12 @@ const Home = () => {
                       "&:hover": { transform: "translateY(-4px)" },
                     }}>
                     <Button
-                      href="/users/signup"
+                      href="/jobs"
                       color="secondary"
                       variant="contained"
+                      size="small"
                       sx={{ fontWeight: "bold" }}>
-                      Daftar sekarang
+                      Cari Pekerjaan
                       <ArrowRightIcon
                         style={{
                           height: 17,
@@ -215,63 +216,6 @@ const Home = () => {
           </Box>
         </Box>
         <Features />
-        {/* ===== PERFORMANCE SECTION ===== */}
-        {/* <Box
-            sx={{
-              position: "relative",
-              overflow: "hidden",
-            }}>
-            <Container>
-              <Grid
-                container
-                spacing={4}
-                sx={{
-                  borderRadius: 2,
-                  alignItems: "center",
-                  justifyContent: { xs: "center", sm: "space-between" },
-                }}>
-                <Grid xs={12} md={6} sx={{ textAlign: "center" }}>
-                  <Typography
-                    variant="h2"
-                    sx={{
-                      fontSize: { xs: "2.5rem", sm: "3rem" },
-                      fontWeight: "bold",
-                      color: "black",
-                    }}>
-                    <span style={{ color: "#336aea" }}>
-                      Kinerja produktivitas{" "}
-                    </span>
-                    kami
-                  </Typography>
-                </Grid>
-
-                <Grid xs={12} md={6}>
-                  <Grid
-                    container
-                    spacing={3}
-                    divider={<Divider orientation="vertical" flexItem />}>
-                    {stats.map((stat) => (
-                      <Grid xs={4} key={stat.name} sx={{ textAlign: "center" }}>
-                        <Typography
-                          variant="body1"
-                          sx={{ color: "black", fontSize: "1rem" }}>
-                          {stat.name}
-                        </Typography>
-                        <Typography
-                          variant="h4"
-                          sx={{ fontWeight: "bold", color: "black", pt: 2 }}>
-                          <span style={{ color: "#336aea", fontWeight: "600" }}>
-                            +{" "}
-                          </span>
-                          {stat.value}
-                        </Typography>
-                      </Grid>
-                    ))}
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Container>
-          </Box> */}
         {/* ===== JOB SECTION ===== */}
         <Box
           sx={{
@@ -594,6 +538,7 @@ const Home = () => {
                 href="/jobs"
                 color="secondary"
                 variant="contained"
+                size="small"
                 sx={{ fontWeight: "bold" }}>
                 Lowongan lainnya
                 <ArrowRightIcon
