@@ -13,7 +13,6 @@ import {
   FormHelperText,
   Box,
 } from "@mui/material";
-import Grid from "@mui/material/Grid2";
 import Breadcrumb from "../Breadcrumb/Breadcrumb";
 import getBlogTheme from "./theme/getBlogTheme";
 import Loaders from "../Loaders/Loaders";
@@ -204,7 +203,7 @@ const ArticleForm = () => {
             <Loaders size={70} />
           </div>
         ) : (
-          <Grid sx={{ maxWidth: "800px", margin: "auto" }}>
+          <Box sx={{ maxWidth: "800px", margin: "auto" }}>
             <Typography variant="h4" sx={{ mb: 3 }}>
               Posting Artikel
             </Typography>
@@ -247,7 +246,7 @@ const ArticleForm = () => {
                   Image
                 </Typography>
                 {previewImage && (
-                  <Grid>
+                  <Box>
                     <img
                       src={previewImage}
                       alt="Preview"
@@ -258,11 +257,11 @@ const ArticleForm = () => {
                         borderRadius: 4,
                       }}
                     />
-                  </Grid>
+                  </Box>
                 )}
 
-                <Grid container spacing={2} alignItems="center">
-                  <Grid>
+                <Box container spacing={2} alignItems="center">
+                  <Box>
                     <Button
                       variant="contained"
                       color="secondary"
@@ -276,16 +275,16 @@ const ArticleForm = () => {
                         sx={{ display: "none" }}
                       />
                     </Button>
-                  </Grid>
-                  <Grid>
+                  </Box>
+                  <Box>
                     <FormHelperText>
                       {imageName || "No file selected"}
                     </FormHelperText>
                     {errors.image && (
                       <FormHelperText error>{errors.image}</FormHelperText>
                     )}
-                  </Grid>
-                </Grid>
+                  </Box>
+                </Box>
               </Box>
 
               <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -303,8 +302,8 @@ const ArticleForm = () => {
                 )}
               </Box>
 
-              <Grid container spacing={2}>
-                <Grid>
+              <Box container spacing={2}>
+                <Box>
                   <Button
                     variant="contained"
                     color="secondary"
@@ -313,8 +312,8 @@ const ArticleForm = () => {
                     disabled={loading}>
                     Posting
                   </Button>
-                </Grid>
-                <Grid>
+                </Box>
+                <Box>
                   <Button
                     variant="contained"
                     color="error"
@@ -322,10 +321,10 @@ const ArticleForm = () => {
                     onClick={handleCancel}>
                     Batalkan
                   </Button>
-                </Grid>
-              </Grid>
+                </Box>
+              </Box>
             </Box>
-          </Grid>
+          </Box>
         )}
 
         {/* ====== ALERT ====== */}

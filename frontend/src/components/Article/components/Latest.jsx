@@ -18,7 +18,6 @@ import {
 import { styled } from "@mui/material/styles";
 import { marked } from "marked";
 import Avatar from "@mui/material/Avatar";
-import Grid from "@mui/material/Grid2";
 import Pagination from "@mui/material/Pagination";
 import NavigateNextRoundedIcon from "@mui/icons-material/NavigateNextRounded";
 import getBlogTheme from "../theme/getBlogTheme";
@@ -171,9 +170,9 @@ export default function Latest() {
             <Loaders size={70} />
           </div>
         ) : (
-          <Grid container spacing={6} columns={12} sx={{ my: 4 }}>
+          <Box container spacing={6} columns={12} sx={{ my: 4 }}>
             {currentArticles.map((article, index) => (
-              <Grid key={index} size={{ xs: 12, sm: 6 }}>
+              <Box key={index} size={{ xs: 12, sm: 6 }}>
                 <Box
                   sx={{
                     display: "flex",
@@ -231,9 +230,9 @@ export default function Latest() {
                     </Typography>
                   </Box>
                 </Box>
-              </Grid>
+              </Box>
             ))}
-          </Grid>
+          </Box>
         )}
 
         <ThemeProvider theme={defaultTheme}>

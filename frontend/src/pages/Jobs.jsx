@@ -49,7 +49,6 @@ import {
   MinusIcon,
   PlusIcon,
 } from "@heroicons/react/20/solid";
-import Grid from "@mui/material/Grid2";
 import Breadcrumb from "../components/Breadcrumb/Breadcrumb";
 import find from "../assets/images/find.svg";
 import Loaders from "../components/Loaders/Loaders";
@@ -502,7 +501,7 @@ const Jobs = () => {
                           <TextField
                             {...params}
                             placeholder="Masukkan kata kunci"
-                            InputProps={{
+                            slotProps={{
                               ...params.InputProps,
                               className:
                                 "w-full bg-transparent focus:outline-none text-gray-500",
@@ -544,7 +543,7 @@ const Jobs = () => {
                           <TextField
                             {...params}
                             placeholder="Masukkan category"
-                            InputProps={{
+                            slotProps={{
                               ...params.InputProps,
                               className:
                                 "w-full bg-transparent focus:outline-none text-gray-500",
@@ -585,7 +584,7 @@ const Jobs = () => {
                           <TextField
                             {...params}
                             placeholder="Masukkan Lokasi"
-                            InputProps={{
+                            slotProps={{
                               ...params.InputProps,
                               className:
                                 "w-full bg-transparent focus:outline-none text-gray-500",
@@ -944,7 +943,7 @@ const Jobs = () => {
                           }}>
                           <Box className="w-full">
                             {visibleData.length > 0 ? (
-                              <Grid className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-5 justify-items-center">
+                              <Box className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-5 justify-items-center">
                                 {visibleData.map((item) => (
                                   <Box
                                     key={item.id}
@@ -1162,7 +1161,7 @@ const Jobs = () => {
                                     </Box>
                                   </Box>
                                 ))}
-                              </Grid>
+                              </Box>
                             ) : (
                               <Box className="flex flex-col items-center text-center">
                                 <img

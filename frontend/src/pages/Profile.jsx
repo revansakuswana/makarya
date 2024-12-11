@@ -25,7 +25,6 @@ import {
   ExclamationCircleIcon,
 } from "@heroicons/react/24/outline";
 import { TrashIcon, CheckBadgeIcon } from "@heroicons/react/24/solid";
-import Grid from "@mui/material/Grid2";
 import getBlogTheme from "../components/Article/theme/getBlogTheme";
 import Loaders from "../components/Loaders/Loaders";
 import axios from "axios";
@@ -305,14 +304,14 @@ const Profile = () => {
             <Loaders size={70} />
           </div>
         ) : (
-          <Grid
+          <Box
             sx={{
               display: "flex",
               flexDirection: { xs: "column", md: "row" },
               justifyContent: "space-between",
               gap: 4,
             }}>
-            <Grid
+            <Box
               sx={{
                 display: "flex",
                 flexDirection: "column",
@@ -321,7 +320,7 @@ const Profile = () => {
                 gap: 2,
                 width: { xs: "100%", md: 400 },
               }}>
-              <Grid
+              <Box
                 sx={{
                   display: "flex",
                   flexDirection: "column",
@@ -351,20 +350,20 @@ const Profile = () => {
                 <Typography variant="h5" fontWeight="bold">
                   {users.name}
                 </Typography>
-              </Grid>
+              </Box>
 
-              <Grid
+              <Box
                 sx={{
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "left",
                   gap: 2.2,
                 }}>
-                <Grid
+                <Box
                   container
                   spacing={1}
                   sx={{ display: "flex", justifyContent: "space-between" }}>
-                  <Grid sx={{ display: "flex", gap: 1 }}>
+                  <Box sx={{ display: "flex", gap: 1 }}>
                     <EnvelopeIcon
                       style={{
                         height: 24,
@@ -389,10 +388,10 @@ const Profile = () => {
                         }}
                       />
                     )}
-                  </Grid>
+                  </Box>
 
                   {!(users.is_verified == 1 || users.is_verified == "1") && (
-                    <Grid sx={{ display: "flex" }}>
+                    <Box sx={{ display: "flex" }}>
                       <ExclamationCircleIcon
                         style={{
                           height: 20,
@@ -403,20 +402,20 @@ const Profile = () => {
                         }}
                       />
                       <Link onClick={handleVerify}>Verifikasi email</Link>
-                    </Grid>
+                    </Box>
                   )}
-                </Grid>
+                </Box>
 
-                <Grid container spacing={1} alignItems="left">
-                  <Grid>
+                <Box container spacing={1} alignItems="left">
+                  <Box>
                     <MapPinIcon
                       style={{
                         height: 24,
                         width: 24,
                       }}
                     />
-                  </Grid>
-                  <Grid>
+                  </Box>
+                  <Box>
                     <Typography
                       sx={{
                         fontWeight: "medium",
@@ -425,9 +424,9 @@ const Profile = () => {
                       variant="body1">
                       {users.location}
                     </Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
+                  </Box>
+                </Box>
+              </Box>
 
               {/* Tombol Edit, Logout, dan Hapus Akun */}
               <Box
@@ -468,7 +467,7 @@ const Profile = () => {
                   Delete Account
                 </Button>
               </Box>
-            </Grid>
+            </Box>
 
             {/* Form Edit */}
             <Box
@@ -545,44 +544,44 @@ const Profile = () => {
                 </>
               ) : (
                 <>
-                  <Grid
+                  <Box
                     sx={{
                       display: "flex",
                       flexDirection: "column",
                       justifyContent: "center",
                       gap: 2.2,
                     }}>
-                    <Grid xs={12} sm={6}>
+                    <Box xs={12} sm={6}>
                       <Typography variant="h6" fontWeight="bold">
                         Name
                       </Typography>
                       <Typography variant="body1">{users.name}</Typography>
-                    </Grid>
-                    <Grid xs={12} sm={6}>
+                    </Box>
+                    <Box xs={12} sm={6}>
                       <Typography variant="h6" fontWeight="bold">
                         Location
                       </Typography>
                       <Typography variant="body1">{users.location}</Typography>
-                    </Grid>
-                    <Grid xs={12} sm={6}>
+                    </Box>
+                    <Box xs={12} sm={6}>
                       <Typography variant="h6" fontWeight="bold">
                         Education
                       </Typography>
                       <Typography variant="body1">{users.education}</Typography>
-                    </Grid>
-                    <Grid xs={12} sm={6}>
+                    </Box>
+                    <Box xs={12} sm={6}>
                       <Typography variant="h6" fontWeight="bold">
                         Skills
                       </Typography>
                       <Typography variant="body1">{users.skills}</Typography>
-                    </Grid>
-                    <Grid xs={12} sm={6}>
+                    </Box>
+                    <Box xs={12} sm={6}>
                       <Typography variant="h6" fontWeight="bold">
                         Email
                       </Typography>
                       <Typography variant="body1">{users.email}</Typography>
-                    </Grid>
-                  </Grid>
+                    </Box>
+                  </Box>
                   <Button
                     sx={{
                       marginTop: 1.8,
@@ -596,19 +595,19 @@ const Profile = () => {
                 </>
               )}
             </Box>
-          </Grid>
+          </Box>
         )}
       </Container>
 
       <Dialog open={deleteConfirmOpen} onClose={handleCloseDeleteDialog}>
-        <Grid sx={{ textAlign: "center" }}>
+        <Box sx={{ textAlign: "center" }}>
           <DialogTitle variant="h4">Konfirmasi</DialogTitle>
           <DialogContent>
             <Typography>
               Apakah anda yakin ingin menghapus akun anda?
             </Typography>
           </DialogContent>
-        </Grid>
+        </Box>
         <DialogActions>
           <Button
             onClick={handleCloseDeleteDialog}

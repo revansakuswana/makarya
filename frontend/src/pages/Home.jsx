@@ -10,7 +10,6 @@ import {
   Alert,
   Button,
   Typography,
-  // Divider,
   Box,
 } from "@mui/material";
 import {
@@ -26,7 +25,6 @@ import {
   ArrowRightIcon,
 } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
-import Grid from "@mui/material/Grid2";
 import getBlogTheme from "../components/Article/theme/getBlogTheme";
 import Bookmark from "../components/Bookmark/Bookmark";
 import Loaders from "../components/Loaders/Loaders";
@@ -34,12 +32,6 @@ import Features from "../components/Features/Features";
 import hero from "../assets/images/hero.png";
 import find from "../assets/images/find.svg";
 import axios from "axios";
-
-// const stats = [
-//   { name: "Jobs", value: "550K" },
-//   { name: "Startups", value: "10K" },
-//   { name: "Recruitment", value: "345K" },
-// ];
 
 const getTimeAgo = (updatedAt) => {
   const now = new Date();
@@ -272,7 +264,7 @@ const Home = () => {
                   }}>
                   <div className="w-full">
                     {visibleData.length > 0 ? (
-                      <Grid className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 justify-items-center">
+                      <Box className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 justify-items-center">
                         {visibleData.map((item) => (
                           <Box
                             key={item.id}
@@ -484,7 +476,7 @@ const Home = () => {
                             </Box>
                           </Box>
                         ))}
-                      </Grid>
+                      </Box>
                     ) : (
                       <Box className="flex flex-col items-center text-center">
                         <img
@@ -533,7 +525,7 @@ const Home = () => {
               </Box>
             </ThemeProvider>
 
-            <Grid sx={{ textAlign: "center" }}>
+            <Box sx={{ textAlign: "center" }}>
               <Button
                 href="/jobs"
                 color="secondary"
@@ -550,7 +542,7 @@ const Home = () => {
                   }}
                 />
               </Button>
-            </Grid>
+            </Box>
           </Box>
         </Box>
       </Container>

@@ -20,7 +20,6 @@ import {
   differenceInSeconds,
   parseISO,
 } from "date-fns";
-import Grid from "@mui/material/Grid2";
 import axios from "axios";
 import Breadcrumb from "../Breadcrumb/Breadcrumb.jsx";
 import getBlogTheme from "../Article/theme/getBlogTheme.jsx";
@@ -162,7 +161,7 @@ export default function JobsItem() {
             <Loaders size={70} />
           </div>
         ) : (
-          <Grid
+          <Box
             container
             spacing={2}
             sx={{
@@ -177,7 +176,7 @@ export default function JobsItem() {
                 padding: 0,
               }}>
               <CardContent>
-                <Grid
+                <Box
                   container
                   spacing={2}
                   sx={{
@@ -186,7 +185,7 @@ export default function JobsItem() {
                     gap: 2,
                     padding: 3,
                   }}>
-                  <Grid
+                  <Box
                     xs={12}
                     sm={6}
                     sx={{
@@ -208,13 +207,13 @@ export default function JobsItem() {
                         borderColor: "grey.300",
                       }}
                     />
-                  </Grid>
+                  </Box>
 
-                  <Grid xs={12}>
+                  <Box xs={12}>
                     <Typography variant="h4" component="div">
                       {jobs.job_title}
                     </Typography>
-                  </Grid>
+                  </Box>
 
                   <Box
                     sx={{
@@ -285,7 +284,7 @@ export default function JobsItem() {
                     Apply Now
                   </Button>
 
-                  <Grid xs={12}>
+                  <Box xs={12}>
                     <Typography variant="h4" sx={{ marginBottom: 2 }}>
                       Description
                     </Typography>
@@ -298,8 +297,8 @@ export default function JobsItem() {
                           : "Loading content...",
                       }}
                     />
-                  </Grid>
-                </Grid>
+                  </Box>
+                </Box>
               </CardContent>
             </Card>
 
@@ -323,11 +322,11 @@ export default function JobsItem() {
                         padding: 0,
                         mb: 2,
                       }}>
-                      <Grid
+                      <Box
                         component="a"
                         href={`/jobs/${otherJobs.id}`}
                         style={{ textDecoration: "none" }}>
-                        <Grid
+                        <Box
                           xs={12}
                           sx={{
                             display: "flex",
@@ -409,8 +408,8 @@ export default function JobsItem() {
                             }}>
                             Diunggah{""} {getTimeAgo(otherJobs.updatedAt)}
                           </Typography>
-                        </Grid>
-                      </Grid>
+                        </Box>
+                      </Box>
                     </Card>
                   ))
               ) : (
@@ -419,7 +418,7 @@ export default function JobsItem() {
                 </Typography>
               )}
             </Box>
-          </Grid>
+          </Box>
         )}
         <ThemeProvider theme={defaultTheme}>
           <Snackbar

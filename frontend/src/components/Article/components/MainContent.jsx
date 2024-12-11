@@ -27,7 +27,6 @@ import {
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { marked } from "marked";
 import { useNavigate } from "react-router-dom";
-import Grid from "@mui/material/Grid2";
 import PropTypes from "prop-types";
 import getBlogTheme from "../theme/getBlogTheme";
 import Loaders from "../../Loaders/Loaders";
@@ -379,9 +378,9 @@ export default function MainContent() {
             <Loaders size={70} />
           </div>
         ) : (
-          <Grid container spacing={2} columns={12}>
+          <Box container spacing={2} columns={12}>
             {currentArticles.map((articles, index) => (
-              <Grid key={index} size={{ xs: 12, sm: 6, md: 4 }}>
+              <Box key={index} size={{ xs: 12, sm: 6, md: 4 }}>
                 <SyledCard tabIndex={0}>
                   <CardMedia
                     component="img"
@@ -439,9 +438,9 @@ export default function MainContent() {
                     </Box>
                   </SyledCardContent>
                 </SyledCard>
-              </Grid>
+              </Box>
             ))}
-          </Grid>
+          </Box>
         )}
 
         <ThemeProvider theme={defaultTheme}>

@@ -14,7 +14,6 @@ import {
   Snackbar,
   FormHelperText,
 } from "@mui/material";
-import Grid from "@mui/material/Grid2";
 import getBlogTheme from "./theme/getBlogTheme";
 import Breadcrumb from "../Breadcrumb/Breadcrumb";
 import Loaders from "../Loaders/Loaders";
@@ -184,11 +183,7 @@ const ArticleEdit = () => {
         });
         setErrors(formattedErrors);
         console.log("Error:", formattedErrors);
-      } else if (err.response.status === 500) {
-        setAlertSeverity("error");
-        setAlertMessage(err.response.data.msg);
-        setAlertOpen(true);
-      } else {
+      } else if (err.response.status === 500 || err.response.status !== 400) {
         setAlertSeverity("error");
         setAlertMessage(err.response.data.msg);
         setAlertOpen(true);
@@ -222,7 +217,7 @@ const ArticleEdit = () => {
             <Loaders size={70} />
           </div>
         ) : (
-          <Grid sx={{ maxWidth: "800px", margin: "auto" }}>
+          <Box sx={{ maxWidth: "800px", margin: "auto" }}>
             <Typography variant="h4" sx={{ mb: 3 }}>
               Edit Artikel
             </Typography>
@@ -275,7 +270,7 @@ const ArticleEdit = () => {
                   Image
                 </Typography>
                 {previewImage ? (
-                  <Grid>
+                  <Box>
                     <img
                       src={previewImage}
                       alt="New upload preview"
@@ -286,10 +281,10 @@ const ArticleEdit = () => {
                         borderRadius: 4,
                       }}
                     />
-                  </Grid>
+                  </Box>
                 ) : (
                   article.image && (
-                    <Grid>
+                    <Box>
                       <img
                         src={`${import.meta.env.VITE_BASE_URL}/public/images/${
                           article.image
@@ -302,12 +297,12 @@ const ArticleEdit = () => {
                           borderRadius: 4,
                         }}
                       />
-                    </Grid>
+                    </Box>
                   )
                 )}
 
-                <Grid container spacing={2} alignItems="center">
-                  <Grid>
+                <Box container spacing={2} alignItems="center">
+                  <Box>
                     <Button
                       variant="contained"
                       color="secondary"
@@ -322,16 +317,16 @@ const ArticleEdit = () => {
                         accept="image/*"
                       />
                     </Button>
-                  </Grid>
-                  <Grid>
+                  </Box>
+                  <Box>
                     <FormHelperText>
                       {imageName || "No file selected"}
                     </FormHelperText>
                     {errors.image && (
                       <FormHelperText error>{errors.image}</FormHelperText>
                     )}
-                  </Grid>
-                </Grid>
+                  </Box>
+                </Box>
               </Box>
 
               <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -348,7 +343,7 @@ const ArticleEdit = () => {
                 />
               </Box>
 
-              <Grid
+              <Box
                 container
                 sx={{
                   display: "flex",
@@ -372,9 +367,9 @@ const ArticleEdit = () => {
                   disabled={loading}>
                   Batalkan
                 </Button>
-              </Grid>
+              </Box>
             </Box>
-          </Grid>
+          </Box>
         )}
         {/* ====== ALERT ====== */}
         <ThemeProvider theme={defaultTheme}>

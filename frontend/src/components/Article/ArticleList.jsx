@@ -21,7 +21,6 @@ import {
   DialogContent,
   DialogActions,
 } from "@mui/material";
-import Grid from "@mui/material/Grid2";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Breadcrumb from "../Breadcrumb/Breadcrumb.jsx";
@@ -339,14 +338,14 @@ const ArticleList = () => {
         </Box>
 
         <Dialog open={dialogOpen} onClose={handleCloseDialog}>
-          <Grid sx={{ textAlign: "center" }}>
+          <Box sx={{ textAlign: "center" }}>
             <DialogTitle>Konfirmasi</DialogTitle>
             <DialogContent>
               <Typography>
                 Apakah anda yakin ingin menghapus artikel ini?
               </Typography>
             </DialogContent>
-          </Grid>
+          </Box>
           <DialogActions>
             <Button
               onClick={handleCloseDialog}

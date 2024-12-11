@@ -51,9 +51,12 @@ export default function NavBar() {
 
   const getSessionLogin = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/session`, {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/api/session`,
+        {
+          withCredentials: true,
+        }
+      );
       setIsLoggedIn(response.data.isLoggedIn);
     } catch (error) {
       setIsLoggedIn(false);
@@ -65,7 +68,6 @@ export default function NavBar() {
       await axios.delete(`${import.meta.env.VITE_BASE_URL}/api/users/logout`, {
         withCredentials: true,
       });
-      //
       setIsLoggedIn(false);
       navigate("/home");
     } catch (error) {

@@ -21,7 +21,6 @@ import {
   parseISO,
 } from "date-fns";
 import { CalendarDaysIcon } from "@heroicons/react/24/solid";
-import Grid from "@mui/material/Grid2";
 import Avatar from "@mui/material/Avatar";
 import axios from "axios";
 import Breadcrumb from "../Breadcrumb/Breadcrumb.jsx";
@@ -147,7 +146,7 @@ const ArticleItem = () => {
             <Loaders size={70} />
           </div>
         ) : (
-          <Grid
+          <Box
             container
             spacing={2}
             sx={{
@@ -171,7 +170,7 @@ const ArticleItem = () => {
               />
 
               <CardContent>
-                <Grid
+                <Box
                   container
                   spacing={2}
                   sx={{
@@ -180,7 +179,7 @@ const ArticleItem = () => {
                     gap: 2,
                     padding: 3,
                   }}>
-                  <Grid
+                  <Box
                     xs={12}
                     sm={6}
                     sx={{
@@ -225,21 +224,21 @@ const ArticleItem = () => {
                       <CalendarDaysIcon className="h-5 w-5 mr-2" />{" "}
                       {getTimeAgo(article.updatedAt)}
                     </Typography>
-                  </Grid>
+                  </Box>
 
-                  <Grid xs={12}>
+                  <Box xs={12}>
                     <Typography variant="subtitle1" color="textSecondary">
                       {article.category}
                     </Typography>
-                  </Grid>
+                  </Box>
 
-                  <Grid xs={12}>
+                  <Box xs={12}>
                     <Typography variant="h4" component="div">
                       {article.title}
                     </Typography>
-                  </Grid>
+                  </Box>
 
-                  <Grid xs={12}>
+                  <Box xs={12}>
                     <Typography
                       variant="body1"
                       color="textPrimary"
@@ -249,8 +248,8 @@ const ArticleItem = () => {
                           : "Loading content...",
                       }}
                     />
-                  </Grid>
-                </Grid>
+                  </Box>
+                </Box>
               </CardContent>
             </Card>
 
@@ -269,11 +268,11 @@ const ArticleItem = () => {
                       padding: 0,
                       mb: 2,
                     }}>
-                    <Grid
+                    <Box
                       component="a"
                       href={`/articles/${otherArticle.id}`}
                       style={{ textDecoration: "none" }}>
-                      <Grid>
+                      <Box>
                         <CardMedia
                           component="img"
                           height="auto"
@@ -281,9 +280,9 @@ const ArticleItem = () => {
                             import.meta.env.VITE_BASE_URL
                           }/public/images/${otherArticle.image}`}
                         />
-                      </Grid>
+                      </Box>
 
-                      <Grid
+                      <Box
                         xs={12}
                         sx={{
                           display: "flex",
@@ -311,12 +310,12 @@ const ArticleItem = () => {
                             ),
                           }}
                         />
-                      </Grid>
-                    </Grid>
+                      </Box>
+                    </Box>
                   </Card>
                 ))}
             </Box>
-          </Grid>
+          </Box>
         )}
 
         <ThemeProvider theme={defaultTheme}>
