@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import {
   ThemeProvider,
   createTheme,
@@ -9,8 +8,9 @@ import {
 } from "@mui/material";
 import { BookmarkIcon as BookmarkIconOutline } from "@heroicons/react/24/outline";
 import { BookmarkIcon as BookmarkIconSolid } from "@heroicons/react/24/solid";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
+import axios from "axios";
 
 const Bookmark = ({ jobsId }) => {
   const defaultTheme = createTheme();
@@ -32,7 +32,7 @@ const Bookmark = ({ jobsId }) => {
         );
         setIsLoggedIn(response.data.isLoggedIn);
       } catch (error) {
-        console.error("Error checking login status:", error);
+        setIsLoggedIn(false);
       }
     };
 
@@ -50,7 +50,8 @@ const Bookmark = ({ jobsId }) => {
         );
         setIsBookmarked(isJobBookmarked);
       } catch (error) {
-        console.error("Error fetching bookmark status:", error);
+        setAlertSeverity("error");
+        setAlertMessage(error.response?.data?.msg);
       }
     };
 
@@ -62,7 +63,6 @@ const Bookmark = ({ jobsId }) => {
       navigate("/users/signin");
       return;
     }
-
     try {
       if (isBookmarked) {
         // Remove bookmark
@@ -87,7 +87,6 @@ const Bookmark = ({ jobsId }) => {
         setAlertMessage(response.data.msg);
         setAlertOpen(true);
       }
-
       setIsBookmarked((prev) => !prev);
     } catch (error) {
       setAlertSeverity("error");
