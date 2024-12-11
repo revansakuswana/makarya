@@ -56,7 +56,6 @@ export default function NavBar() {
       });
       setIsLoggedIn(response.data.isLoggedIn);
     } catch (error) {
-      console.error("Error validating session", error);
       setIsLoggedIn(false);
     }
   };
