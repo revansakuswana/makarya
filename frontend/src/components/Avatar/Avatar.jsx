@@ -14,14 +14,16 @@ import {
   ArrowLeftStartOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"
 import axios from "axios";
 
 // eslint-disable-next-line react/prop-types
-export default function AvatarIcon({ handleLogout }) {
+export default function AvatarIcon() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
   const [previewImage, setPreviewImage] = useState(null);
+  const navigate = useNavigate();
 
   const [users, setUsers] = useState({
     id: "",
@@ -33,8 +35,16 @@ export default function AvatarIcon({ handleLogout }) {
     avatar: "",
   });
 
-  const defaultImage =
-    "https://banner2.cleanpng.com/20180420/krw/avfa3ii00.webp";
+  const handleLogout = async () => {
+    try {
+      await axios.delete(`${import.meta.env.VITE_BASE_URL}/api/users/logout`, {
+        withCredentials: true,
+      });
+      navigate("/users/signin");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -47,11 +57,9 @@ export default function AvatarIcon({ handleLogout }) {
         );
         setUsers(response.data.data);
         setPreviewImage(
-          response.data.data.avatar
-            ? `${import.meta.env.VITE_BASE_URL}/public/images/${
-                response.data.data.avatar
-              }`
-            : defaultImage
+          `${import.meta.env.VITE_BASE_URL}/public/images/${
+            response.data.data.avatar
+          }`
         );
       } catch (err) {
         console.error(err?.response?.data?.msg);
@@ -80,13 +88,10 @@ export default function AvatarIcon({ handleLogout }) {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}>
             <Avatar
-              src={
-                previewImage ||
-                `${import.meta.env.VITE_BASE_URL}/public/images/${
-                  users.avatar
-                }`
-              }
-              alt="Profile Picture"
+              src={`${import.meta.env.VITE_BASE_URL}/public/images/${
+                users.avatar
+              }`}
+              alt={users.name}
               sx={{ width: 32, height: 32 }}
             />
           </IconButton>
@@ -133,8 +138,11 @@ export default function AvatarIcon({ handleLogout }) {
           href="/profile"
           style={{ textDecoration: "none" }}>
           <Avatar
-            src={previewImage || defaultImage}
-            alt="Profile Picture"
+            src={
+              previewImage ||
+              `${import.meta.env.VITE_BASE_URL}/public/images/${users.avatar}`
+            }
+            alt={users.name}
             sx={{ width: 120, height: 120, cursor: "pointer" }}
           />
           Profile
