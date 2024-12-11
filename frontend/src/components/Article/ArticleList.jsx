@@ -117,13 +117,13 @@ const ArticleList = () => {
           { withCredentials: true }
         );
         if (response.status === 200) {
-        setAlertMessage(response.data.msg);
-        setAlertSeverity("success");
-        setAlertOpen(true);
-        setArticles((prevArticles) =>
-          prevArticles.filter((article) => article.id !== articleIdToDelete)
-        );
-      }
+          setAlertMessage(response.data.msg);
+          setAlertSeverity("success");
+          setAlertOpen(true);
+          setArticles((prevArticles) =>
+            prevArticles.filter((article) => article.id !== articleIdToDelete)
+          );
+        }
       } catch (err) {
         setAlertMessage(err.response.data.msg);
         setAlertSeverity("error");
@@ -262,7 +262,8 @@ const ArticleList = () => {
                       </TableCell>
                       <TableCell
                         sx={{
-                          width: 200,
+                          minWidth: 200,
+                          MaxWidth: 200,
                           textAlign: "center",
                           border: "1px solid #e0e0e0",
                           justifyItems: "center",
@@ -275,8 +276,8 @@ const ArticleList = () => {
                           alt="img cover"
                           style={{
                             objectFit: "cover",
-                            width: "auto",
-                            transform: "scale(1.0)",
+                            maxWidth: 200,
+                            height: "auto",
                             borderRadius: 4,
                           }}
                         />
@@ -367,7 +368,7 @@ const ArticleList = () => {
         <ThemeProvider theme={defaultTheme}>
           <Snackbar
             open={alertOpen}
-            autoHideDuration={6000}
+            autoHideDuration={1500}
             onClose={handleCloseAlert}>
             <Alert
               onClose={handleCloseAlert}
