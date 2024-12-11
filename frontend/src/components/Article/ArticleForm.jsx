@@ -161,10 +161,6 @@ const ArticleForm = () => {
           formattedErrors[error.field] = error.msg;
         });
         setErrors(formattedErrors);
-      } else if (err.response.status === 500) {
-        setAlertSeverity("error");
-        setAlertMessage(err.response.data.msg);
-        setAlertOpen(true);
       } else {
         setAlertSeverity("error");
         setAlertMessage(err.response.data.msg);
