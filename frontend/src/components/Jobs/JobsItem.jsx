@@ -20,12 +20,6 @@ import {
   differenceInSeconds,
   parseISO,
 } from "date-fns";
-import axios from "axios";
-import Breadcrumb from "../Breadcrumb/Breadcrumb.jsx";
-import getBlogTheme from "../Article/theme/getBlogTheme.jsx";
-import Loaders from "../Loaders/Loaders.jsx";
-import DOMPurify from "dompurify";
-import { marked } from "marked";
 import {
   MapPinIcon,
   BriefcaseIcon,
@@ -33,6 +27,13 @@ import {
   BanknotesIcon,
   BuildingOffice2Icon,
 } from "@heroicons/react/24/outline";
+import { marked } from "marked";
+import Grid from "@mui/material/Grid2";
+import Breadcrumb from "../Breadcrumb/Breadcrumb.jsx";
+import getBlogTheme from "../Article/theme/getBlogTheme.jsx";
+import Loaders from "../Loaders/Loaders.jsx";
+import DOMPurify from "dompurify";
+import axios from "axios";
 
 export default function JobsItem() {
   const defaultTheme = createTheme();
@@ -161,7 +162,7 @@ export default function JobsItem() {
             <Loaders size={70} />
           </div>
         ) : (
-          <Box
+          <Grid
             container
             spacing={2}
             sx={{
@@ -176,7 +177,7 @@ export default function JobsItem() {
                 padding: 0,
               }}>
               <CardContent>
-                <Box
+                <Grid
                   container
                   spacing={2}
                   sx={{
@@ -298,7 +299,7 @@ export default function JobsItem() {
                       }}
                     />
                   </Box>
-                </Box>
+                </Grid>
               </CardContent>
             </Card>
 
@@ -418,12 +419,12 @@ export default function JobsItem() {
                 </Typography>
               )}
             </Box>
-          </Box>
+          </Grid>
         )}
         <ThemeProvider theme={defaultTheme}>
           <Snackbar
             open={alertOpen}
-            autoHideDuration={2000}
+            autoHideDuration={1500}
             onClose={handleCloseAlert}>
             <Alert
               onClose={handleCloseAlert}

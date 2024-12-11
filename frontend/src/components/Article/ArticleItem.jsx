@@ -21,6 +21,7 @@ import {
   parseISO,
 } from "date-fns";
 import { CalendarDaysIcon } from "@heroicons/react/24/solid";
+import Grid from "@mui/material/Grid2";
 import Avatar from "@mui/material/Avatar";
 import axios from "axios";
 import Breadcrumb from "../Breadcrumb/Breadcrumb.jsx";
@@ -147,12 +148,11 @@ const ArticleItem = () => {
           </div>
         ) : (
           <Box
-            container
-            spacing={2}
             sx={{
               display: "flex",
               flexDirection: { xs: "column", md: "row" },
               justifyContent: "space-between",
+              gap: 4,
             }}>
             <Card
               sx={{
@@ -170,9 +170,7 @@ const ArticleItem = () => {
               />
 
               <CardContent>
-                <Box
-                  container
-                  spacing={2}
+                <Grid
                   sx={{
                     display: "flex",
                     flexDirection: "column",
@@ -249,7 +247,7 @@ const ArticleItem = () => {
                       }}
                     />
                   </Box>
-                </Box>
+                </Grid>
               </CardContent>
             </Card>
 
@@ -321,7 +319,7 @@ const ArticleItem = () => {
         <ThemeProvider theme={defaultTheme}>
           <Snackbar
             open={alertOpen}
-            autoHideDuration={6000}
+            autoHideDuration={1500}
             onClose={handleCloseAlert}>
             <Alert
               onClose={handleCloseAlert}
