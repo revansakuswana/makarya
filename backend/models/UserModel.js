@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import db from "../config/database.js";
+import UserSavedJobs from "./UserSavedJobsModel.js";
 
 const Users = db.define(
   "users",
@@ -71,6 +72,10 @@ const Users = db.define(
 
 Users.associate = (models) => {
   Users.hasMany(models.Articles, { foreignKey: "author_id", as: "articles" });
+};
+
+Users.associate = (models) => {
+  Users.belongsToMany(models.Jobs, { through: UserSavedJobs, as: 'savedJobs', foreignKey: 'users_id' });
 };
 
 export default Users;

@@ -14,9 +14,9 @@ import {
 import {
   getJobs,
   getJobsById,
-  // postsavedJobs,
-  // deletesavedJobs,
-  // getsavedJobs,
+  saveJob,
+  deleteSavedJob,
+  getSavedJobs,
 } from "../controllers/Jobs.js";
 import {
   createArticles,
@@ -28,17 +28,10 @@ import {
   updateArticle,
 } from "../controllers/Articles.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
-// import { assignJobToUser } from "../controllers/jobAssignment.js";
 import { refreshToken } from "../controllers/RefreshToken.js";
 import express from "express";
 
 const router = express.Router();
-
-// router.get("/test", getProfile, (req, res) => {
-//   // Mengakses data pengguna yang sudah disimpan di req.user
-//   const user = req.user;
-//   res.json({ message: "Data pengguna", user });
-// });
 
 // Rute untuk profile
 router.get("/profile", verifyToken, getProfile);
@@ -55,18 +48,15 @@ router.get("/verify-email/:token", verifyEmail);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password/:token", resetPassword);
 
-// Rute untuk saved jobs
-// router.post("/assign-job", verifyToken, assignJobToUser);
-// router.post("/savedjobs", postsavedJobs);
-// router.delete("/savedjobs", deletesavedJobs);
-// router.get("/savedjobs", getsavedJobs);
-
 // Rute untuk token refresh
 router.get("/token", refreshToken);
 
 // Rute untuk pekerjaan
 router.get("/jobs", getJobs);
 router.get("/jobs/:id", getJobsById);
+router.post("/save-job", verifyToken, saveJob);
+router.delete("/delete-job", verifyToken, deleteSavedJob);
+router.get("/saved-jobs", verifyToken, getSavedJobs);
 
 // Rute untuk artikel
 router.get("/allarticles", getAllArticles);

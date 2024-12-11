@@ -40,7 +40,7 @@ module.exports = {
       link: {
         type: Sequelize.STRING(255),
         allowNull: false,
-        unique: true, // Menambahkan unique constraint untuk menghindari duplikasi
+        unique: true,
       },
       link_img: {
         type: Sequelize.STRING(255),
