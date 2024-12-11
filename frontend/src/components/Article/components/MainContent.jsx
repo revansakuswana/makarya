@@ -99,7 +99,7 @@ export function Search({ searchQuery, setSearchQuery }) {
         id="search"
         placeholder="Search…"
         value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)} // Update search query on input change
+        onChange={(e) => setSearchQuery(e.target.value)}
         sx={{ flexGrow: 1 }}
       />
     </FormControl>
@@ -193,7 +193,6 @@ export default function MainContent() {
         );
         setIsLoggedIn(response.data.isLoggedIn);
       } catch (error) {
-        console.error("Error validating session", error);
         setIsLoggedIn(false);
       }
     };
