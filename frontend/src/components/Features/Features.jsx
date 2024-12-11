@@ -4,7 +4,7 @@ import { Container, Box, Button, Card, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import MuiChip from "@mui/material/Chip";
 import {
-  AdjustmentsHorizontalIcon,
+  BookmarkIcon,
   CogIcon,
   NewspaperIcon,
 } from "@heroicons/react/24/solid";
@@ -12,16 +12,16 @@ import {
 const items = [
   {
     icon: <CogIcon />,
-    title: "Integrasi Lowongan Kerja",
+    title: "Integrasi Lowongan Pekerjaan",
     description:
       "Jelajahi ribuan lowongan kerja dari berbagai platform, semuanya dalam satu tempat. Tidak perlu repot berpindah-pindah situs, cukup dengan Makarya, semua informasi lowongan ada dalam genggaman Anda.",
     imageLight: 'url("https://i.ibb.co.com/bRYF1PT/12463953-4966428.jpg")',
   },
   {
-    icon: <AdjustmentsHorizontalIcon />,
-    title: "Filter Pekerjaan",
+    icon: <BookmarkIcon />,
+    title: "Simpan Lowongan Pekerjaan",
     description:
-      "Filter pekerjaan sesuai preferensi anda. Fitur ini memungkinkan pengguna untuk menyaring daftar lowongan kerja berdasarkan kategori, lokasi, atau kriteria lainnya yang relevan, sehingga mempermudah pencarian pekerjaan yang sesuai dengan kebutuhan dan preferensi.",
+      "Simpan pekerjaan impian Anda dengan mudah! memungkinkan Anda menyimpan lowongan pekerjaan favorit untuk diakses kapan saja, membantu Anda mengelola pencarian karir dengan lebih efisien. Jangan lewatkan peluang terbaik, mulai sekarang!",
     imageLight: 'url("https://i.ibb.co.com/xhYLF3h/5463047-2808304.jpg")',
   },
   {
