@@ -32,7 +32,7 @@ const About = () => {
           <CssBaseline />
           <Box sx={{ overflow: "hidden", pt: { xs: 0, sm: 6 } }}>
             <Box className="mx-auto max-w-7xl">
-              <Box className="grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
+              <Box className="grid max-w-2xl grid-cols-1 gap-x-8 gap-y-10 sm:gap-y-10 lg:mx-0 lg:max-w-none lg:grid-cols-2">
                 <Box className="mx-auto max-w-7xl content-center sm:static ">
                   <Box className="lg:max-w-lg flex flex-col gap-5">
                     <Box sx={{ display: "flex"}}>
@@ -90,6 +90,7 @@ const About = () => {
                         href="/users/signup"
                         color="secondary"
                         variant="contained"
+                        size="small"
                         sx={{ fontWeight: "bold" }}>
                         Daftar sekarang
                         <ArrowRightIcon
@@ -105,11 +106,9 @@ const About = () => {
                   </Box>
                 </Box>
                 <img
-                  src="https://i.ibb.co.com/PFRkWwV/corporate-woman-posing-office.jpg"
-                  alt="Product screenshot"
-                  className="w-[48rem] max-w-none ring-gray-400/10 sm:w-[57rem] md:-ml-4 lg:-ml-0"
-                  width={2432}
-                  height={1442}
+                  src="https://i.ibb.co.com/jzXDgVF/corporate-woman-posing-office.jpg"
+                  alt="About us"
+                  className="w-full max-w-none ring-gray-400/10 sm:w-[57rem] md:-ml-4 lg:-ml-0"
                 />
               </Box>
             </Box>
