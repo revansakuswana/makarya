@@ -336,9 +336,9 @@ export default function MainContent() {
                 },
               }}
             />
-            {categories.map((category, index) => (
+            {categories.map((category) => (
               <Chip
-                key={index}
+                key={category}
                 onClick={() => handleClick(category)}
                 size="medium"
                 label={category}
@@ -380,8 +380,8 @@ export default function MainContent() {
           </div>
         ) : (
           <Grid container spacing={2} columns={12}>
-            {currentArticles.map((articles, index) => (
-              <Grid key={index} size={{ xs: 12, sm: 6, md: 4 }}>
+            {currentArticles.map((articles) => (
+              <Grid key={articles} size={{ xs: 12, sm: 6, md: 4 }}>
                 <SyledCard tabIndex={0}>
                   <CardMedia
                     component="img"
