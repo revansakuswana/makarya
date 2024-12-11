@@ -13,6 +13,7 @@ import {
   FormHelperText,
   Box,
 } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import Breadcrumb from "../Breadcrumb/Breadcrumb";
 import getBlogTheme from "./theme/getBlogTheme";
 import Loaders from "../Loaders/Loaders";
@@ -260,7 +261,7 @@ const ArticleForm = () => {
                   </Box>
                 )}
 
-                <Box container spacing={2} alignItems="center">
+                <Grid container spacing={2} alignItems="center">
                   <Box>
                     <Button
                       variant="contained"
@@ -284,7 +285,7 @@ const ArticleForm = () => {
                       <FormHelperText error>{errors.image}</FormHelperText>
                     )}
                   </Box>
-                </Box>
+                </Grid>
               </Box>
 
               <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -302,7 +303,7 @@ const ArticleForm = () => {
                 )}
               </Box>
 
-              <Box container spacing={2}>
+              <Grid container spacing={2}>
                 <Box>
                   <Button
                     variant="contained"
@@ -322,7 +323,7 @@ const ArticleForm = () => {
                     Batalkan
                   </Button>
                 </Box>
-              </Box>
+              </Grid>
             </Box>
           </Box>
         )}
@@ -331,7 +332,7 @@ const ArticleForm = () => {
         <ThemeProvider theme={defaultTheme}>
           <Snackbar
             open={alertOpen}
-            autoHideDuration={2000}
+            autoHideDuration={1500}
             onClose={handleCloseAlert}>
             <Alert
               onClose={handleCloseAlert}
