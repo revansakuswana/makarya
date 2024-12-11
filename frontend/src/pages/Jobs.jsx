@@ -84,24 +84,24 @@ const Jobs = () => {
   const [mode] = React.useState("light");
   const blogTheme = createTheme(getBlogTheme(mode));
 
-  const [visibleData, setVisibleData] = useState([]); // Data yang terlihat
-  const [selectedSearch, setSelectedSearch] = useState(""); // Keyword pencarian
-  const [selectedCategory, setSelectedCategory] = useState(""); // Kategori pencarian
-  const [selectedLocation, setSelectedLocation] = useState(""); // Lokasi pencarian
-  const [sortDirection, setSortDirection] = useState("newest"); // Sorting direction (newest or oldest)
+  const [visibleData, setVisibleData] = useState([]);
+  const [selectedSearch, setSelectedSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("");
+  const [sortDirection, setSortDirection] = useState("newest");
 
-  const [selectedSearchToUse, setSelectedSearchToUse] = useState(""); // Keyword yang digunakan untuk pencarian
-  const [selectedCategoryToUse, setSelectedCategoryToUse] = useState(""); // Kategori yang digunakan untuk pencarian
-  const [selectedLocationToUse, setSelectedLocationToUse] = useState(""); // Lokasi yang digunakan untuk pencarian
+  const [selectedSearchToUse, setSelectedSearchToUse] = useState("");
+  const [selectedCategoryToUse, setSelectedCategoryToUse] = useState("");
+  const [selectedLocationToUse, setSelectedLocationToUse] = useState("");
 
-  const [isSearchInitiated, setIsSearchInitiated] = useState(false); // Menyimpan status apakah pencarian telah dimulai
-  const [page, setPage] = useState(1); // Halaman saat ini
-  const [totalPages, setTotalPages] = useState(1); // Menyimpan total halaman untuk paginasi
+  const [isSearchInitiated, setIsSearchInitiated] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const [allSearch, setAllSearch] = useState([]);
-  const [allCategories, setAllCategories] = useState([]); // Menyimpan semua kategori
-  const [allLocations, setAllLocations] = useState([]); // Menyimpan semua lokasi
-  const itemsPerPage = 16; // Jumlah item per halaman
+  const [allCategories, setAllCategories] = useState([]);
+  const [allLocations, setAllLocations] = useState([]);
+  const itemsPerPage = 50;
 
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
@@ -109,10 +109,10 @@ const Jobs = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const [selectedWork_Type, setSelectedWork_Type] = useState([]); // Filter untuk Tipe Pekerjaan
-  const [selectedWorking_Type, setSelectedWorking_Type] = useState([]); // Filter untuk Kebijakan Kerja
-  const [selectedExperience, setSelectedExperience] = useState([]); // Filter untuk Pengalaman
-  const [selectedEducation, setSelectedEducation] = useState([]); // Filter untuk Tingkat Pendidikan
+  const [selectedWork_Type, setSelectedWork_Type] = useState([]);
+  const [selectedWorking_Type, setSelectedWorking_Type] = useState([]);
+  const [selectedExperience, setSelectedExperience] = useState([]);
+  const [selectedEducation, setSelectedEducation] = useState([]);
 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
@@ -216,9 +216,9 @@ const Jobs = () => {
 
     const updateFilterState = (stateSetter, currentState) => {
       if (checked) {
-        stateSetter([...currentState, value]); // Add value if checked
+        stateSetter([...currentState, value]);
       } else {
-        stateSetter(currentState.filter((item) => item !== value)); // Remove value if unchecked
+        stateSetter(currentState.filter((item) => item !== value));
       }
     };
 
@@ -374,16 +374,16 @@ const Jobs = () => {
   };
 
   const handleSearchClick = () => {
-    setIsSearchInitiated(true); // Trigger search
-    setSelectedSearchToUse(selectedSearch); // Set the actual value for search
-    setSelectedCategoryToUse(selectedCategory); // Set the actual value for search
-    setSelectedLocationToUse(selectedLocation); // Set the actual value for search
-    setPage(1); // Reset ke halaman pertama
+    setIsSearchInitiated(true);
+    setSelectedSearchToUse(selectedSearch);
+    setSelectedCategoryToUse(selectedCategory);
+    setSelectedLocationToUse(selectedLocation);
+    setPage(1);
   };
 
   const handleSort = (direction) => {
     setSortDirection(direction);
-    setPage(1); // Reset to page 1 on sort change
+    setPage(1);
   };
 
   const handleCloseAlert = (event, reason) => {
@@ -394,828 +394,827 @@ const Jobs = () => {
   };
 
   return (
-      <ThemeProvider theme={blogTheme}>
-        <CssBaseline />
-        <Container
-          maxWidth="lg"
-          component="main"
+    <ThemeProvider theme={blogTheme}>
+      <CssBaseline />
+      <Container
+        maxWidth="lg"
+        component="main"
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          my: 16,
+          gap: 4,
+          direction: "column",
+          justifyContent: "space-between",
+        }}>
+        {/* ===== BANNER SEARCH ===== */}
+        <Breadcrumb />
+        <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            my: 16,
-            gap: 4,
-            direction: "column",
-            justifyContent: "space-between",
+            maxWidth: "84rem",
+            margin: "0 auto",
           }}>
-          {/* ===== BANNER SEARCH ===== */}
-          <Breadcrumb />
           <Box
             sx={{
-              maxWidth: "84rem",
-              margin: "0 auto",
+              borderRadius: 2,
+              borderWidth: 1,
+              borderColor: "grey.200",
+              borderStyle: "solid",
+              display: { lg: "flex" },
+              maxWidth: { lg: "none" },
+            }}
+            style={{
+              backgroundImage: "url('https://i.ibb.co.com/ZYSzFCt/101465.jpg')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
             }}>
             <Box
               sx={{
-                borderRadius: 2,
-                borderWidth: 1,
-                borderColor: "grey.200",
-                borderStyle: "solid",
-                display: { lg: "flex" },
-                maxWidth: { lg: "none" },
-              }}
-              style={{
-                backgroundImage:
-                  "url('https://i.ibb.co.com/ZYSzFCt/101465.jpg')",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                gap: 4,
+                textAlign: "center",
+                py: 4,
+                px: 5,
               }}>
+              <Typography
+                variant="h2"
+                sx={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: { xs: "3xl", lg: "5xl" },
+                }}>
+                Cari Pekerjaan yang Kamu Inginkan
+              </Typography>
+              <Typography
+                variant="h6"
+                sx={{
+                  color: "white",
+                  fontSize: { xs: "md", lg: "xl" },
+                  fontWeight: "medium",
+                  display: { xs: "none", sm: "block" },
+                }}>
+                Temukan pekerjaan yang sesuai dengan keahlian dan minatmu. Kami
+                menyediakan berbagai lowongan pekerjaan dari berbagai industri
+                yang siap membantumu membangun karier yang kamu impikan.
+              </Typography>
+
               <Box
                 sx={{
-                  width: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 4,
-                  textAlign: "center",
-                  py: 4,
-                  px: 5,
+                  backgroundColor: "white",
+                  marginX: { xs: 0, sm: 10 },
+                  borderRadius: 1,
+                  boxShadow: 2,
+                  p: 2,
                 }}>
-                <Typography
-                  variant="h2"
-                  sx={{
-                    color: "white",
-                    fontWeight: "bold",
-                    fontSize: { xs: "3xl", lg: "5xl" },
-                  }}>
-                  Cari Pekerjaan yang Kamu Inginkan
-                </Typography>
-                <Typography
-                  variant="h6"
-                  sx={{
-                    color: "white",
-                    fontSize: { xs: "md", lg: "xl" },
-                    fontWeight: "medium",
-                    display: { xs: "none", sm: "block" },
-                  }}>
-                  Temukan pekerjaan yang sesuai dengan keahlian dan minatmu.
-                  Kami menyediakan berbagai lowongan pekerjaan dari berbagai
-                  industri yang siap membantumu membangun karier yang kamu
-                  impikan.
-                </Typography>
-
                 <Box
                   sx={{
-                    backgroundColor: "white",
-                    marginX: { xs: 0, sm: 10 },
-                    borderRadius: 1,
-                    boxShadow: 2,
-                    p: 2,
+                    display: "flex",
+                    flexDirection: { xs: "column", sm: "row" },
+                    justifyContent: "space-between",
+                    gap: 2,
                   }}>
                   <Box
                     sx={{
                       display: "flex",
-                      flexDirection: { xs: "column", sm: "row" },
-                      justifyContent: "space-between",
-                      gap: 2,
+                      alignItems: "center",
+                      borderRadius: "8px",
                     }}>
-                    <Box
+                    <MagnifyingGlassIcon
+                      style={{
+                        height: 30,
+                        width: 30,
+                        marginRight: 15,
+                        color: "grey",
+                      }}
+                    />
+                    <Autocomplete
+                      freeSolo
+                      fullWidth
+                      options={allSearch}
+                      value={selectedSearch}
+                      onChange={handleSearchChange}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          placeholder="Masukkan kata kunci"
+                          InputProps={{
+                            ...params.InputProps,
+                            className:
+                              "w-full bg-transparent focus:outline-none text-gray-500",
+                          }}
+                          onChange={handleSearchChange}
+                        />
+                      )}
                       sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        borderRadius: "8px",
-                      }}>
-                      <MagnifyingGlassIcon
-                        style={{
-                          height: 30,
-                          width: 30,
-                          marginRight: 15,
-                          color: "grey",
-                        }}
-                      />
-                      <Autocomplete
-                        freeSolo
-                        fullWidth
-                        options={allSearch}
-                        value={selectedSearch}
-                        onChange={handleSearchChange}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            placeholder="Masukkan kata kunci"
-                            slotProps={{
-                              ...params.InputProps,
-                              className:
-                                "w-full bg-transparent focus:outline-none text-gray-500",
-                            }}
-                            onChange={handleSearchChange}
-                          />
-                        )}
-                        sx={{
-                          "& .MuiAutocomplete-clearIndicator": {
-                            fontSize: "1.5rem",
-                            width: "30px",
-                            height: "30px",
-                          },
-                        }}
-                      />
-                    </Box>
+                        "& .MuiAutocomplete-clearIndicator": {
+                          fontSize: "1.5rem",
+                          width: "30px",
+                          height: "30px",
+                        },
+                      }}
+                    />
+                  </Box>
 
-                    <Box
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      borderRadius: "8px",
+                    }}>
+                    <BriefcaseIcon
+                      style={{
+                        height: 30,
+                        width: 30,
+                        marginRight: 15,
+                        color: "grey",
+                      }}
+                    />
+                    <Autocomplete
+                      freeSolo
+                      fullWidth
+                      options={allCategories}
+                      value={selectedCategory}
+                      onChange={handleCategoryChange}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          placeholder="Masukkan category"
+                          InputProps={{
+                            ...params.InputProps,
+                            className:
+                              "w-full bg-transparent focus:outline-none text-gray-500",
+                          }}
+                          onChange={handleCategoryChange}
+                        />
+                      )}
                       sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        borderRadius: "8px",
-                      }}>
-                      <BriefcaseIcon
-                        style={{
-                          height: 30,
-                          width: 30,
-                          marginRight: 15,
-                          color: "grey",
-                        }}
-                      />
-                      <Autocomplete
-                        freeSolo
-                        fullWidth
-                        options={allCategories}
-                        value={selectedCategory}
-                        onChange={handleCategoryChange}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            placeholder="Masukkan category"
-                            slotProps={{
-                              ...params.InputProps,
-                              className:
-                                "w-full bg-transparent focus:outline-none text-gray-500",
-                            }}
-                          />
-                        )}
-                        sx={{
-                          "& .MuiAutocomplete-clearIndicator": {
-                            fontSize: "1.5rem",
-                            width: "30px",
-                            height: "30px",
-                          },
-                        }}
-                      />
-                    </Box>
+                        "& .MuiAutocomplete-clearIndicator": {
+                          fontSize: "1.5rem",
+                          width: "30px",
+                          height: "30px",
+                        },
+                      }}
+                    />
+                  </Box>
 
-                    <Box
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      borderRadius: "8px",
+                    }}>
+                    <MapPinIcon
+                      style={{
+                        height: 30,
+                        width: 30,
+                        marginRight: 15,
+                        color: "grey",
+                      }}
+                    />
+                    <Autocomplete
+                      freeSolo
+                      fullWidth
+                      options={allLocations}
+                      value={selectedLocation}
+                      onChange={handleLocationChange}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          placeholder="Masukkan Lokasi"
+                          InputProps={{
+                            ...params.InputProps,
+                            className:
+                              "w-full bg-transparent focus:outline-none text-gray-500",
+                          }}
+                          onChange={handleLocationChange}
+                        />
+                      )}
                       sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        borderRadius: "8px",
-                      }}>
-                      <MapPinIcon
-                        style={{
-                          height: 30,
-                          width: 30,
-                          marginRight: 15,
-                          color: "grey",
-                        }}
-                      />
-                      <Autocomplete
-                        freeSolo
-                        fullWidth
-                        options={allLocations}
-                        value={selectedLocation}
-                        onChange={handleLocationChange}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            placeholder="Masukkan Lokasi"
-                            slotProps={{
-                              ...params.InputProps,
-                              className:
-                                "w-full bg-transparent focus:outline-none text-gray-500",
-                            }}
-                          />
-                        )}
-                        sx={{
-                          "& .MuiAutocomplete-clearIndicator": {
-                            fontSize: "1.5rem",
-                            width: "30px",
-                            height: "30px",
-                          },
-                        }}
-                      />
-                    </Box>
+                        "& .MuiAutocomplete-clearIndicator": {
+                          fontSize: "1.5rem",
+                          width: "30px",
+                          height: "30px",
+                        },
+                      }}
+                    />
+                  </Box>
 
-                    <Box
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: { xs: "center", sm: "flex-start" },
+                    }}>
+                    <Button
+                      onClick={handleSearchClick}
                       sx={{
-                        display: "flex",
-                        justifyContent: { xs: "center", sm: "flex-start" },
+                        backgroundColor: "primary.main",
+                        width: { xs: "100%", sm: "auto" },
+                        fontWeight: "bold",
+                        p: 2,
+                        color: "white",
+                        borderRadius: "8px",
+                        "&:hover": {
+                          backgroundColor: "primary.dark",
+                        },
                       }}>
-                      <Button
-                        onClick={handleSearchClick}
-                        sx={{
-                          backgroundColor: "primary.main",
-                          width: { xs: "100%", sm: "auto" },
-                          fontWeight: "bold",
-                          p: 2,
-                          color: "white",
-                          borderRadius: "8px",
-                          "&:hover": {
-                            backgroundColor: "primary.dark",
-                          },
-                        }}>
-                        Search
-                      </Button>
-                    </Box>
+                      Search
+                    </Button>
                   </Box>
                 </Box>
               </Box>
             </Box>
           </Box>
+        </Box>
 
-          {/* Jobs grid */}
-          <Box>
-            {/* Mobile filter dialog */}
-            <Dialog
-              open={mobileFiltersOpen}
-              onClose={setMobileFiltersOpen}
-              className="relative z-40 lg:hidden">
-              <DialogBackdrop
+        {/* Jobs grid */}
+        <Box>
+          {/* Mobile filter dialog */}
+          <Dialog
+            open={mobileFiltersOpen}
+            onClose={setMobileFiltersOpen}
+            className="relative z-40 lg:hidden">
+            <DialogBackdrop
+              transition
+              className="fixed inset-0 bg-black bg-opacity-25 transition-opacity duration-300 ease-linear data-[closed]:opacity-0"
+            />
+
+            <Box
+              sx={{
+                backgroundColor: "white",
+                position: "fixed",
+                display: "flex",
+                top: 0,
+                inset: 0,
+                zIndex: 40,
+              }}>
+              <DialogPanel
                 transition
-                className="fixed inset-0 bg-black bg-opacity-25 transition-opacity duration-300 ease-linear data-[closed]:opacity-0"
-              />
-
-              <Box
-                sx={{
-                  backgroundColor: "white",
-                  position: "fixed",
-                  display: "flex",
-                  top: 0,
-                  inset: 0,
-                  zIndex: 40,
-                }}>
-                <DialogPanel
-                  transition
-                  className="relative mx-auto flex h-full w-full transform flex-col overflow-y-auto py-32 pb-12 shadow-xl transition duration-300 ease-in-out data-[closed]:-translate-y-full">
-                  <Box
+                className="relative mx-auto flex h-full w-full transform flex-col overflow-y-auto py-32 pb-12 shadow-xl transition duration-300 ease-in-out data-[closed]:-translate-y-full">
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    px: 3,
+                  }}>
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: "medium", color: "gray.900" }}>
+                    Filter
+                  </Typography>
+                  <IconButton
+                    type="button"
+                    onClick={() => setMobileFiltersOpen(false)}
                     sx={{
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: "space-between",
-                      px: 3,
+                      justifyContent: "center",
+                      color: "gray.400",
                     }}>
-                    <Typography
-                      variant="h6"
-                      sx={{ fontWeight: "medium", color: "gray.900" }}>
-                      Filter
-                    </Typography>
-                    <IconButton
-                      type="button"
-                      onClick={() => setMobileFiltersOpen(false)}
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "gray.400",
-                      }}>
-                      <span className="sr-only">Close menu</span>
-                      <XCircleIcon
-                        aria-hidden="true"
-                        style={{
-                          height: 30,
-                          width: 30,
-                          color: "grey",
-                        }}
-                      />
-                    </IconButton>
-                  </Box>
-
-                  {/* Filters Mobile */}
-                  <Box
-                    component="form"
-                    sx={{
-                      borderColor: "gray.200",
-                      marginTop: 2,
-                      paddingX: 3,
-                    }}>
-                    {filters.map((section) => (
-                      <Disclosure
-                        key={section.id}
-                        as="div"
-                        className="border-b border-gray-200 py-6">
-                        {({ open }) => (
-                          <>
-                            <Typography
-                              variant="h6"
-                              sx={{
-                                my: -3,
-                                display: "flow-root", // MUI tidak memiliki properti flow-root, tetapi Anda dapat menggunakan display: 'block'
-                              }}>
-                              <DisclosureButton className="group flex w-full items-center justify-between py-3 text-sm text-gray-400 hover:text-gray-500">
-                                <span className="font-medium text-gray-900">
-                                  {section.name}
-                                </span>
-                                <span className="ml-6 flex items-center">
-                                  {open ? (
-                                    <MinusIcon
-                                      className="h-5 w-5 text-gray-500"
-                                      aria-hidden="true"
-                                    />
-                                  ) : (
-                                    <PlusIcon
-                                      className="h-5 w-5 text-gray-500"
-                                      aria-hidden="true"
-                                    />
-                                  )}
-                                </span>
-                              </DisclosureButton>
-                            </Typography>
-
-                            <Transition
-                              show={open}
-                              enter="transition-all duration-300 ease-in"
-                              enterFrom="transform opacity-0"
-                              enterTo="transform opacity-100 max-h-screen"
-                              leave="transition-all duration-300 ease-out"
-                              leaveFrom="transform opacity-100 max-h-screen"
-                              leaveTo="transform opacity-0">
-                              <DisclosurePanel className="pt-6 overflow-hidden transition-all duration-300">
-                                <div className="space-y-4">
-                                  {section.options.map((option, optionIdx) => (
-                                    <div
-                                      key={option.value}
-                                      className="flex items-center">
-                                      <input
-                                        value={option.value}
-                                        checked={getCheckedState(
-                                          section.name,
-                                          option.value
-                                        )} // Menggunakan fungsi untuk mendapatkan nilai checked
-                                        onChange={(e) =>
-                                          handleFilterChange(e, section.name)
-                                        }
-                                        id={`filter-${section.id}-${optionIdx}`}
-                                        name={`${section.id}[]`}
-                                        type="checkbox"
-                                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                      />
-                                      <label
-                                        htmlFor={`filter-${section.id}-${optionIdx}`}
-                                        className="ml-3 text-sm text-gray-600">
-                                        {option.label}
-                                      </label>
-                                    </div>
-                                  ))}
-                                </div>
-                              </DisclosurePanel>
-                            </Transition>
-                          </>
-                        )}
-                      </Disclosure>
-                    ))}
-                  </Box>
-                </DialogPanel>
-              </Box>
-            </Dialog>
-
-            <main className="mx-auto max-w-7xl">
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "baseline",
-                  justifyContent: "space-between",
-                  gap: 2,
-                  borderBottom: "1px solid",
-                  borderColor: "grey.200",
-                  paddingBottom: 1,
-                }}>
-                <Typography
-                  variant="h4"
-                  sx={{
-                    fontWeight: "bold",
-                    color: "black",
-                  }}>
-                  Info Lowongan Kerja di Indonesia
-                </Typography>
-
-                <Box sx={{ display: "flex", justifyItems: "center" }}>
-                  <Menu as="div" className="relative inline-block text-left">
-                    <Box>
-                      <MenuButton className="group inline-flex justify-center text-sm font-medium text-black">
-                        Sort
-                        <ChevronDownIcon
-                          aria-hidden="true"
-                          className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-black"
-                        />
-                      </MenuButton>
-                    </Box>
-
-                    <MenuItems
-                      transition
-                      className="absolute right-0 z-10 mt-2 w-35 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in">
-                      <Box>
-                        <MenuItem key="newest">
-                          <a
-                            className="flex px-4 py-2 text-sm rounded-md text-black hover:bg-gray-100"
-                            onClick={() => handleSort("newest")}>
-                            Newest
-                          </a>
-                        </MenuItem>
-                        <MenuItem key="oldest">
-                          <a
-                            className="flex px-4 py-2 text-sm rounded-md text-black hover:bg-gray-100"
-                            onClick={() => handleSort("oldest")}>
-                            Oldest
-                          </a>
-                        </MenuItem>
-                      </Box>
-                    </MenuItems>
-                  </Menu>
-
-                  <button
-                    type="button"
-                    onClick={() => setMobileFiltersOpen(true)}
-                    className="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden">
-                    <span className="sr-only">Filters</span>
-                    <FunnelIcon aria-hidden="true" className="h-5 w-5" />
-                  </button>
+                    <span className="sr-only">Close menu</span>
+                    <XCircleIcon
+                      aria-hidden="true"
+                      style={{
+                        height: 30,
+                        width: 30,
+                        color: "grey",
+                      }}
+                    />
+                  </IconButton>
                 </Box>
+
+                {/* Filters Mobile */}
+                <Box
+                  component="form"
+                  sx={{
+                    borderColor: "gray.200",
+                    marginTop: 2,
+                    paddingX: 3,
+                  }}>
+                  {filters.map((section) => (
+                    <Disclosure
+                      key={section.id}
+                      as="div"
+                      className="border-b border-gray-200 py-6">
+                      {({ open }) => (
+                        <>
+                          <Typography
+                            variant="h6"
+                            sx={{
+                              my: -3,
+                              display: "block",
+                            }}>
+                            <DisclosureButton className="group flex w-full items-center justify-between py-3 text-sm text-gray-400 hover:text-gray-500">
+                              <span className="font-medium text-gray-900">
+                                {section.name}
+                              </span>
+                              <span className="ml-6 flex items-center">
+                                {open ? (
+                                  <MinusIcon
+                                    className="h-5 w-5 text-gray-500"
+                                    aria-hidden="true"
+                                  />
+                                ) : (
+                                  <PlusIcon
+                                    className="h-5 w-5 text-gray-500"
+                                    aria-hidden="true"
+                                  />
+                                )}
+                              </span>
+                            </DisclosureButton>
+                          </Typography>
+
+                          <Transition
+                            show={open}
+                            enter="transition-all duration-300 ease-in"
+                            enterFrom="transform opacity-0"
+                            enterTo="transform opacity-100 max-h-screen"
+                            leave="transition-all duration-300 ease-out"
+                            leaveFrom="transform opacity-100 max-h-screen"
+                            leaveTo="transform opacity-0">
+                            <DisclosurePanel className="pt-6 overflow-hidden transition-all duration-300">
+                              <div className="space-y-4">
+                                {section.options.map((option, optionIdx) => (
+                                  <div
+                                    key={option.value}
+                                    className="flex items-center">
+                                    <input
+                                      value={option.value}
+                                      checked={getCheckedState(
+                                        section.name,
+                                        option.value
+                                      )}
+                                      onChange={(e) =>
+                                        handleFilterChange(e, section.name)
+                                      }
+                                      id={`filter-${section.id}-${optionIdx}`}
+                                      name={`${section.id}[]`}
+                                      type="checkbox"
+                                      className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                    />
+                                    <label
+                                      htmlFor={`filter-${section.id}-${optionIdx}`}
+                                      className="ml-3 text-sm text-gray-600">
+                                      {option.label}
+                                    </label>
+                                  </div>
+                                ))}
+                              </div>
+                            </DisclosurePanel>
+                          </Transition>
+                        </>
+                      )}
+                    </Disclosure>
+                  ))}
+                </Box>
+              </DialogPanel>
+            </Box>
+          </Dialog>
+
+          <main className="mx-auto max-w-7xl">
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "baseline",
+                justifyContent: "space-between",
+                gap: 2,
+                borderBottom: "1px solid",
+                borderColor: "grey.200",
+                paddingBottom: 1,
+              }}>
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: "bold",
+                  color: "black",
+                }}>
+                Info Lowongan Kerja di Indonesia
+              </Typography>
+
+              <Box sx={{ display: "flex", justifyItems: "center" }}>
+                <Menu as="div" className="relative inline-block text-left">
+                  <Box>
+                    <MenuButton className="group inline-flex justify-center text-sm font-medium text-black">
+                      Sort
+                      <ChevronDownIcon
+                        aria-hidden="true"
+                        className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-black"
+                      />
+                    </MenuButton>
+                  </Box>
+
+                  <MenuItems
+                    transition
+                    className="absolute right-0 z-10 mt-2 w-35 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in">
+                    <Box sx={{ display: "flex", flexDirection: "column" }}>
+                      <MenuItem key="newest">
+                        <button
+                          className="px-4 py-2 text-md rounded-md text-black hover:bg-gray-100"
+                          onClick={() => handleSort("newest")}>
+                          Newest
+                        </button>
+                      </MenuItem>
+                      <MenuItem key="oldest">
+                        <button
+                          className="px-4 py-2 text-md rounded-md text-black hover:bg-gray-100"
+                          onClick={() => handleSort("oldest")}>
+                          Oldest
+                        </button>
+                      </MenuItem>
+                    </Box>
+                  </MenuItems>
+                </Menu>
+
+                <button
+                  type="button"
+                  onClick={() => setMobileFiltersOpen(true)}
+                  className="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden">
+                  <span className="sr-only">Filters</span>
+                  <FunnelIcon aria-hidden="true" className="h-5 w-5" />
+                </button>
               </Box>
+            </Box>
 
-              <section aria-labelledby="products-heading" className="pt-6">
-                <h2 id="products-heading" className="sr-only">
-                  Products
-                </h2>
+            <section aria-labelledby="products-heading" className="pt-6">
+              <h2 id="products-heading" className="sr-only">
+                Products
+              </h2>
 
-                <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
-                  {/* Filters */}
-                  <form className="hidden lg:block">
-                    <h3 className="sr-only">Categories</h3>
-                    {filters.map((section) => (
-                      <Disclosure
-                        key={section.id}
-                        as="div"
-                        className="border-b border-gray-200 py-6">
-                        {({ open }) => (
-                          <>
-                            <h3 className="-my-3 flow-root">
-                              <DisclosureButton className="group flex w-full items-center justify-between py-3 text-sm text-gray-400 hover:text-gray-500">
-                                <span className="font-medium text-gray-900">
-                                  {section.name}
-                                </span>
-                                <span className="ml-6 flex items-center">
-                                  {open ? (
-                                    <MinusIcon
-                                      className="h-5 w-5 text-gray-500"
-                                      aria-hidden="true"
+              <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
+                {/* Filters */}
+                <form className="hidden lg:block">
+                  <h3 className="sr-only">Categories</h3>
+                  {filters.map((section) => (
+                    <Disclosure
+                      key={section.id}
+                      as="div"
+                      className="border-b border-gray-200 py-6">
+                      {({ open }) => (
+                        <>
+                          <h3 className="-my-3 flow-root">
+                            <DisclosureButton className="group flex w-full items-center justify-between py-3 text-sm text-gray-400 hover:text-gray-500">
+                              <span className="font-medium text-gray-900">
+                                {section.name}
+                              </span>
+                              <span className="ml-6 flex items-center">
+                                {open ? (
+                                  <MinusIcon
+                                    className="h-5 w-5 text-gray-500"
+                                    aria-hidden="true"
+                                  />
+                                ) : (
+                                  <PlusIcon
+                                    className="h-5 w-5 text-gray-500"
+                                    aria-hidden="true"
+                                  />
+                                )}
+                              </span>
+                            </DisclosureButton>
+                          </h3>
+
+                          <Transition
+                            show={open}
+                            enter="transition-all duration-300 ease-in"
+                            enterFrom="transform opacity-0"
+                            enterTo="transform opacity-100 max-h-screen"
+                            leave="transition-all duration-300 ease-out"
+                            leaveFrom="transform opacity-100 max-h-screen"
+                            leaveTo="transform opacity-0">
+                            <DisclosurePanel className="pt-6 overflow-hidden transition-all duration-300">
+                              <div className="space-y-4">
+                                {section.options.map((option, optionIdx) => (
+                                  <div
+                                    key={option.value}
+                                    className="flex items-center">
+                                    <input
+                                      value={option.value}
+                                      checked={getCheckedState(
+                                        section.name,
+                                        option.value
+                                      )}
+                                      onChange={(e) =>
+                                        handleFilterChange(e, section.name)
+                                      }
+                                      id={`filter-${section.id}-${optionIdx}`}
+                                      name={`${section.id}[]`}
+                                      type="checkbox"
+                                      className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                     />
-                                  ) : (
-                                    <PlusIcon
-                                      className="h-5 w-5 text-gray-500"
-                                      aria-hidden="true"
-                                    />
-                                  )}
-                                </span>
-                              </DisclosureButton>
-                            </h3>
+                                    <label
+                                      htmlFor={`filter-${section.id}-${optionIdx}`}
+                                      className="ml-3 text-sm text-gray-600">
+                                      {option.label}
+                                    </label>
+                                  </div>
+                                ))}
+                              </div>
+                            </DisclosurePanel>
+                          </Transition>
+                        </>
+                      )}
+                    </Disclosure>
+                  ))}
+                </form>
 
-                            <Transition
-                              show={open}
-                              enter="transition-all duration-300 ease-in"
-                              enterFrom="transform opacity-0"
-                              enterTo="transform opacity-100 max-h-screen"
-                              leave="transition-all duration-300 ease-out"
-                              leaveFrom="transform opacity-100 max-h-screen"
-                              leaveTo="transform opacity-0">
-                              <DisclosurePanel className="pt-6 overflow-hidden transition-all duration-300">
-                                <div className="space-y-4">
-                                  {section.options.map((option, optionIdx) => (
-                                    <div
-                                      key={option.value}
-                                      className="flex items-center">
-                                      <input
-                                        value={option.value}
-                                        checked={getCheckedState(
-                                          section.name,
-                                          option.value
-                                        )}
-                                        onChange={(e) =>
-                                          handleFilterChange(e, section.name)
-                                        }
-                                        id={`filter-${section.id}-${optionIdx}`}
-                                        name={`${section.id}[]`}
-                                        type="checkbox"
-                                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                      />
-                                      <label
-                                        htmlFor={`filter-${section.id}-${optionIdx}`}
-                                        className="ml-3 text-sm text-gray-600">
-                                        {option.label}
-                                      </label>
-                                    </div>
-                                  ))}
-                                </div>
-                              </DisclosurePanel>
-                            </Transition>
-                          </>
-                        )}
-                      </Disclosure>
-                    ))}
-                  </form>
-
-                  {/* CARD */}
-                  <Box className="flex flex-col gap-5 lg:col-span-3">
-                    <Box
-                      xs={12}
-                      lg={3}
-                      sx={{ display: "flex", flexDirection: "column" }}
-                      aria-label="card section">
-                      {loading ? (
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            height: "100%",
-                            my: 80,
-                          }}>
-                          <Loaders size={70} />
-                        </Box>
-                      ) : (
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                          }}>
-                          <Box className="w-full">
-                            {visibleData.length > 0 ? (
-                              <Box className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-5 justify-items-center">
-                                {visibleData.map((item) => (
-                                  <Box
-                                    key={item.id}
-                                    sx={{
-                                      width: "100%",
-                                      maxWidth: 410,
-                                    }}>
-                                    <Box>
+                {/* CARD */}
+                <Box className="flex flex-col gap-5 lg:col-span-3">
+                  <Box
+                    xs={12}
+                    lg={3}
+                    sx={{ display: "flex", flexDirection: "column" }}
+                    aria-label="card section">
+                    {loading ? (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "center",
+                          height: "100%",
+                          my: 80,
+                        }}>
+                        <Loaders size={70} />
+                      </Box>
+                    ) : (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "center",
+                        }}>
+                        <Box className="w-full">
+                          {visibleData.length > 0 ? (
+                            <Box className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-5 justify-items-center">
+                              {visibleData.map((item) => (
+                                <Box
+                                  key={item.id}
+                                  sx={{
+                                    width: "100%",
+                                    maxWidth: 410,
+                                  }}>
+                                  <Box>
+                                    <Box
+                                      sx={{
+                                        width: "100%",
+                                        height: "100%",
+                                        p: "20px",
+                                        border: 1,
+                                        backgroundColor: "grey.50",
+                                        borderColor: "grey.300",
+                                        borderRadius: 1,
+                                        transition: "all 0.3s ease-in-out",
+                                        "&:hover": {
+                                          backgroundColor: "white",
+                                          boxShadow: 3,
+                                          borderColor: "primary.main",
+                                        },
+                                      }}>
                                       <Box
                                         sx={{
-                                          width: "100%",
-                                          height: "100%",
-                                          p: "20px",
-                                          border: 1,
-                                          backgroundColor: "grey.50",
-                                          borderColor: "grey.300",
-                                          borderRadius: 1,
-                                          transition: "all 0.3s ease-in-out",
-                                          "&:hover": {
-                                            backgroundColor: "white",
-                                            boxShadow: 3,
-                                            borderColor: "primary.main",
-                                          },
+                                          display: "flex",
+                                          flexDirection: "column",
+                                          justifyContent: "space-between",
+                                          gap: 2,
                                         }}>
                                         <Box
                                           sx={{
                                             display: "flex",
-                                            flexDirection: "column",
                                             justifyContent: "space-between",
-                                            gap: 2,
+                                            gap: 1,
+                                          }}>
+                                          <Box
+                                            component="img"
+                                            src={item.link_img}
+                                            alt="Company Logo"
+                                            sx={{
+                                              maxWidth: 200,
+                                              height: 50,
+                                              borderRadius: 1,
+                                              border: 1,
+                                              borderColor: "grey.300",
+                                            }}
+                                          />
+                                          <Bookmark
+                                            jobsId={item.id.toString()}
+                                          />
+                                        </Box>
+
+                                        <Box
+                                          sx={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
+                                            whiteSpace: "nowrap",
+                                          }}>
+                                          <a href={`/jobs/${item.id}`}>
+                                            <Typography
+                                              variant="h6"
+                                              fontWeight="bold"
+                                              noWrap
+                                              sx={{
+                                                color: "text.primary",
+                                                transition:
+                                                  "color 0.3s ease-in-out",
+                                                "&:hover": {
+                                                  color: "primary.main",
+                                                },
+                                              }}>
+                                              {item.job_title}
+                                            </Typography>
+                                          </a>
+                                        </Box>
+                                        <Box className="flex flex-wrap gap-2">
+                                          <button className="rounded-md bg-gray-200 p-1.5 text-sm font-medium text-black shadow-sm hover:text-primary transition ease-in-out duration-300">
+                                            {item.work_type}
+                                          </button>
+                                          <button className="rounded-md bg-gray-200 p-1.5 text-sm font-medium text-black shadow-sm hover:text-primary transition ease-in-out duration-300">
+                                            {item.working_type}
+                                          </button>
+                                          <button className="rounded-md bg-gray-200 p-1.5 text-sm font-medium text-black shadow-sm hover:text-primary transition ease-in-out duration-300">
+                                            {item.experience}
+                                          </button>
+                                          <button className="rounded-md bg-gray-200 p-1.5 text-sm font-medium text-black shadow-sm hover:text-primary transition ease-in-out duration-300">
+                                            {item.study_requirement}
+                                          </button>
+                                        </Box>
+                                        <Box
+                                          sx={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            gap: 1,
                                           }}>
                                           <Box
                                             sx={{
                                               display: "flex",
-                                              justifyContent: "space-between",
-                                              gap: 1,
+                                              flexDirection: "row",
+                                              alignItems: "center",
                                             }}>
-                                            <Box
-                                              component="img"
-                                              src={item.link_img}
-                                              alt="Company Logo"
-                                              sx={{
-                                                maxWidth: 200,
-                                                height: 50,
-                                                borderRadius: 1,
-                                                border: 1,
-                                                borderColor: "grey.300",
+                                            <BuildingOffice2Icon
+                                              style={{
+                                                height: 24,
+                                                width: 24,
                                               }}
+                                              className="mr-2"
                                             />
-                                            <Bookmark jobsId={item.id.toString()} />
+                                            <Typography
+                                              variant="h6"
+                                              sx={{
+                                                fontSize: "0.75rem",
+                                                fontWeight: 600,
+                                                transition:
+                                                  "color 0.3s ease-in-out",
+                                                "&:hover": {
+                                                  color: "primary.main",
+                                                },
+                                              }}>
+                                              {item.company}
+                                            </Typography>
                                           </Box>
 
                                           <Box
                                             sx={{
                                               display: "flex",
-                                              flexDirection: "column",
-                                              overflow: "hidden",
-                                              textOverflow: "ellipsis",
-                                              whiteSpace: "nowrap",
-                                            }}>
-                                            <a href={`/jobs/${item.id}`}>
-                                              <Typography
-                                                variant="h6"
-                                                fontWeight="bold"
-                                                noWrap
-                                                sx={{
-                                                  color: "text.primary",
-                                                  transition:
-                                                    "color 0.3s ease-in-out",
-                                                  "&:hover": {
-                                                    color: "primary.main",
-                                                  },
-                                                }}>
-                                                {item.job_title}
-                                              </Typography>
-                                            </a>
-                                          </Box>
-                                          <Box className="flex flex-wrap gap-2">
-                                            <button className="rounded-md bg-gray-200 p-1.5 text-sm font-medium text-black shadow-sm hover:text-primary transition ease-in-out duration-300">
-                                              {item.work_type}
-                                            </button>
-                                            <button className="rounded-md bg-gray-200 p-1.5 text-sm font-medium text-black shadow-sm hover:text-primary transition ease-in-out duration-300">
-                                              {item.working_type}
-                                            </button>
-                                            <button className="rounded-md bg-gray-200 p-1.5 text-sm font-medium text-black shadow-sm hover:text-primary transition ease-in-out duration-300">
-                                              {item.experience}
-                                            </button>
-                                            <button className="rounded-md bg-gray-200 p-1.5 text-sm font-medium text-black shadow-sm hover:text-primary transition ease-in-out duration-300">
-                                              {item.study_requirement}
-                                            </button>
-                                          </Box>
-                                          <Box
-                                            sx={{
-                                              display: "flex",
-                                              flexDirection: "column",
+                                              fontSize: "0.875rem",
                                               gap: 1,
+                                              color: "black",
                                             }}>
-                                            <Box
+                                            <Typography
+                                              variant="Body1"
                                               sx={{
                                                 display: "flex",
-                                                flexDirection: "row",
                                                 alignItems: "center",
                                               }}>
-                                              <BuildingOffice2Icon
+                                              <MapPinIcon
                                                 style={{
                                                   height: 24,
                                                   width: 24,
                                                 }}
                                                 className="mr-2"
                                               />
-                                              <Typography
-                                                variant="h6"
-                                                sx={{
-                                                  fontSize: "0.75rem",
-                                                  fontWeight: 600,
-                                                  transition:
-                                                    "color 0.3s ease-in-out",
-                                                  "&:hover": {
-                                                    color: "primary.main",
-                                                  },
-                                                }}>
-                                                {item.company}
-                                              </Typography>
-                                            </Box>
-
-                                            <Box
-                                              sx={{
-                                                display: "flex",
-                                                fontSize: "0.875rem",
-                                                gap: 1,
-                                                color: "black",
-                                              }}>
-                                              <Typography
-                                                variant="Body1"
-                                                sx={{
-                                                  display: "flex",
-                                                  alignItems: "center",
-                                                }}>
-                                                <MapPinIcon
-                                                  style={{
-                                                    height: 24,
-                                                    width: 24,
-                                                  }}
-                                                  className="mr-2"
-                                                />
-                                                {item.location}
-                                              </Typography>
-                                            </Box>
+                                              {item.location}
+                                            </Typography>
                                           </Box>
+                                        </Box>
+                                        <Typography
+                                          sx={{
+                                            fontSize: "13px",
+                                            color: "gray",
+                                            overflow: "hidden",
+                                            whiteSpace: "nowrap",
+                                            textOverflow: "ellipsis",
+                                          }}>
+                                          Skills: {item.skills}
+                                        </Typography>
+                                        <Box className="flex items-end">
                                           <Typography
+                                            variant="body2"
                                             sx={{
-                                              fontSize: "13px",
-                                              color: "gray",
+                                              fontWeight: "bold",
+                                              color: "primary.main",
+                                            }}>
+                                            {item.salary}
+                                          </Typography>
+                                          <Typography
+                                            variant="caption"
+                                            sx={{
+                                              color: "text.secondary",
+                                              marginLeft: "8px",
+                                            }}>
+                                            /Month
+                                          </Typography>
+                                        </Box>
+                                        <Box className="flex justify-between">
+                                          <Typography
+                                            variant="body2"
+                                            color="error"
+                                            sx={{
+                                              alignContent: "end",
                                               overflow: "hidden",
                                               whiteSpace: "nowrap",
                                               textOverflow: "ellipsis",
                                             }}>
-                                            Skills: {item.skills}
+                                            {getTimeAgo(item.updatedAt)}
                                           </Typography>
-                                          <Box className="flex items-end">
-                                            <Typography
-                                              variant="body2"
-                                              sx={{
-                                                fontWeight: "bold",
-                                                color: "primary.main",
-                                              }}>
-                                              {item.salary}
-                                            </Typography>
-                                            <Typography
-                                              variant="caption"
-                                              sx={{
-                                                color: "text.secondary",
-                                                marginLeft: "8px",
-                                              }}>
-                                              /Month
-                                            </Typography>
-                                          </Box>
-                                          <Box className="flex justify-between">
-                                            <Typography
-                                              variant="body2"
-                                              color="error"
-                                              sx={{
-                                                alignContent: "end",
-                                                overflow: "hidden",
-                                                whiteSpace: "nowrap",
-                                                textOverflow: "ellipsis",
-                                              }}>
-                                              {getTimeAgo(item.updatedAt)}
-                                            </Typography>
 
-                                            <Button
-                                              variant="outlined"
-                                              size="small"
-                                              sx={{
-                                                fontWeight: "bold",
-                                                padding: 1,
-                                                color: "primary.main",
-                                                borderColor: "primary.main",
-                                                "&:hover": {
-                                                  backgroundColor:
-                                                    "primary.main",
-                                                  color: "white",
-                                                },
-                                                transition:
-                                                  "all 0.3s ease-in-out",
-                                              }}
-                                              href={
-                                                item.link ? item.link : "#"
-                                              }>
-                                              Apply Now
-                                            </Button>
-                                          </Box>
+                                          <Button
+                                            variant="outlined"
+                                            size="small"
+                                            sx={{
+                                              fontWeight: "bold",
+                                              padding: 1,
+                                              color: "primary.main",
+                                              borderColor: "primary.main",
+                                              "&:hover": {
+                                                backgroundColor: "primary.main",
+                                                color: "white",
+                                              },
+                                              transition:
+                                                "all 0.3s ease-in-out",
+                                            }}
+                                            href={item.link ? item.link : "#"}>
+                                            Apply Now
+                                          </Button>
                                         </Box>
                                       </Box>
                                     </Box>
                                   </Box>
-                                ))}
-                              </Box>
-                            ) : (
-                              <Box className="flex flex-col items-center text-center">
-                                <img
-                                  src={find}
-                                  alt="No jobs found"
-                                  className="mx-auto h-96"
-                                />
-                                <Typography variant="h5" fontWeight="bold">
-                                  Tidak ada pekerjaan yang ditemukan untuk
-                                  pencarian ini
-                                </Typography>
-                                <Typography variant="body1" sx={{ mt: 2 }}>
-                                  Tidak ditemukan hasil pencarian yang sesuai{" "}
-                                  <br />
-                                  Coba ubah filter atau periksa penulisanmu
-                                </Typography>
-                              </Box>
-                            )}
-                          </Box>
+                                </Box>
+                              ))}
+                            </Box>
+                          ) : (
+                            <Box className="flex flex-col items-center text-center">
+                              <img
+                                src={find}
+                                alt="No jobs found"
+                                className="mx-auto h-96"
+                              />
+                              <Typography variant="h5" fontWeight="bold">
+                                Tidak ada pekerjaan yang ditemukan untuk
+                                pencarian ini
+                              </Typography>
+                              <Typography variant="body1" sx={{ mt: 2 }}>
+                                Tidak ditemukan hasil pencarian yang sesuai{" "}
+                                <br />
+                                Coba ubah filter atau periksa penulisanmu
+                              </Typography>
+                            </Box>
+                          )}
                         </Box>
-                      )}
-                    </Box>
-
-                    <ThemeProvider theme={defaultTheme}>
-                      <Snackbar
-                        open={alertOpen}
-                        autoHideDuration={5000}
-                        onClose={handleCloseAlert}>
-                        <Alert
-                          onClose={handleCloseAlert}
-                          severity={alertSeverity}
-                          sx={{ width: "100%" }}>
-                          {alertMessage}
-                        </Alert>
-                      </Snackbar>
-
-                      <Box sx={{ display: "flex", justifyContent: "center" }}>
-                        <Stack>
-                          <Pagination
-                            count={Math.min(totalPages)}
-                            page={page}
-                            onChange={handlePageChange}
-                            color="primary"
-                          />
-                        </Stack>
                       </Box>
-                    </ThemeProvider>
+                    )}
                   </Box>
-                </div>
-              </section>
-            </main>
-          </Box>
-        </Container>
-      </ThemeProvider>
+
+                  <ThemeProvider theme={defaultTheme}>
+                    <Snackbar
+                      open={alertOpen}
+                      autoHideDuration={1500}
+                      onClose={handleCloseAlert}>
+                      <Alert
+                        onClose={handleCloseAlert}
+                        severity={alertSeverity}
+                        sx={{ width: "100%" }}>
+                        {alertMessage}
+                      </Alert>
+                    </Snackbar>
+
+                    <Box sx={{ display: "flex", justifyContent: "center" }}>
+                      <Stack>
+                        <Pagination
+                          count={Math.min(totalPages)}
+                          page={page}
+                          onChange={handlePageChange}
+                          color="primary"
+                        />
+                      </Stack>
+                    </Box>
+                  </ThemeProvider>
+                </Box>
+              </div>
+            </section>
+          </main>
+        </Box>
+      </Container>
+    </ThemeProvider>
   );
 };
 
