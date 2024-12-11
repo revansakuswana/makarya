@@ -395,7 +395,6 @@ const Jobs = () => {
   };
 
   return (
-    <>
       <ThemeProvider theme={blogTheme}>
         <CssBaseline />
         <Container
@@ -809,7 +808,7 @@ const Jobs = () => {
 
                     <MenuItems
                       transition
-                      className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in">
+                      className="absolute right-0 z-10 mt-2 w-35 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in">
                       <Box>
                         <MenuItem key="newest">
                           <a
@@ -895,7 +894,7 @@ const Jobs = () => {
                                         checked={getCheckedState(
                                           section.name,
                                           option.value
-                                        )} // Menggunakan fungsi untuk mendapatkan nilai checked
+                                        )}
                                         onChange={(e) =>
                                           handleFilterChange(e, section.name)
                                         }
@@ -1107,10 +1106,10 @@ const Jobs = () => {
                                           </Typography>
                                           <Box className="flex items-end">
                                             <Typography
-                                              variant="body2" // Menggunakan variant yang sesuai, seperti h6 untuk ukuran kecil
+                                              variant="body2"
                                               sx={{
-                                                fontWeight: "bold", // font-semibold
-                                                color: "primary.main", // text-primary, pastikan Anda telah mendefinisikan primary dalam tema MUI
+                                                fontWeight: "bold",
+                                                color: "primary.main",
                                               }}>
                                               {item.salary}
                                             </Typography>
@@ -1218,7 +1217,6 @@ const Jobs = () => {
           </Box>
         </Container>
       </ThemeProvider>
-    </>
   );
 };
 
