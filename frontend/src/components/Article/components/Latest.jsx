@@ -17,6 +17,7 @@ import {
 } from "date-fns";
 import { styled } from "@mui/material/styles";
 import { marked } from "marked";
+import Grid from "@mui/material/Grid2";
 import Avatar from "@mui/material/Avatar";
 import Pagination from "@mui/material/Pagination";
 import NavigateNextRoundedIcon from "@mui/icons-material/NavigateNextRounded";
@@ -161,8 +162,8 @@ export default function Latest() {
 
   return (
     <ThemeProvider theme={blogTheme}>
-      <Box>
-        <Typography variant="h2" gutterBottom>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
+        <Typography variant="h2" >
           Artikel Terbaru
         </Typography>
         {loading ? (
@@ -170,9 +171,9 @@ export default function Latest() {
             <Loaders size={70} />
           </div>
         ) : (
-          <Box container spacing={6} columns={12} sx={{ my: 4 }}>
+          <Grid container spacing={6} columns={12}>
             {currentArticles.map((article, index) => (
-              <Box key={index} size={{ xs: 12, sm: 6 }}>
+              <Grid key={index} size={{ xs: 12, sm: 6 }}>
                 <Box
                   sx={{
                     display: "flex",
@@ -230,15 +231,15 @@ export default function Latest() {
                     </Typography>
                   </Box>
                 </Box>
-              </Box>
+              </Grid>
             ))}
-          </Box>
+          </Grid>
         )}
 
         <ThemeProvider theme={defaultTheme}>
           <Snackbar
             open={alertOpen}
-            autoHideDuration={5000}
+            autoHideDuration={1500}
             onClose={handleCloseAlert}>
             <Alert
               onClose={handleCloseAlert}
