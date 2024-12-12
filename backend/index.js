@@ -31,6 +31,6 @@ app.use(
 );
 app.use("/api", router);
 
-app.listen(process.env.APP_PORT || 3000, () =>
-  console.log(`Server running at port ${process.env.APP_PORT || 3000}`)
+app.listen(process.env.APP_PORT, () =>
+  console.log(`Server running at port ${process.env.APP_PORT}`)
 );
