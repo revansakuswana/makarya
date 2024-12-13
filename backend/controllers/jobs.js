@@ -7,7 +7,6 @@ export const getJobs = async (req, res) => {
     const jobs = await Jobs.findAll();
     res.status(200).json(jobs);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ msg: "Terjadi kesalahan pada server" });
   }
 };
