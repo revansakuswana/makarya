@@ -97,6 +97,7 @@ async function fetchJobData(page, url) {
       console.error(`Error navigating to ${job_link}:`, error);
       continue;
     }
+    
     const jobDetails = await page.evaluate((job_link) => {
       const job_title = document.querySelector(
         'h1[data-automation="job-detail-title"]'
