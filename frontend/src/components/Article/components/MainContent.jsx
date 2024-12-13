@@ -28,7 +28,6 @@ import Grid from "@mui/material/Grid2";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { marked } from "marked";
 import { useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
 import getBlogTheme from "../theme/getBlogTheme";
 import Loaders from "../../Loaders/Loaders";
 import axios from "axios";
@@ -89,26 +88,6 @@ const getTimeAgo = (updatedAt) => {
 
   const seconds = Math.abs(differenceInSeconds(now, updatedDate));
   return `${seconds} detik yang lalu`;
-};
-
-export function Search({ searchQuery, setSearchQuery }) {
-  return (
-    <FormControl sx={{ width: { xs: "100%", md: "25ch" } }} variant="outlined">
-      <OutlinedInput
-        size="small"
-        id="search"
-        placeholder="Search…"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        sx={{ flexGrow: 1 }}
-      />
-    </FormControl>
-  );
-}
-
-Search.propTypes = {
-  searchQuery: PropTypes.string.isRequired,
-  setSearchQuery: PropTypes.func.isRequired,
 };
 
 export default function MainContent() {
@@ -210,6 +189,10 @@ export default function MainContent() {
     }
   };
 
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
   const handleCloseAlert = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -291,7 +274,18 @@ export default function MainContent() {
             width: { xs: "100%", md: "fit-content" },
             overflow: "auto",
           }}>
-          <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+          <FormControl
+            sx={{ width: { xs: "100%", md: "25ch" } }}
+            variant="outlined">
+            <OutlinedInput
+              size="small"
+              id="search desktop"
+              placeholder="Search article…"
+              value={searchQuery}
+              onChange={handleSearchChange}
+              sx={{ flexGrow: 1 }}
+            />
+          </FormControl>
         </Box>
         <Box
           sx={{
@@ -371,7 +365,18 @@ export default function MainContent() {
               width: { xs: "100%", md: "fit-content" },
               overflow: "auto",
             }}>
-            <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+            <FormControl
+              sx={{ width: { xs: "100%", md: "25ch" } }}
+              variant="outlined">
+              <OutlinedInput
+                size="small"
+                id="search mobile"
+                placeholder="Search article…"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                sx={{ flexGrow: 1 }}
+              />
+            </FormControl>
           </Box>
         </Box>
         {loading ? (
@@ -447,7 +452,7 @@ export default function MainContent() {
         <ThemeProvider theme={defaultTheme}>
           <Snackbar
             open={alertOpen}
-            autoHideDuration={1500}
+            autoHideDuration={2000}
             onClose={handleCloseAlert}>
             <Alert
               onClose={handleCloseAlert}
