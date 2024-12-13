@@ -68,7 +68,7 @@ async function fetchJobData(page, url) {
 
   console.log("Fetching job links...");
   const jobCards = await page.$$eval(
-    "div._1tghpaf0._1bnjhlp4z._1bnjhlp4x",
+    "div._1unphw40.tcmsgw4v.tcmsgw51",
     (cards) => {
       return cards.map((card) => {
         const anchorTag = card.querySelector("a");
