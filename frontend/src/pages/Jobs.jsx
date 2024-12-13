@@ -41,7 +41,7 @@ import {
   MapPinIcon,
   MagnifyingGlassIcon,
   BriefcaseIcon,
-  XCircleIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/outline";
 import {
   ChevronDownIcon,
@@ -248,6 +248,7 @@ const Jobs = () => {
           `${import.meta.env.VITE_BASE_URL}/api/jobs`
         );
         let fetchedData = Array.isArray(response.data) ? response.data : [];
+
         const search = Array.from(
           new Set(fetchedData.map((item) => item.job_title))
         );
@@ -286,9 +287,9 @@ const Jobs = () => {
                   .toLowerCase()
                   .includes(selectedSearchToUse.toLowerCase())) &&
               (!selectedCategoryToUse ||
-                item.category === selectedCategoryToUse) &&
+                item.category.toLowerCase().includes(selectedCategoryToUse.toLowerCase())) &&
               (!selectedLocationToUse ||
-                item.location.includes(selectedLocationToUse))
+                item.location.toLowerCase().includes(selectedLocationToUse.toLowerCase()))
           );
         }
 
@@ -634,7 +635,7 @@ const Jobs = () => {
           <Dialog
             open={mobileFiltersOpen}
             onClose={setMobileFiltersOpen}
-            className="relative z-40 lg:hidden">
+            className="relative z-50 lg:hidden">
             <DialogBackdrop
               transition
               className="fixed inset-0 bg-black bg-opacity-25 transition-opacity duration-300 ease-linear data-[closed]:opacity-0"
@@ -673,8 +674,7 @@ const Jobs = () => {
                       justifyContent: "center",
                       color: "gray.400",
                     }}>
-                    <span className="sr-only">Close menu</span>
-                    <XCircleIcon
+                    <XMarkIcon
                       aria-hidden="true"
                       style={{
                         height: 30,
@@ -1187,7 +1187,7 @@ const Jobs = () => {
                   <ThemeProvider theme={defaultTheme}>
                     <Snackbar
                       open={alertOpen}
-                      autoHideDuration={1500}
+                      autoHideDuration={2000}
                       onClose={handleCloseAlert}>
                       <Alert
                         onClose={handleCloseAlert}
