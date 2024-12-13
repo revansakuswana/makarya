@@ -287,9 +287,13 @@ const Jobs = () => {
                   .toLowerCase()
                   .includes(selectedSearchToUse.toLowerCase())) &&
               (!selectedCategoryToUse ||
-                item.category.toLowerCase().includes(selectedCategoryToUse.toLowerCase())) &&
+                item.category
+                  .toLowerCase()
+                  .includes(selectedCategoryToUse.toLowerCase())) &&
               (!selectedLocationToUse ||
-                item.location.toLowerCase().includes(selectedLocationToUse.toLowerCase()))
+                item.location
+                  .toLowerCase()
+                  .includes(selectedLocationToUse.toLowerCase()))
           );
         }
 
@@ -363,11 +367,11 @@ const Jobs = () => {
   };
 
   const handleCategoryChange = (event, newValue) => {
-    setSelectedCategory(newValue || "");
+    setSelectedCategory(newValue || event.target.value || "");
   };
 
   const handleLocationChange = (event, newValue) => {
-    setSelectedLocation(newValue || "");
+    setSelectedLocation(newValue || event.target.value || "");
   };
 
   const handlePageChange = (event, value) => {
