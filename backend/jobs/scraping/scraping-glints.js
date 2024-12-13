@@ -276,7 +276,7 @@ export default async function scrapeGlints() {
 
   const connection = await createConnection();
 
-  while (pageNumber <= 2) {
+  while (pageNumber <= 5) {
     console.log(`Scraping page ${pageNumber}...`);
     const url = `${baseUrl}&page=${pageNumber}`;
     const jobLinks = await scrapeJobCards(url, cookies);
