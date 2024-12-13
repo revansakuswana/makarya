@@ -36,7 +36,9 @@ const ArticleItem = () => {
   const blogTheme = createTheme(getBlogTheme(mode));
 
   const [article, setArticle] = React.useState([]);
-  const [articlesList, setArticlesList] = useState([]);
+  const [articleImage, setArticleImage] = useState(null);
+  const [articlesWithImages, setArticlesWithImages] = useState([]);
+  const [authorAvatar, setAuthorAvatar] = useState(null);
 
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
@@ -88,7 +90,26 @@ const ArticleItem = () => {
         const response = await axios.get(
           `${import.meta.env.VITE_BASE_URL}/api/allarticles/${id}`
         );
-        setArticle(response.data.data);
+        const articleData = response.data.data;
+        setArticle(articleData);
+        if (articleData.image) {
+          const imageResponse = await axios.get(
+            `${import.meta.env.VITE_BASE_URL}/public/images/${
+              articleData.image
+            }`,
+            { responseType: "blob" }
+          );
+          setArticleImage(URL.createObjectURL(imageResponse.data));
+        }
+        if (articleData.author?.avatar) {
+          const avatarResponse = await axios.get(
+            `${import.meta.env.VITE_BASE_URL}/public/images/${
+              articleData.author.avatar
+            }`,
+            { responseType: "blob" }
+          );
+          setAuthorAvatar(URL.createObjectURL(avatarResponse.data));
+        }
       } catch (err) {
         setAlertMessage("Terjadi kesalahan saat mengambil data");
         setAlertSeverity("error");
@@ -100,6 +121,11 @@ const ArticleItem = () => {
       }
     };
     fetchArticle();
+
+    return () => {
+      if (articleImage) URL.revokeObjectURL(articleImage);
+      if (authorAvatar) URL.revokeObjectURL(authorAvatar);
+    };
   }, [id]);
 
   useEffect(() => {
@@ -108,18 +134,52 @@ const ArticleItem = () => {
         const response = await axios.get(
           `${import.meta.env.VITE_BASE_URL}/api/allarticles`
         );
-        setArticlesList(response.data.data);
+
+        const articles = response.data.data;
+        const articlesWithImageBlobs = await Promise.all(
+          articles.map(async (article) => {
+            try {
+              const imageResponse = await axios.get(
+                `${import.meta.env.VITE_BASE_URL}/public/images/${
+                  article.image
+                }`,
+                { responseType: "blob" }
+              );
+              return {
+                ...article,
+                imageUrl: URL.createObjectURL(imageResponse.data),
+              };
+            } catch (error) {
+              console.error(
+                "Error fetching image for article:",
+                article.id,
+                error
+              );
+              return {
+                ...article,
+                imageUrl: null,
+              };
+            }
+          })
+        );
+
+        setArticlesWithImages(articlesWithImageBlobs);
       } catch (err) {
-        setAlertMessage("Terjadi kesalahan saat mengambil data");
+        setAlertMessage("Terjadi kesalahan saat mengambil daftar artikel");
         setAlertSeverity("error");
         setAlertOpen(true);
-      } finally {
-        setTimeout(() => {
-          setLoading(false);
-        }, 1000);
       }
     };
+
     fetchArticlesList();
+
+    return () => {
+      articlesWithImages.forEach((article) => {
+        if (article.imageUrl) {
+          URL.revokeObjectURL(article.imageUrl);
+        }
+      });
+    };
   }, [id]);
 
   const handleCloseAlert = (event, reason) => {
@@ -163,9 +223,7 @@ const ArticleItem = () => {
               <CardMedia
                 component="img"
                 height="auto"
-                src={`${import.meta.env.VITE_BASE_URL}/public/images/${
-                  article.image
-                }`}
+                src={articleImage}
                 alt="Article Cover"
               />
 
@@ -202,11 +260,12 @@ const ArticleItem = () => {
                       {article.author && (
                         <>
                           <Avatar
-                            src={`${
-                              import.meta.env.VITE_BASE_URL
-                            }/public/images/${article.author.avatar}`}
+                            src={authorAvatar}
                             alt={article.author.name}
-                            sx={{ width: { xs: 35, md: 40 }, height: { xs: 35, md: 40 } }}
+                            sx={{
+                              width: { xs: 35, md: 40 },
+                              height: { xs: 35, md: 40 },
+                            }}
                           />
                           <Typography variant="caption">
                             {article.author.name}
@@ -255,17 +314,13 @@ const ArticleItem = () => {
               <Typography variant="h5" sx={{ fontWeight: "bold", mb: 1.6 }}>
                 Artikel lainnya
               </Typography>
-              {articlesList
+              {articlesWithImages
                 .filter((otherArticle) => otherArticle.id !== article.id)
                 .slice(0, 3)
                 .map((otherArticle) => (
                   <Card
                     key={otherArticle.id}
-                    sx={{
-                      width: "100%",
-                      padding: 0,
-                      mb: 2,
-                    }}>
+                    sx={{ width: "100%", padding: 0, mb: 2 }}>
                     <Box
                       component="a"
                       href={`/articles/${otherArticle.id}`}
@@ -274,9 +329,8 @@ const ArticleItem = () => {
                         <CardMedia
                           component="img"
                           height="auto"
-                          src={`${
-                            import.meta.env.VITE_BASE_URL
-                          }/public/images/${otherArticle.image}`}
+                          src={otherArticle.imageUrl}
+                          alt={otherArticle.title}
                         />
                       </Box>
 
@@ -290,9 +344,7 @@ const ArticleItem = () => {
                         }}>
                         <Typography
                           variant="subtitle2"
-                          sx={{
-                            display: "flex",
-                          }}>
+                          sx={{ display: "flex" }}>
                           <CalendarDaysIcon className="h-5 w-5 mr-2" />{" "}
                           {getTimeAgo(otherArticle.updatedAt)}
                         </Typography>
@@ -319,7 +371,7 @@ const ArticleItem = () => {
         <ThemeProvider theme={defaultTheme}>
           <Snackbar
             open={alertOpen}
-            autoHideDuration={1500}
+            autoHideDuration={2000}
             onClose={handleCloseAlert}>
             <Alert
               onClose={handleCloseAlert}
