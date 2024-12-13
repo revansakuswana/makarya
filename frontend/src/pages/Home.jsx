@@ -23,6 +23,7 @@ import {
   BuildingOffice2Icon,
   MapPinIcon,
   ArrowRightIcon,
+  ArrowTopRightOnSquareIcon,
 } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
 import getBlogTheme from "../components/Article/theme/getBlogTheme";
@@ -468,7 +469,14 @@ const Home = () => {
                                         transition: "all 0.3s ease-in-out",
                                       }}
                                       href={item.link ? item.link : "#"}>
-                                      Apply Now
+                                      Apply
+                                      <ArrowTopRightOnSquareIcon
+                                        style={{
+                                          height: 17,
+                                          width: 17,
+                                        }}
+                                        className="ml-1"
+                                      />
                                     </Button>
                                   </Box>
                                 </Box>

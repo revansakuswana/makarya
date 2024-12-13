@@ -42,6 +42,7 @@ import {
   MagnifyingGlassIcon,
   BriefcaseIcon,
   XMarkIcon,
+  ArrowTopRightOnSquareIcon,
 } from "@heroicons/react/24/outline";
 import {
   ChevronDownIcon,
@@ -1156,7 +1157,14 @@ const Jobs = () => {
                                                 "all 0.3s ease-in-out",
                                             }}
                                             href={item.link ? item.link : "#"}>
-                                            Apply Now
+                                            Apply
+                                            <ArrowTopRightOnSquareIcon
+                                              style={{
+                                                height: 17,
+                                                width: 17,
+                                              }}
+                                              className="ml-1"
+                                            />
                                           </Button>
                                         </Box>
                                       </Box>

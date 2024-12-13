@@ -26,6 +26,7 @@ import {
   ClockIcon,
   BanknotesIcon,
   BuildingOffice2Icon,
+  ArrowTopRightOnSquareIcon,
 } from "@heroicons/react/24/outline";
 import { marked } from "marked";
 import Grid from "@mui/material/Grid2";
@@ -273,17 +274,32 @@ export default function JobsItem() {
                     </Typography>
                   </Box>
 
-                  <Button
-                    sx={{
-                      width: { xs: "30%", md: "14%" },
-                      fontWeight: "bold",
-                    }}
-                    variant="contained"
-                    color="secondary"
-                    size="small"
-                    href={jobs.link ? jobs.link : "#"}>
-                    Apply Now
-                  </Button>
+                  <Box>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      sx={{
+                        fontWeight: "bold",
+                        padding: 1,
+                        color: "primary.main",
+                        borderColor: "primary.main",
+                        "&:hover": {
+                          backgroundColor: "primary.main",
+                          color: "white",
+                        },
+                        transition: "all 0.3s ease-in-out",
+                      }}
+                      href={jobs.link ? jobs.link : "#"}>
+                      Apply
+                      <ArrowTopRightOnSquareIcon
+                        style={{
+                          height: 17,
+                          width: 17,
+                        }}
+                        className="ml-1"
+                      />
+                    </Button>
+                  </Box>
 
                   <Box xs={12}>
                     <Typography variant="h4" sx={{ marginBottom: 2 }}>
