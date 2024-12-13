@@ -14,17 +14,14 @@ import {
   ArrowLeftStartOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-// eslint-disable-next-line react/prop-types
 export default function AvatarIcon() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-
-  const [previewImage, setPreviewImage] = useState(null);
   const navigate = useNavigate();
-
+  const [avatarBlob, setAvatarBlob] = useState(null);
   const [users, setUsers] = useState({
     id: "",
     name: "",
@@ -55,12 +52,15 @@ export default function AvatarIcon() {
             withCredentials: true,
           }
         );
-        setUsers(response.data.data);
-        setPreviewImage(
-          `${import.meta.env.VITE_BASE_URL}/public/images/${
-            response.data.data.avatar
-          }`
-        );
+        const userData = response.data.data;
+        setUsers(userData);
+        if (userData.avatar) {
+          const imageResponse = await axios.get(
+            `${import.meta.env.VITE_BASE_URL}/public/images/${userData.avatar}`,
+            { responseType: "blob" }
+          );
+          setAvatarBlob(URL.createObjectURL(imageResponse.data));
+        }
       } catch (err) {
         console.error(err?.response?.data?.msg);
       }
@@ -68,6 +68,14 @@ export default function AvatarIcon() {
 
     fetchUsers();
   }, []);
+
+  useEffect(() => {
+    return () => {
+      if (avatarBlob) {
+        URL.revokeObjectURL(avatarBlob);
+      }
+    };
+  }, [avatarBlob]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -88,9 +96,7 @@ export default function AvatarIcon() {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}>
             <Avatar
-              src={`${import.meta.env.VITE_BASE_URL}/public/images/${
-                users.avatar
-              }`}
+              src={avatarBlob}
               alt={users.name}
               sx={{ width: 32, height: 32 }}
             />
@@ -138,10 +144,7 @@ export default function AvatarIcon() {
           href="/profile"
           style={{ textDecoration: "none" }}>
           <Avatar
-            src={
-              previewImage ||
-              `${import.meta.env.VITE_BASE_URL}/public/images/${users.avatar}`
-            }
+            src={avatarBlob}
             alt={users.name}
             sx={{ width: 120, height: 120, cursor: "pointer" }}
           />
