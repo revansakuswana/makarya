@@ -15,7 +15,11 @@ import {
   differenceInSeconds,
   parseISO,
 } from "date-fns";
-import { BookmarkIcon, BuildingOffice2Icon, MapPinIcon } from "@heroicons/react/24/outline";
+import {
+  BookmarkIcon,
+  BuildingOffice2Icon,
+  MapPinIcon,
+} from "@heroicons/react/24/outline";
 import { ShoppingBagIcon } from "@heroicons/react/24/solid";
 import getBlogTheme from "../components/Article/theme/getBlogTheme";
 import Bookmark from "../components/Bookmark/Bookmark";
@@ -64,9 +68,7 @@ const SavedJobs = () => {
       } catch (error) {
         setLoading(false);
       } finally {
-        setTimeout(() => {
-          setLoading(false);
-        }, 1000);
+        setLoading(false);
       }
     };
 
@@ -358,6 +360,7 @@ const SavedJobs = () => {
                         alignItems: { xs: "center", md: "center" },
                         textAlign: { xs: "center", md: "center" },
                         justifyContent: "center",
+                        my: 20,
                       }}>
                       <ShoppingBagIcon style={{ width: 96, height: 96 }} />
                       <Typography
