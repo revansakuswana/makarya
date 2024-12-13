@@ -23,8 +23,10 @@ import {
   EnvelopeIcon,
   ArrowRightStartOnRectangleIcon,
   ExclamationCircleIcon,
+  PencilSquareIcon,
+  TrashIcon,
 } from "@heroicons/react/24/outline";
-import { TrashIcon, CheckBadgeIcon } from "@heroicons/react/24/solid";
+import { CheckBadgeIcon } from "@heroicons/react/24/solid";
 import getBlogTheme from "../components/Article/theme/getBlogTheme";
 import Loaders from "../components/Loaders/Loaders";
 import axios from "axios";
@@ -45,10 +47,10 @@ const Profile = () => {
   const navigate = useNavigate();
   const [avatar, setAvatar] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
-  const [setError] = useState(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
   const [initialUserData, setInitialUserData] = useState(null);
+  const [avatarBlob, setAvatarBlob] = useState(null);
   const [users, setUsers] = useState({
     id: "",
     name: "",
@@ -73,16 +75,16 @@ const Profile = () => {
         const userData = response.data.data;
         setUsers(userData);
         setInitialUserData(userData);
-        setPreviewImage(
-          `${import.meta.env.VITE_BASE_URL}/public/images/${
-            response.data.data.avatar
-          }`
-        );
+        if (userData.avatar) {
+          const imageResponse = await axios.get(
+            `${import.meta.env.VITE_BASE_URL}/public/images/${userData.avatar}`,
+            { responseType: "blob" }
+          );
+          setAvatarBlob(URL.createObjectURL(imageResponse.data));
+        }
       } catch (err) {
-        setAlertMessage(
-          err?.response?.data?.msg || "Failed to fetch user data."
-        );
         setAlertSeverity("error");
+        setAlertMessage(err?.response?.data?.msg);
         setAlertOpen(true);
       } finally {
         setLoading(false);
@@ -91,6 +93,14 @@ const Profile = () => {
 
     fetchUsers();
   }, []);
+
+  useEffect(() => {
+    return () => {
+      if (avatarBlob) {
+        URL.revokeObjectURL(avatarBlob);
+      }
+    };
+  }, [avatarBlob]);
 
   const handleEditToggle = () => {
     setIsEditing((prev) => !prev);
@@ -135,9 +145,8 @@ const Profile = () => {
             ...prev,
             avatar: updatedUser.avatar || prev.avatar,
           }));
-
           setPreviewImage(
-            updatedUser.avatar`${import.meta.env.VITE_BASE_URL}/public/images/${
+            `${import.meta.env.VITE_BASE_URL}/public/images/${
               updatedUser.avatar
             }`
           );
@@ -153,7 +162,7 @@ const Profile = () => {
         });
         setErrors(formattedErrors);
       } else {
-        setError(err.msg);
+        setAlertSeverity("error");
         setAlertMessage(err.response?.data?.msg);
       }
       setAlertSeverity("error");
@@ -181,8 +190,10 @@ const Profile = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.size > 5000000) {
-        setError("File size should not exceed 5MB.");
+      if (file.size > 3000000) {
+        setAlertSeverity("error");
+        setAlertMessage("Ukuran file tidak boleh melebihi 3MB");
+        setAlertOpen(true);
         return;
       }
       setAvatar(file);
@@ -237,9 +248,6 @@ const Profile = () => {
     } finally {
       setAlertOpen(true);
       setDeleteConfirmOpen(false);
-      setTimeout(() => {
-        setAlertOpen(false);
-      }, 1500);
     }
   };
 
@@ -260,15 +268,15 @@ const Profile = () => {
           email: users.email,
         }
       );
-      if (response.status === 200) {
-        setAlertSeverity("success");
-        setAlertMessage(response?.data?.msg);
-        setAlertOpen(true);
-      }
+      setAlertSeverity("success");
+      setAlertMessage(response?.data?.msg);
+      setAlertOpen(true);
     } catch (error) {
       const statusCode = error.response?.status;
       setAlertSeverity("error");
-      if (statusCode === 500 || statusCode === 404) {
+      if (statusCode === 404) {
+        setAlertMessage(statusCode);
+      } else if (statusCode === 500) {
         setAlertMessage(error.response?.data?.msg);
       }
       setAlertOpen(true);
@@ -301,7 +309,7 @@ const Profile = () => {
               display: "flex",
               flexDirection: { xs: "column", md: "row" },
               justifyContent: "space-between",
-              gap: 4,
+              gap: 5,
             }}>
             <Box
               sx={{
@@ -310,7 +318,7 @@ const Profile = () => {
                 alignItems: "left",
                 justifyContent: "left",
                 gap: 2,
-                width: { xs: "100%", md: 400 },
+                minWidth: { xs: "100%", md: 400 },
               }}>
               <Box
                 sx={{
@@ -322,12 +330,7 @@ const Profile = () => {
                 }}>
                 <label htmlFor="avatar-upload">
                   <Avatar
-                    src={
-                      previewImage ||
-                      `${import.meta.env.VITE_BASE_URL}/public/images/${
-                        users.avatar
-                      }`
-                    }
+                    src={previewImage || avatarBlob}
                     alt={users.name}
                     sx={{
                       width: 180,
@@ -339,10 +342,10 @@ const Profile = () => {
                 <input
                   id="avatar-upload"
                   type="file"
-                  accept="avatar/*"
+                  accept="image/*"
                   style={{ display: "none" }}
                   onChange={handleImageChange}
-                  disabled={!isEditing} // Disable saat tidak dalam mode edit
+                  disabled={!isEditing}
                 />
                 <Typography variant="h5" fontWeight="bold">
                   {users.name}
@@ -353,14 +356,19 @@ const Profile = () => {
                 sx={{
                   display: "flex",
                   flexDirection: "column",
-                  justifyContent: "left",
-                  gap: 2.2,
+                  gap: 1,
                 }}>
                 <Box
-                
-                  spacing={1}
-                  sx={{ display: "flex", justifyContent: "space-between" }}>
-                  <Box sx={{ display: "flex", gap: 1 }}>
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                  }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      gap: 1,
+                      justifyContent: "left",
+                    }}>
                     <EnvelopeIcon
                       style={{
                         height: 24,
@@ -375,35 +383,42 @@ const Profile = () => {
                       variant="body1">
                       {users.email}
                     </Typography>
-                    {(users.is_verified == 1 || users.is_verified == "1") && (
-                      <CheckBadgeIcon
-                        style={{
-                          height: 20,
-                          width: 20,
-                          alignSelf: "center",
-                          color: "#016FDD",
-                        }}
-                      />
-                    )}
-                  </Box>
-
-                  {!(users.is_verified == 1 || users.is_verified == "1") && (
-                    <Box sx={{ display: "flex" }}>
-                      <ExclamationCircleIcon
-                        style={{
-                          height: 20,
-                          width: 20,
-                          alignSelf: "center",
-                          marginRight: 4,
-                          color: "#e50000",
-                        }}
-                      />
-                      <Link onClick={handleVerify}>Verifikasi email</Link>
+                    <Box>
+                      {users.is_verified ? (
+                        <CheckBadgeIcon
+                          style={{
+                            height: 20,
+                            width: 20,
+                            color: "#016FDD",
+                          }}
+                        />
+                      ) : (
+                        <ExclamationCircleIcon
+                          style={{
+                            height: 24,
+                            width: 24,
+                            color: "red",
+                          }}
+                        />
+                      )}
                     </Box>
+                  </Box>
+                  {!users.is_verified && (
+                    <Link
+                      sx={{
+                        fontSize: 10,
+                        marginLeft: 4,
+                        color: "red",
+                      }}
+                      onClick={handleVerify}>
+                      Kirim email verifikasi
+                    </Link>
                   )}
                 </Box>
 
-                <Box spacing={1} alignItems="left">
+                <Box
+                  sx={{ display: "flex", gap: 1, justifyContent: "left" }}
+                  spacing={1}>
                   <Box>
                     <MapPinIcon
                       style={{
@@ -443,7 +458,7 @@ const Profile = () => {
                       height: 20,
                       width: 20,
                     }}
-                    className="mr-2"
+                    className="mr-1"
                   />
                   Logout
                 </Button>
@@ -459,7 +474,7 @@ const Profile = () => {
                       height: 20,
                       width: 20,
                     }}
-                    className="mr-2"
+                    className="mr-1"
                   />
                   Delete Account
                 </Button>
@@ -473,12 +488,13 @@ const Profile = () => {
                 width: { xs: "100%", md: 800 },
               }}>
               {isEditing ? (
-                <>
+                <Box sx={{ display: "flex", flexDirection: "column" }}>
                   <TextField
                     fullWidth
                     margin="normal"
                     label="Name"
                     name="name"
+                    autoComplete="name"
                     value={users.name}
                     onChange={handleInputChange}
                   />
@@ -512,6 +528,7 @@ const Profile = () => {
                     margin="normal"
                     label="Email"
                     name="email"
+                    autoComplete="email"
                     value={users.email}
                     onChange={handleInputChange}
                   />
@@ -521,75 +538,78 @@ const Profile = () => {
                     sx={{
                       display: "flex",
                       gap: 2,
-                      mt: 1.8,
                     }}>
                     <Button
                       variant="contained"
                       color="secondary"
                       size="small"
                       onClick={handleSubmit}>
-                      Save
+                      Simpan
                     </Button>
                     <Button
                       variant="contained"
                       color="error"
                       size="small"
                       onClick={handleCancel}>
-                      Cancel
+                      Batalkan
                     </Button>
                   </Box>
-                </>
+                </Box>
               ) : (
-                <>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      gap: 2.2,
-                    }}>
-                    <Box xs={12} sm={6}>
-                      <Typography variant="h6" fontWeight="bold">
-                        Name
-                      </Typography>
-                      <Typography variant="body1">{users.name}</Typography>
-                    </Box>
-                    <Box xs={12} sm={6}>
-                      <Typography variant="h6" fontWeight="bold">
-                        Location
-                      </Typography>
-                      <Typography variant="body1">{users.location}</Typography>
-                    </Box>
-                    <Box xs={12} sm={6}>
-                      <Typography variant="h6" fontWeight="bold">
-                        Education
-                      </Typography>
-                      <Typography variant="body1">{users.education}</Typography>
-                    </Box>
-                    <Box xs={12} sm={6}>
-                      <Typography variant="h6" fontWeight="bold">
-                        Skills
-                      </Typography>
-                      <Typography variant="body1">{users.skills}</Typography>
-                    </Box>
-                    <Box xs={12} sm={6}>
-                      <Typography variant="h6" fontWeight="bold">
-                        Email
-                      </Typography>
-                      <Typography variant="body1">{users.email}</Typography>
-                    </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    gap: 2.2,
+                  }}>
+                  <Box xs={12} sm={6}>
+                    <Typography variant="h6" fontWeight="bold">
+                      Nama
+                    </Typography>
+                    <Typography variant="body1">{users.name}</Typography>
                   </Box>
-                  <Button
-                    sx={{
-                      marginTop: 1.8,
-                    }}
-                    variant="contained"
-                    color="secondary"
-                    size="small"
-                    onClick={handleEditToggle}>
-                    Edit
-                  </Button>
-                </>
+                  <Box xs={12} sm={6}>
+                    <Typography variant="h6" fontWeight="bold">
+                      Lokasi
+                    </Typography>
+                    <Typography variant="body1">{users.location}</Typography>
+                  </Box>
+                  <Box xs={12} sm={6}>
+                    <Typography variant="h6" fontWeight="bold">
+                      Pendidikan Terakhir
+                    </Typography>
+                    <Typography variant="body1">{users.education}</Typography>
+                  </Box>
+                  <Box xs={12} sm={6}>
+                    <Typography variant="h6" fontWeight="bold">
+                      Skills
+                    </Typography>
+                    <Typography variant="body1">{users.skills}</Typography>
+                  </Box>
+                  <Box xs={12} sm={6}>
+                    <Typography variant="h6" fontWeight="bold">
+                      Email
+                    </Typography>
+                    <Typography variant="body1">{users.email}</Typography>
+                  </Box>
+                  <Box>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      size="small"
+                      onClick={handleEditToggle}>
+                      <PencilSquareIcon
+                        style={{
+                          height: 20,
+                          width: 20,
+                          marginRight: 5,
+                        }}
+                      />
+                      Ubah
+                    </Button>
+                  </Box>
+                </Box>
               )}
             </Box>
           </Box>
@@ -605,20 +625,20 @@ const Profile = () => {
             </Typography>
           </DialogContent>
         </Box>
-        <DialogActions>
+        <DialogActions sx={{ display: "flex", justifyContent: "center" }}>
           <Button
             onClick={handleCloseDeleteDialog}
             variant="contained"
             size="small"
             color="secondary">
-            Cancel
+            Batalkan
           </Button>
           <Button
             onClick={handleDeleteAccount}
             variant="contained"
             size="small"
             color="error">
-            Delete
+            Hapus
           </Button>
         </DialogActions>
       </Dialog>
@@ -626,7 +646,7 @@ const Profile = () => {
       <ThemeProvider theme={defaultTheme}>
         <Snackbar
           open={alertOpen}
-          autoHideDuration={1500}
+          autoHideDuration={2000}
           onClose={handleCloseAlert}>
           <Alert onClose={handleCloseAlert} severity={alertSeverity}>
             {alertMessage}
