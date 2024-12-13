@@ -114,7 +114,7 @@ export default function Latest() {
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_BASE_URL}/api/allarticles`
-        ); // Replace with your API URL
+        );
         const sortedArticles = response.data.data.sort(
           (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
         );
@@ -141,15 +141,13 @@ export default function Latest() {
   };
 
   const getExcerpt = (content, maxLength = 150) => {
-    // Mengonversi Markdown ke HTML dan kemudian menggunakannya untuk mendapatkan excerpt
     const htmlContent = marked(content);
-    const plainText = htmlContent.replace(/<\/?[^>]+(>|$)/g, ""); // Menghapus tag HTML
+    const plainText = htmlContent.replace(/<\/?[^>]+(>|$)/g, "");
     return plainText.length <= maxLength
       ? plainText
       : plainText.slice(0, maxLength) + "...";
   };
 
-  // Calculate the current articles to display
   const indexOfLastArticle = currentPage * articlesPerPage;
   const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
   const currentArticles = articles.slice(
@@ -241,7 +239,7 @@ export default function Latest() {
         <ThemeProvider theme={defaultTheme}>
           <Snackbar
             open={alertOpen}
-            autoHideDuration={1500}
+            autoHideDuration={2000}
             onClose={handleCloseAlert}>
             <Alert
               onClose={handleCloseAlert}
