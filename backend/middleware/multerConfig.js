@@ -1,7 +1,7 @@
 import { fileURLToPath } from "url";
 import { dirname } from "path";
-import multer from "multer";
 import path from "path";
+import multer from "multer";
 
 // Mendapatkan __dirname di ES6
 const __filename = fileURLToPath(import.meta.url); // Mendapatkan nama file saat ini
@@ -31,7 +31,7 @@ const fileFilter = (req, file, cb) => {
 // Membuat middleware upload
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 },
+  limits: { fileSize: 3 * 1024 * 1024 },
   fileFilter: fileFilter,
 });
 
