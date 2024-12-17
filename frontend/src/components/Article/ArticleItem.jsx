@@ -162,7 +162,6 @@ const ArticleItem = () => {
             }
           })
         );
-
         setArticlesWithImages(articlesWithImageBlobs);
       } catch (err) {
         setAlertMessage("Terjadi kesalahan saat mengambil daftar artikel");
