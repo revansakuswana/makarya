@@ -71,7 +71,7 @@ const ArticleList = () => {
     fetchArticles();
   }, []);
 
-  const getExcerpt = (content, maxLength = 150) => {
+  const getExcerpt = (content, maxLength = 100) => {
     const htmlContent = marked(content);
     const plainText = htmlContent.replace(/<\/?[^>]+(>|$)/g, "");
     return plainText.length <= maxLength
@@ -288,7 +288,7 @@ const ArticleList = () => {
                           border: "1px solid #e0e0e0",
                           padding: 1,
                         }}>
-                        {getExcerpt(article.content, 500)}
+                        {getExcerpt(article.content, 100)}
                       </TableCell>
                       <TableCell
                         sx={{
