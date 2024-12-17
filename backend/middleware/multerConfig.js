@@ -1,7 +1,6 @@
 import { fileURLToPath } from "url";
-import { dirname } from "path";
+import { path, dirname } from "path";
 import multer from "multer";
-import path from "path";
 
 // Mendapatkan __dirname di ES6
 const __filename = fileURLToPath(import.meta.url); // Mendapatkan nama file saat ini
