@@ -16,7 +16,7 @@ async function createConnection() {
 
 async function insertJobData(connection, job) {
   const query = `
-        INSERT INTO jobs (job_title, company, work_type, working_type, experience, location, salary, link, link_img, category, study_requirement, skills, description, createdAt, updatedAt)
+        INSERT INTO jobs (job_title, company, work_type, working_type, experience, location, salary, link, link_img, category, study_requirement, skills, description, created_at, updated_at)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
         ON DUPLICATE KEY UPDATE 
           job_title = VALUES(job_title),
@@ -31,7 +31,7 @@ async function insertJobData(connection, job) {
           study_requirement = VALUES(study_requirement),
           skills = VALUES(skills),
           description = VALUES(description),
-          updatedAt = CURRENT_TIMESTAMP
+          updated_at = CURRENT_TIMESTAMP
     `;
 
   const values = [
@@ -52,7 +52,7 @@ async function insertJobData(connection, job) {
 
   try {
     await connection.execute(query, values);
-    console.log(`Job ${job.job_title} inserted/updated successfully.`);
+    console.log(`Jobs ${job.job_title} inserted/updated successfully.`);
   } catch (error) {
     console.error("Error inserting job data:", error);
   }
@@ -81,21 +81,24 @@ const convertWorkType = (type) => {
   return workTypeMapping[type] || type;
 };
 
-export default async function scrapeKalibrr(numPagesToScrape = 2) {
+export default async function scrapeKalibrr() {
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
 
   const baseUrl = "https://www.kalibrr.com/id-ID/home/all-jobs";
   let jobData = [];
+  const numPagesToScrape = 5; // Adjust the number of pages to scrape
 
   const connection = await createConnection();
 
+  // Function to fetch and load page data using puppeteer
   const fetchData = async (url) => {
     console.log(`Fetching page: ${url}`);
     await page.goto(url, { waitUntil: "networkidle2" });
     console.log(`Page loaded: ${url}`);
   };
 
+  // Function to scrape job details from each page
   const scrapePage = async (pageNumber) => {
     let idCounter = 1;
     const url = `${baseUrl}?page=${pageNumber}`;
@@ -103,7 +106,7 @@ export default async function scrapeKalibrr(numPagesToScrape = 2) {
     await fetchData(url);
 
     const jobCards = await page.$$(
-      ".k-font-dm-sans.k-rounded-lg.k-bg-white.k-border-solid.k-border"
+      ".k-font-dm-sans.k-rounded-lg"
     );
 
     if (jobCards.length === 0) {
@@ -120,6 +123,7 @@ export default async function scrapeKalibrr(numPagesToScrape = 2) {
       const jobLink = await jobLinkElement.evaluate((el) => el.href);
       console.log(`Scraping job details from: ${jobLink}`);
 
+      // Fetch job details using axios and cheerio
       const response = await axios.get(jobLink);
       const $ = cheerio.load(response.data);
 
@@ -139,10 +143,9 @@ export default async function scrapeKalibrr(numPagesToScrape = 2) {
         : "Location Not Specified";
 
       const salaryElement = await card.$("span.k-text-subdued");
-      let salary = salaryElement
+      const salary = salaryElement
         ? await salaryElement.evaluate((el) => el.textContent.trim())
         : "Tidak ditampilkan";
-      salary = salary.replace(/\/ month|\/ bulan/gi, "").trim();
 
       const grayTextElements = await card.$$("span.k-text-gray-500");
       const work_type = grayTextElements[1]
@@ -155,8 +158,6 @@ export default async function scrapeKalibrr(numPagesToScrape = 2) {
       const working_type =
         $("a.k-remote-work-tag span").text().trim() || "Tidak ditampilkan";
 
-      const description = $('div[itemprop="description"]').html();
-
       const study_requirement = [];
       $("dd.k-inline-flex.k-items-center").each((_, el) => {
         study_requirement.push($(el).text());
@@ -167,11 +168,13 @@ export default async function scrapeKalibrr(numPagesToScrape = 2) {
         experience.push($(el).text());
       });
 
+      const description = $('div[itemprop="description"]').text().trim();
+
       const imgElement = $(
         "img.k-block.k-max-w-full.k-max-h-full.k-bg-white.k-mx-auto"
       ).attr("src");
 
-      jobDetails["id"] = `kb${idCounter++}`;
+      jobDetails["id"] = idCounter++;
       jobDetails["job_title"] = jobTitle;
       jobDetails["company"] = companyName;
       jobDetails["category"] = category;
@@ -191,21 +194,28 @@ export default async function scrapeKalibrr(numPagesToScrape = 2) {
       console.log(`Job scraped: ${jobTitle} at ${companyName}`);
       jobData.push(jobDetails);
 
+
+      // Insert job data into database
       await insertJobData(connection, jobDetails);
     }
 
+    // Log number of jobs scraped from the page
     console.log(
       `Total jobs scraped from page ${pageNumber}: ${jobCards.length}`
     );
   };
 
+  // Loop through pages to scrape data
   for (let i = 1; i <= numPagesToScrape; i++) {
     console.log(`Processing page ${i} of ${numPagesToScrape}`);
     await scrapePage(i);
   }
 
+  // Log total jobs scraped
   console.log(`Total jobs scraped: ${jobData.length}`);
 
   await connection.end();
   await browser.close();
 }
+
+scrapeKalibrr().catch(console.error);
