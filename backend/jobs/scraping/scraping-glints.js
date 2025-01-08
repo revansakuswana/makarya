@@ -153,11 +153,11 @@ async function scrapeJobCards(url, cookies) {
       const link = "https://glints.com" + $(card).find("a").attr("href");
 
       const job_title = $(card)
-        .find("h2.CompactOpportunityCardsc__JobTitle-sc-dkg8my-11.crGNMX")
+        .find("h2.CompactOpportunityCardsc__JobTitle-sc-dkg8my-11.gwOhhF")
         .text();
 
       const company = $(card)
-        .find("a.CompactOpportunityCardsc__CompanyLink-sc-dkg8my-13.ciWEKu")
+        .find("a.CompactOpportunityCardsc__CompanyLink-sc-dkg8my-14.hjkavF")
         .text();
 
       let work_type = $(card)
@@ -191,7 +191,7 @@ async function scrapeJobCards(url, cookies) {
       const salary =
         $(card)
           .find(
-            "span.CompactOpportunityCardsc__SalaryWrapper-sc-dkg8my-31.cdlTsx"
+            "span.CompactOpportunityCardsc__SalaryWrapper-sc-dkg8my-32.jTefKS"
           )
           .text() || "Tidak ditampilkan";
 
@@ -230,12 +230,13 @@ async function scrapeJobDetails(link) {
     const $ = cheerio.load(html);
 
     const category =
-      $("div.a")
-        ?.text()
+      $("div.TopFoldsc__JobOverViewInfo-sc-1fbktg5-9.erJXAZ.div")
+        ?.eq(0)
+        .text()
         .trim() || "Tidak ditampilkan";
 
     let study_requirement = $(
-      "div.TagStyle__TagContentWrapper-sc-r1wv7a-1.koGVuk"
+      "div.TopFoldsc__JobOverViewInfo-sc-1fbktg5-9.erJXAZ"
     )
       ?.eq(2)
       .text()
