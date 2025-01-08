@@ -13,7 +13,6 @@ async function createConnection() {
   });
   return connection;
 }
-
 async function insertJobData(connection, job) {
   const query = `
         INSERT INTO jobs (job_title, company, work_type, working_type, experience, location, salary, link, link_img, category, study_requirement, skills, description, created_at, updated_at)
@@ -106,7 +105,7 @@ export default async function scrapeKalibrr() {
     await fetchData(url);
 
     const jobCards = await page.$$(
-      ".k-font-dm-sans.k-rounded-lg"
+      "div.k-font-dm-sans.k-rounded-lg.k-bg-white.k-border-solid.k-border"
     );
 
     if (jobCards.length === 0) {

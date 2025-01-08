@@ -64,11 +64,11 @@ let job_id_counter = 0;
 // Fungsi untuk mengambil data pekerjaan dari halaman
 async function fetchJobData(page, url) {
   console.log(`Navigating to ${url}...`);
-  await page.goto(url, { waitUntil: "domcontentloaded" });
+  await page.goto(url, { waitUntil: "networkidle2" });
 
   console.log("Fetching job links...");
   const jobCards = await page.$$eval(
-    "div.snwpn00",
+    "div.snwpn00.l1r1184z.l1r1184x",
     (cards) => {
       return cards.map((card) => {
         const anchorTag = card.querySelector("a");
@@ -180,7 +180,7 @@ export default async function scrapeJobstreet() {
   const connection = await createConnection();
 
   let page_number = 1;
-  while (page_number < 2) {
+  while (page_number < 5) {
     const url = `${base_url}?page=${page_number}`;
     console.log(`Scraping page ${page_number}...`);
     await fetchJobData(page, url);
