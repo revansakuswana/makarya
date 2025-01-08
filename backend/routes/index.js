@@ -17,7 +17,7 @@ import {
   saveJob,
   deleteSavedJob,
   getSavedJobs,
-} from "../controllers/jobs.js";
+} from "../controllers/Jobs.js";
 import {
   createArticles,
   deleteArticles,
